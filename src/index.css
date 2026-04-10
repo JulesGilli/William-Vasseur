@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+  --bg: #0a0a0a;
+  --text: #f0f0f0;
+  --accent-red: #ff0000;
+  --accent-green: #00ff41;
+  --border: rgba(255, 255, 255, 0.2);
+}
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  overflow-x: hidden;
+  cursor: none; /* Hide default cursor for custom one */
+}
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-red);
+  border: 1px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cc0000;
+}
+::selection {
+  background: var(--accent-red);
+  color: white;
+}
+/* Glitch Animation Keyframes */
+@keyframes glitch-anim-1 {
+  0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
+  20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+  40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+  60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+  80% { clip-path: inset(10% 0 60% 0); transform: translate(-1px, 1px); }
+  100% { clip-path: inset(30% 0 30% 0); transform: translate(1px, -1px); }
+}
+@keyframes glitch-anim-2 {
+  0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -1px); }
+  20% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 2px); }
+  40% { clip-path: inset(30% 0 20% 0); transform: translate(2px, 1px); }
+  60% { clip-path: inset(10% 0 80% 0); transform: translate(-1px, -2px); }
+  80% { clip-path: inset(40% 0 10% 0); transform: translate(1px, 2px); }
+  100% { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 1px); }
+}
+/* Utility classes for glitch effect */
+.glitch-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.glitch-wrapper::before,
+.glitch-wrapper::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+}
+.glitch-wrapper::before {
+  left: 2px;
+  text-shadow: -1px 0 var(--accent-red);
+  clip-path: inset(0 0 0 0);
+  animation: glitch-anim-1 2s infinite linear alternate-reverse;
+  display: none;
+}
+.glitch-wrapper::after {
+  left: -2px;
+  text-shadow: -1px 0 var(--accent-green);
+  clip-path: inset(0 0 0 0);
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+  display: none;
+}
+.glitch-wrapper:hover::before,
+.glitch-wrapper:hover::after {
+  display: block;
+}
+/* Brutalist Utilities */
+.border-brutal {
+  border: 2px solid var(--border);
+}
+.text-stroke {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+  color: transparent;
+}
+.text-stroke-hover:hover {
+  -webkit-text-stroke: 0px;
+  color: var(--accent-red);
+}
