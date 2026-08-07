@@ -21,6 +21,8 @@
 
 :root {
   --bg: #e4e4e4;
+  /* Same colour as --bg, in components, so gradients can fade its alpha. */
+  --bg-rgb: 228 228 228;
   --surface: #efefef;
   --ink: #0c0c0c;
   --muted: #5c5c5c;
@@ -29,6 +31,7 @@
 }
 .dark {
   --bg: #161616;
+  --bg-rgb: 22 22 22;
   --surface: #1e1e1e;
   --ink: #f1f1f1;
   --muted: #9a9a9a;

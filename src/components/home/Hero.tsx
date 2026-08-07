@@ -14,7 +14,25 @@ export function Hero() {
 
   return (
     <section className="relative border-b border-line" aria-labelledby="hero-title">
-      <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:py-24">
+      {/* Clears the page grid out of the middle band, so the name and the model
+          sit on bare paper. Painted in the background colour rather than masking
+          the grid itself, since the grid lives on the app root, not here. */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+          'linear-gradient(to bottom,' +
+          ' rgb(var(--bg-rgb) / 0) 0%,' +
+          ' rgb(var(--bg-rgb) / 0.55) 17%,' +
+          ' rgb(var(--bg-rgb) / 1) 36%,' +
+          ' rgb(var(--bg-rgb) / 1) 64%,' +
+          ' rgb(var(--bg-rgb) / 0.55) 83%,' +
+          ' rgb(var(--bg-rgb) / 0) 100%)'
+        }} />
+
+
+      <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:py-24">
         {/* min-w-0 stops the oversized display type from starving the viewer
             column — fr tracks otherwise refuse to shrink below min-content. */}
         {/* --title drives the type size *and* the indent and measure derived
