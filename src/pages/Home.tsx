@@ -8,6 +8,7 @@ import { SectionHeading } from '../components/SectionHeading';
 import { Reveal } from '../components/motion/Reveal';
 import { Marquee } from '../components/motion/Marquee';
 import { Magnetic } from '../components/motion/Magnetic';
+import { TopographyBackdrop } from '../components/backgrounds/TopographyBackdrop';
 import { products } from '../data/products';
 import { asset } from '../lib/asset';
 
@@ -171,9 +172,10 @@ export function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="blueprint-grid" aria-labelledby="cta-title">
-        <div className="mx-auto max-w-[1400px] px-4 py-16 text-center sm:px-8 lg:py-24">
+      {/* CTA — contours instead of the grid, to break the page's repetition */}
+      <section className="relative isolate" aria-labelledby="cta-title">
+        <TopographyBackdrop />
+        <div className="relative mx-auto max-w-[1400px] px-4 py-16 text-center sm:px-8 lg:py-24">
           <Reveal>
             <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
               04 / Next
