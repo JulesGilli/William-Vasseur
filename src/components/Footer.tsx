@@ -5,7 +5,7 @@ export function Footer() {
     <footer className="border-t border-line">
       <div className="mx-auto flex max-w-[1400px] flex-col gap-6 px-4 py-8 sm:px-8 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="font-display text-xs tracking-tight">
+          <p className="font-display text-sm tracking-tight">
             WILLIAM VASSEUR — 3D ARTIST
           </p>
           <p className="mt-2 font-mono text-[11px] text-muted">

@@ -51,10 +51,11 @@ export function ToolsRail() {
 
               <Icon className="h-7 w-7 text-muted transition-colors duration-300 group-hover:text-ink" />
             </motion.span>
-            <span className="mt-3 font-display text-[11px] tracking-tight">
+            {/* Gulax is a display face — under ~14px it stops being readable. */}
+            <span className="mt-3 font-display text-sm tracking-tight">
               {name.toUpperCase()}
             </span>
-            <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+            <span className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
               {role}
             </span>
           </motion.li>

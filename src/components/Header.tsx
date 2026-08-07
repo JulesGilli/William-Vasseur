@@ -42,7 +42,7 @@ export function Header() {
             <Logo className="h-7 w-7" />
           </motion.span>
           <span
-            className={`hidden font-display text-xs tracking-tight transition-opacity duration-300 sm:block ${
+            className={`hidden font-display text-sm tracking-tight transition-opacity duration-300 sm:block ${
             showName ? 'opacity-100' : 'opacity-0'}`
             }>
             

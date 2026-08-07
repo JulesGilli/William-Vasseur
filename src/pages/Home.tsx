@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRightIcon } from 'lucide-react';
 import { Hero } from '../components/home/Hero';
 import { ToolsRail } from '../components/home/ToolsRail';
+import { ProcessStages } from '../components/home/ProcessStages';
 import { BlueprintFrame } from '../components/BlueprintFrame';
 import { SectionHeading } from '../components/SectionHeading';
 import { Reveal } from '../components/motion/Reveal';
@@ -127,11 +128,13 @@ export function Home() {
         </div>
       </section>
 
+      <ProcessStages />
+
       {/* Physical work */}
       <section className="border-b border-line" aria-labelledby="real-title">
         <div className="mx-auto max-w-[1400px] px-4 py-16 sm:px-8 lg:py-24">
           <SectionHeading
-            index="03 / Physical"
+            index="04 / Physical"
             title="PUT MY IMAGINATION IN THE REAL LIFE"
             id="real-title" />
 
@@ -162,10 +165,10 @@ export function Home() {
                     </div>
                   </BlueprintFrame>
                   <span className="mt-3 flex items-baseline justify-between gap-3">
-                    <span className="font-display text-[11px] tracking-tight transition-opacity group-hover:opacity-60">
+                    <span className="font-display text-sm tracking-tight transition-opacity group-hover:opacity-60">
                       {product.name.toUpperCase()}
                     </span>
-                    <span className="font-mono text-[11px] text-muted">
+                    <span className="font-mono text-xs text-muted">
                       {product.price}
                     </span>
                   </span>
@@ -182,7 +185,7 @@ export function Home() {
         <div className="relative mx-auto max-w-[1400px] px-4 py-16 text-center sm:px-8 lg:py-24">
           <Reveal>
             <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
-              04 / Next
+              05 / Next
             </span>
             <h2
               id="cta-title"
