@@ -1,129 +1,120 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDownIcon } from 'lucide-react';
-import { asset } from '../../lib/asset';
+import { ModelViewer } from '../three/ModelViewer';
+import { projects } from '../../data/projects';
 
-const HERO_IMAGE = asset("/c5091bcf-b0b6-4779-8747-7613c0e9be91.jpg");
-
+const SIGNATURE = projects[0];
 
 export function Hero() {
-  const [angle, setAngle] = useState(-8);
-  const dragging = useRef(false);
-  const lastX = useRef(0);
-
-  const onPointerDown = useCallback((event: React.PointerEvent) => {
-    dragging.current = true;
-    lastX.current = event.clientX;
-    event.currentTarget.setPointerCapture(event.pointerId);
-  }, []);
-
-  const onPointerMove = useCallback((event: React.PointerEvent) => {
-    if (!dragging.current) return;
-    const delta = event.clientX - lastX.current;
-    lastX.current = event.clientX;
-    setAngle((prev) => Math.max(-38, Math.min(38, prev + delta * 0.35)));
-  }, []);
-
-  const stopDrag = useCallback(() => {
-    dragging.current = false;
-  }, []);
+  const reduced = useReducedMotion();
+  const { scrollY } = useScroll();
+  // The type drifts up a touch slower than the page, so the two layers separate.
+  const titleY = useTransform(scrollY, [0, 600], [0, reduced ? 0 : -70]);
+  const titleOpacity = useTransform(scrollY, [0, 480], [1, reduced ? 1 : 0.15]);
 
   return (
-    <section
-      className="relative border-b border-line"
-      aria-labelledby="hero-title">
-      
-      <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:py-24">
-        <div>
-          <motion.h1
+    <section className="relative border-b border-line" aria-labelledby="hero-title">
+      <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:py-24">
+        {/* min-w-0 stops the oversized display type from starving the viewer
+            column — fr tracks otherwise refuse to shrink below min-content. */}
+        <motion.div className="min-w-0" style={{ y: titleY, opacity: titleOpacity }}>
+          <h1
             id="hero-title"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display text-[13vw] leading-[0.92] tracking-tight sm:text-[9vw] lg:text-[6.4vw]">
-            
-            WILLIAM
-            <br />
-            VASSEUR
-          </motion.h1>
+            // Bruno Ace runs ~7.3em wide for these seven letters, and the
+            // per-line overflow-hidden used by the reveal would clip any spill,
+            // so the sizes below are capped to always fit the column.
+            className="font-display text-[12vw] leading-[0.92] tracking-tight sm:text-[9vw] lg:text-[clamp(3rem,6.1vw,5.5rem)]"
+            aria-label="William Vasseur">
+
+            {['WILLIAM', 'VASSEUR'].map((line, row) =>
+            <span key={line} className="block overflow-hidden pb-[0.06em]">
+                <motion.span
+                aria-hidden="true"
+                className="block"
+                initial={{ y: reduced ? 0 : '110%' }}
+                animate={{ y: '0%' }}
+                transition={{
+                  duration: reduced ? 0.01 : 1,
+                  delay: reduced ? 0 : 0.1 + row * 0.11,
+                  ease: [0.16, 1, 0.3, 1]
+                }}>
+
+                  {line}
+                </motion.span>
+              </span>
+            )}
+          </h1>
 
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.45 }}
             className="mt-5 max-w-md text-sm text-muted lg:ml-[6vw]">
-            
-            3D Artist — Science fiction environments and characters.
-            <span className="block font-mono text-[11px] uppercase tracking-[0.2em]">
+
+            3D Artist — science-fiction environments, characters and the objects
+            they leave behind.
+            <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.2em]">
               Toulouse, France
             </span>
           </motion.p>
 
-          <div className="mt-14 flex items-center gap-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="mt-14 flex items-center gap-4">
+
             <span className="flex h-16 w-6 items-center justify-center rounded-full border border-line">
               <span className="rotate-90 font-mono text-[9px] uppercase tracking-[0.28em] text-muted">
                 Scroll
               </span>
             </span>
             <motion.span
-              animate={{ y: [0, 10, 0] }}
+              animate={reduced ? undefined : { y: [0, 10, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               className="text-ink"
               aria-hidden="true">
-              
+
               <ArrowDownIcon className="h-6 w-6" />
             </motion.span>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="relative">
-          <div className="relative aspect-[4/3] border border-line">
-            <span
-              aria-hidden="true"
-              className="absolute -left-px -top-px h-10 w-10 border-b border-r border-line bg-bg" />
-            
-            <div
-              role="img"
-              aria-label="Rendu 3D d'un fragment de roche flottant recouvert de mousse et de fleurs de cerisier"
-              tabIndex={0}
-              onPointerDown={onPointerDown}
-              onPointerMove={onPointerMove}
-              onPointerUp={stopDrag}
-              onPointerCancel={stopDrag}
-              onKeyDown={(e) => {
-                if (e.key === 'ArrowLeft') setAngle((p) => Math.max(-38, p - 6));
-                if (e.key === 'ArrowRight') setAngle((p) => Math.min(38, p + 6));
-              }}
-              className="flex h-full w-full cursor-grab touch-none items-center justify-center overflow-hidden active:cursor-grabbing"
-              style={{ perspective: 1000 }}>
-              
-              <motion.img
-                src={HERO_IMAGE}
-                alt=""
-                animate={{ rotateY: angle, y: [0, -12, 0] }}
-                transition={{
-                  rotateY: { type: 'spring', stiffness: 120, damping: 18 },
-                  y: { duration: 7, repeat: Infinity, ease: 'easeInOut' }
-                }}
-                className="h-[86%] w-[86%] select-none object-contain mix-blend-multiply dark:mix-blend-screen"
-                draggable={false} />
-              
-            </div>
+        <motion.div
+          className="min-w-0"
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}>
 
-            <span className="pointer-events-none absolute bottom-3 right-4 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-              Drag to turn the object
+          <ModelViewer
+            url={SIGNATURE.model}
+            poster={SIGNATURE.image}
+            label={`${SIGNATURE.ref} — ${SIGNATURE.title}`}
+            spec={SIGNATURE.spec}
+            aspect="aspect-[4/3]" />
+
+
+          <div className="mt-3 flex items-center justify-between">
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+              Live model · not a render
             </span>
-          </div>
+            <div className="flex gap-2" aria-hidden="true">
+              {[0, 1, 2].map((dot) =>
+              <motion.span
+                key={dot}
+                className="h-1.5 w-1.5 rounded-full border border-line"
+                animate={reduced ? undefined : { opacity: [0.3, 1, 0.3] }}
+                transition={{
+                  duration: 2.4,
+                  repeat: Infinity,
+                  delay: dot * 0.3,
+                  ease: 'easeInOut'
+                }} />
 
-          <div className="mt-3 flex justify-end gap-2" aria-hidden="true">
-            {[0, 1, 2].map((dot) =>
-            <span
-              key={dot}
-              className="h-1.5 w-1.5 rounded-full border border-line" />
-
-            )}
+              )}
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>);
 

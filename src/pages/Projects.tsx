@@ -1,9 +1,13 @@
-import React, { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { ModelViewer } from '../components/three/ModelViewer';
+import { SplitText } from '../components/motion/SplitText';
+import { Reveal } from '../components/motion/Reveal';
 import { projects } from '../data/projects';
 
 export function Projects() {
-  const [filter, setFilter] = useState<string>('All');
+  const reduced = useReducedMotion();
+  const [filter, setFilter] = useState('All');
 
   const categories = useMemo(
     () => ['All', ...Array.from(new Set(projects.map((p) => p.category)))],
@@ -21,16 +25,26 @@ export function Projects() {
   return (
     <main className="mx-auto max-w-[1400px] px-4 py-14 sm:px-8">
       <header className="border-b border-line pb-8">
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
+
           Index / Sheet 02
-        </span>
-        <h1 className="mt-3 font-display text-3xl tracking-tight sm:text-5xl">
-          PROJECTS
-        </h1>
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">
-          A selection of environments, characters and props. Every piece is
-          modelled, shaded and rendered in-house.
-        </p>
+        </motion.span>
+        <SplitText
+          as="h1"
+          by="letter"
+          text="PROJECTS"
+          className="mt-3 font-display text-3xl tracking-tight sm:text-5xl" />
+
+        <Reveal delay={0.15}>
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">
+            Environments, characters and props — each one modelled, shaded and
+            rendered in-house. Every piece below is the real mesh: drag it,
+            spin it, look underneath.
+          </p>
+        </Reveal>
       </header>
 
       <div className="flex flex-wrap items-center gap-2 border-b border-line py-4">
@@ -42,13 +56,22 @@ export function Projects() {
               type="button"
               onClick={() => setFilter(category)}
               aria-pressed={active}
-              className={`rounded-full border px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] transition-colors ${
+              className={`relative rounded-full border px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] transition-colors duration-300 ${
               active ?
-              'border-ink bg-ink text-bg' :
+              'border-ink text-bg' :
               'border-line text-muted hover:border-ink hover:text-ink'}`
               }>
-              
-              {category}
+
+              {/* One shared pill slides between the chips instead of blinking. */}
+              {active ?
+              <motion.span
+                layoutId="filter-pill"
+                aria-hidden="true"
+                className="absolute inset-0 rounded-full bg-ink"
+                transition={{ type: 'spring', stiffness: 380, damping: 32 }} /> :
+
+              null}
+              <span className="relative">{category}</span>
             </button>);
 
         })}
@@ -57,53 +80,83 @@ export function Projects() {
         </span>
       </div>
 
+      <ul className="divide-y divide-line">
+        <AnimatePresence mode="popLayout" initial={false}>
+          {visible.map((project, index) => {
+            const flipped = index % 2 === 1;
+            return (
+              <motion.li
+                key={project.id}
+                layout
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{
+                  duration: reduced ? 0.01 : 0.6,
+                  delay: reduced ? 0 : index * 0.06,
+                  ease: [0.16, 1, 0.3, 1]
+                }}
+                className="py-12 lg:py-16">
+
+                <article className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
+                  <div className={flipped ? 'lg:order-2' : undefined}>
+                    <ModelViewer
+                      url={project.model}
+                      poster={project.image}
+                      label={project.ref}
+                      spec={project.spec}
+                      aspect="aspect-[5/4]" />
+
+                  </div>
+
+                  <div className={flipped ? 'lg:order-1 lg:pr-[8%]' : 'lg:pl-[8%]'}>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
+                      {String(index + 1).padStart(2, '0')} / {project.category}
+                    </span>
+
+                    <h2 className="mt-3 font-display text-xl leading-tight tracking-tight sm:text-2xl">
+                      {project.title.toUpperCase()}
+                    </h2>
+
+                    <motion.span
+                      aria-hidden="true"
+                      className="mt-4 block h-px w-16 origin-left bg-ink opacity-40"
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: reduced ? 0.01 : 0.8, delay: 0.2 }} />
+
+
+                    <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted">
+                      {project.description}
+                    </p>
+
+                    <dl className="mt-7 grid max-w-lg grid-cols-2 gap-px border border-line bg-line">
+                      {[
+                      ['Year', project.year],
+                      ['Software', project.software]].
+                      map(([term, value]) =>
+                      <div key={term} className="bg-bg px-4 py-3">
+                          <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+                            {term}
+                          </dt>
+                          <dd className="mt-1 text-sm">{value}</dd>
+                        </div>
+                      )}
+                    </dl>
+                  </div>
+                </article>
+              </motion.li>);
+
+          })}
+        </AnimatePresence>
+      </ul>
+
       {visible.length === 0 ?
       <p className="py-24 text-center font-mono text-xs uppercase tracking-[0.2em] text-muted">
           No project in this category yet.
         </p> :
-
-      <ul className="grid gap-px border-b border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map((project, index) =>
-        <motion.li
-          key={project.id}
-          layout
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: index * 0.05 }}
-          className="group bg-bg">
-          
-              <article className="flex h-full flex-col">
-                <div className="relative overflow-hidden">
-                  <img
-                src={project.image}
-                alt={project.title}
-                className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
-              
-                  <span className="absolute left-3 top-3 bg-bg px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-                    {project.ref}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col gap-2 p-5">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <h2 className="font-display text-sm tracking-tight">
-                      {project.title.toUpperCase()}
-                    </h2>
-                    <span className="font-mono text-[10px] text-muted">
-                      {project.year}
-                    </span>
-                  </div>
-                  <p className="text-sm leading-relaxed text-muted">
-                    {project.description}
-                  </p>
-                  <span className="mt-auto border-t border-line pt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
-                    {project.category} · {project.software}
-                  </span>
-                </div>
-              </article>
-            </motion.li>
-        )}
-        </ul>
-      }
+      null}
     </main>);
 
 }

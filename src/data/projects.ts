@@ -8,79 +8,64 @@ export interface Project {
   year: string;
   software: string;
   description: string;
+  /** Still frame, rendered from the model itself. */
   image: string;
+  /** Compressed glTF binary powering the inline viewer. */
+  model: string;
+  /** Technical caption shown in the viewer chrome. */
+  spec: string;
 }
 
 export const projects: Project[] = [
 {
-  id: 'station',
+  id: 'mossy-log',
   ref: 'PRJ—001',
-  title: 'Sector 4 / Biology',
-  category: 'Environment',
-  year: '2026',
-  software: 'Blender · Unreal Engine',
-  description:
-  'An abandoned orbital research corridor, slowly reclaimed by the biology it was built to contain.',
-  image: asset("/0b2a7de3-c2b1-4bf2-ae5d-7e0fc06656d2.jpg")
-
-},
-{
-  id: 'walker',
-  ref: 'PRJ—002',
-  title: 'The Last Surveyor',
-  category: 'Character',
-  year: '2026',
-  software: 'Blender · Nomad Sculpt',
-  description:
-  'A lone explorer in a weathered exosuit, designed for long solitary walks across dead atmospheres.',
-  image: asset("/a9bfb9c5-643f-45a8-ad95-5a9f0eadd999.jpg")
-
-},
-{
-  id: 'forest',
-  ref: 'PRJ—003',
-  title: 'Pale Canopy',
-  category: 'Environment',
-  year: '2025',
-  software: 'Blender · DaVinci Resolve',
-  description:
-  'An alien forest growing through the bones of a forgotten structure. Study on fog and scale.',
-  image: asset("/6c4b448b-3401-443e-998e-0a989c5b3878.jpg")
-
-},
-{
-  id: 'vessel',
-  ref: 'PRJ—004',
-  title: 'Cargo Hauler / DUSK',
-  category: 'Hard surface',
-  year: '2025',
-  software: 'Blender · Fusion',
-  description:
-  'A derelict cargo vessel drifting above the plain. Hull panelling and weathering exercise.',
-  image: asset("/aa821a9f-d626-40d2-b281-5cf11342588d.jpg")
-
-},
-{
-  id: 'artifact',
-  ref: 'PRJ—005',
-  title: 'Monolith Study',
-  category: 'Prop',
-  year: '2025',
-  software: 'Blender',
-  description:
-  'A carved artifact suspended in orbit with its own debris. Lighting and material research.',
-  image: asset("/62b617a6-053d-4ff3-9ea9-1994086dbaf0.jpg")
-
-},
-{
-  id: 'island',
-  ref: 'PRJ—006',
   title: 'Bloom Fragment',
   category: 'Environment',
   year: '2026',
-  software: 'Blender',
+  software: 'Blender · Meshy AI',
   description:
-  'A floating fragment of rock, moss and blossom. The starting point of the whole series.',
-  image: asset("/c5091bcf-b0b6-4779-8747-7613c0e9be91.jpg")
-
+  'A drifting shard of bark, moss and quartz in bloom. The study that set the direction for everything since — technology used to look at nature closely.',
+  image: asset('/models/posters/mossy-log.webp'),
+  model: asset('/models/mossy-log.glb'),
+  spec: 'GLB · 25K TRIS'
+},
+{
+  id: 'clockwork-colossus',
+  ref: 'PRJ—002',
+  title: 'Clockwork Colossus',
+  category: 'Character',
+  year: '2026',
+  software: 'Nomad Sculpt · Blender',
+  description:
+  'A six-limbed industrial giant, all pipes and pressure tanks. Sculpted for resin printing, so every overhang had to survive the real world.',
+  image: asset('/models/posters/clockwork-colossus.webp'),
+  model: asset('/models/clockwork-colossus.glb'),
+  spec: 'GLB · 12K TRIS'
+},
+{
+  id: 'crash-landed',
+  ref: 'PRJ—003',
+  title: 'Crash Landed / Planet Unknown',
+  category: 'Diorama',
+  year: '2025',
+  software: 'Blender · Unreal Engine',
+  description:
+  'A freighter down on a dead world, hull split against the rock. Built at 1/144 as a physical diorama, then brought back into 3D.',
+  image: asset('/models/posters/crash-landed.webp'),
+  model: asset('/models/crash-landed.glb'),
+  spec: 'GLB · 26K TRIS'
+},
+{
+  id: 'canal-arches',
+  ref: 'PRJ—004',
+  title: 'Canal Arches of Seville',
+  category: 'Architecture',
+  year: '2026',
+  software: 'Blender · DaVinci Resolve',
+  description:
+  'Terraced arcades stacked over still water, somewhere between an aqueduct and a hanging garden. Rendered for print, framed in oak.',
+  image: asset('/models/posters/canal-arches.webp'),
+  model: asset('/models/canal-arches.glb'),
+  spec: 'GLB · 4K TRIS'
 }];

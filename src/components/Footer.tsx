@@ -1,4 +1,3 @@
-import React from 'react';
 import { InstagramIcon, MailIcon, TriangleIcon } from 'lucide-react';
 
 export function Footer() {

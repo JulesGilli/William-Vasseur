@@ -8,36 +8,38 @@ export interface Product {
   spec: string;
   price: string;
   image: string;
+  /** Present when the piece can be inspected in 3D before buying. */
+  model?: string;
 }
 
 export const products: Product[] = [
 {
-  id: 'poster',
+  id: 'canal-arches-print',
   ref: 'ART—01',
-  name: 'Overgrown Archway',
+  name: 'Canal Arches of Seville',
   kind: 'Poster · Fine art print',
-  spec: '50 × 70 cm · 250 g matte paper · wooden frame',
+  spec: '50 × 70 cm · 250 g matte paper · solid oak frame',
   price: '€60',
-  image: asset("/e1e17ece-3536-4658-8366-054d1a488184.jpg")
-
+  image: asset('/models/posters/canal-arches.webp'),
+  model: asset('/models/canal-arches.glb')
 },
 {
-  id: 'figurine',
+  id: 'colossus-figurine',
   ref: 'ART—02',
-  name: 'Multi-Armed Sentinel',
+  name: 'Clockwork Colossus',
   kind: 'Figurine · Resin print',
   spec: '18 cm · unpainted grey resin · numbered base',
   price: '€85',
-  image: asset("/7ab25f06-90b6-4850-afe4-4681b4a891d1.jpg")
-
+  image: asset('/models/posters/clockwork-colossus.webp'),
+  model: asset('/models/clockwork-colossus.glb')
 },
 {
-  id: 'diorama',
+  id: 'crash-landed-diorama',
   ref: 'ART—03',
-  name: 'Crash Site / DUSK',
-  kind: 'Diorama · Resin print',
-  spec: '24 × 16 cm · hand painted · display base',
-  price: '€140',
-  image: asset("/bb37fb43-04fa-4d66-a777-0f4f54580530.jpg")
-
+  name: 'Crash Landed / Planet Unknown',
+  kind: 'Diorama · Scale 1/144',
+  spec: '24 × 18 cm · hand-painted resin · engraved plate',
+  price: '€180',
+  image: asset('/models/posters/crash-landed.webp'),
+  model: asset('/models/crash-landed.glb')
 }];

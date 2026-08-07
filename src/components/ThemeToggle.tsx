@@ -1,4 +1,3 @@
-import React from 'react';
 import { MoonIcon, SunIcon } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -10,7 +9,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={isDark ? 'Activer le mode clair' : 'Activer le mode sombre'}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       aria-pressed={isDark}
       className="group relative flex h-8 w-[74px] items-center justify-between rounded-full border border-line px-2 transition-colors hover:border-ink">
       
