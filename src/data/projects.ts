@@ -26,6 +26,11 @@ export interface Project {
   stages?: ProcessStage[];
 }
 
+/**
+ * Portfolio work only. The pieces sold as prints, figurines and dioramas live
+ * in `products` and are deliberately absent here, so the Projects sheet stays
+ * a body of work rather than a second shop window.
+ */
 export const projects: Project[] = [
 {
   id: 'mossy-log',
@@ -41,47 +46,8 @@ export const projects: Project[] = [
   spec: 'GLB · 25K TRIS'
 },
 {
-  id: 'clockwork-colossus',
-  ref: 'PRJ—002',
-  title: 'Clockwork Colossus',
-  category: 'Character',
-  year: '2026',
-  software: 'Nomad Sculpt · Blender',
-  description:
-  'A six-limbed industrial giant, all pipes and pressure tanks. Sculpted for resin printing, so every overhang had to survive the real world.',
-  image: asset('/models/posters/clockwork-colossus.webp'),
-  model: asset('/models/clockwork-colossus.glb'),
-  spec: 'GLB · 12K TRIS'
-},
-{
-  id: 'crash-landed',
-  ref: 'PRJ—003',
-  title: 'Crash Landed / Planet Unknown',
-  category: 'Diorama',
-  year: '2025',
-  software: 'Blender · Unreal Engine',
-  description:
-  'A freighter down on a dead world, hull split against the rock. Built at 1/144 as a physical diorama, then brought back into 3D.',
-  image: asset('/models/posters/crash-landed.webp'),
-  model: asset('/models/crash-landed.glb'),
-  spec: 'GLB · 26K TRIS'
-},
-{
-  id: 'canal-arches',
-  ref: 'PRJ—004',
-  title: 'Canal Arches of Seville',
-  category: 'Architecture',
-  year: '2026',
-  software: 'Blender · DaVinci Resolve',
-  description:
-  'Terraced arcades stacked over still water, somewhere between an aqueduct and a hanging garden. Rendered for print, framed in oak.',
-  image: asset('/models/posters/canal-arches.webp'),
-  model: asset('/models/canal-arches.glb'),
-  spec: 'GLB · 4K TRIS'
-},
-{
   id: 'navana',
-  ref: 'PRJ—005',
+  ref: 'PRJ—002',
   title: 'Navana',
   category: 'Environment',
   year: '2026',

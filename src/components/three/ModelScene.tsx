@@ -1,15 +1,14 @@
-import React, { Suspense, useEffect, useMemo, useRef } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import {
   Bounds,
-  Center,
   ContactShadows,
   Environment,
   Lightformer,
   OrbitControls,
   useGLTF,
 } from '@react-three/drei';
-import { Vector3, type Group } from 'three';
+import { Box3, Vector3, type Group } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
 const UP = new Vector3(0, 1, 0);
@@ -30,17 +29,62 @@ export interface ModelSceneProps {
   onReady?: () => void;
 }
 
-function Model({ url, onReady }: {url: string;onReady?: () => void;}) {
+/** Every model ends up with its longest side spanning this many units. */
+const NORMALISED_SIZE = 2;
+
+export interface Footing {
+  /** World Y of the model's underside, once normalised. */
+  baseY: number;
+  /** Widest horizontal extent, for sizing the shadow. */
+  spread: number;
+}
+
+function Model({
+  url,
+  onReady,
+  onMeasure
+}: {
+  url: string;
+  onReady?: () => void;
+  onMeasure: (f: Footing) => void;
+}) {
   const { scene } = useGLTF(url);
-  // useGLTF caches per URL, so each mount needs its own copy of the graph.
-  const model = useMemo(() => scene.clone(true), [scene]);
+
+  // These arrive from the generator at wildly different scales, so normalise
+  // to a common box. Without it nothing downstream can be positioned reliably
+  // — a fixed shadow plane ends up buried inside one model and off-screen
+  // under the next.
+  const { model, scale, offset, footing } = useMemo(() => {
+    // useGLTF caches per URL, so each mount needs its own copy of the graph.
+    const clone = scene.clone(true);
+    const box = new Box3().setFromObject(clone);
+    const size = box.getSize(new Vector3());
+    const centre = box.getCenter(new Vector3());
+    const s = NORMALISED_SIZE / Math.max(size.x, size.y, size.z, 1e-6);
+    return {
+      model: clone,
+      scale: s,
+      offset: centre.clone().multiplyScalar(-1),
+      footing: {
+        baseY: -(size.y * s) / 2,
+        spread: Math.max(size.x, size.z) * s
+      }
+    };
+  }, [scene]);
 
   // Runs only after Suspense resolves, which is exactly "the model is here".
   useEffect(() => {
+    onMeasure(footing);
     onReady?.();
-  }, [onReady]);
+  }, [footing, onMeasure, onReady]);
 
-  return <primitive object={model} />;
+  return (
+    <group scale={scale}>
+      <group position={offset}>
+        <primitive object={model} />
+      </group>
+    </group>);
+
 }
 
 /** A slow drift that keeps the object alive even while the orbit is idle. */
@@ -113,6 +157,10 @@ export default function ModelScene({
   onReady,
 }: ModelSceneProps) {
   const dark = theme === 'dark';
+  // Filled in once the mesh is measured; the default keeps the shadow sane
+  // during the frame or two before that happens.
+  const [footing, setFooting] = useState<Footing>({ baseY: -1, spread: 2 });
+  const onMeasure = useCallback((f: Footing) => setFooting(f), []);
 
   return (
     <Canvas
@@ -158,24 +206,29 @@ export default function ModelScene({
       </Environment>
 
       <Suspense fallback={null}>
-        {/* Tight fit: the canvas overspills its frame, so filling the canvas is
-            what pushes the mesh past the border. */}
-        <Bounds fit clip observe margin={1}>
-          <Center>
-            <Float>
-              <Model url={url} onReady={onReady} />
-            </Float>
-          </Center>
+        {/* Bounds fits a cube of the model's longest side, so a margin of 1 sits
+            exactly on the frustum edge and the drift below is enough to clip
+            it. The headroom here is what keeps the silhouette whole. */}
+        <Bounds fit clip observe margin={1.18}>
+          <Float>
+            <Model url={url} onReady={onReady} onMeasure={onMeasure} />
+          </Float>
         </Bounds>
       </Suspense>
 
+      {/* Sits on the model's measured underside rather than a fixed plane,
+          which is the only way one setting works across every piece. Kept
+          close to the footprint: spread over a larger plane the same shadow
+          budget just washes out. Pure black in dark mode, which is genuinely
+          darker than the sheet and so still reads against it. */}
       <ContactShadows
-        position={[0, -1.05, 0]}
-        opacity={dark ? 0.4 : 0.32}
-        scale={9}
-        blur={2.6}
-        far={4}
-        color={dark ? '#000000' : '#0c0c0c'} />
+        position={[0, footing.baseY - 0.02, 0]}
+        opacity={dark ? 0.85 : 0.55}
+        scale={Math.max(footing.spread * 1.5, 2.5)}
+        blur={1.9}
+        far={Math.max(footing.spread, 1.5)}
+        resolution={512}
+        color="#000000" />
 
 
       <Rig resetKey={resetKey} />

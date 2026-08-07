@@ -7,8 +7,12 @@ import { useInView } from '../../hooks/useInView';
 // three.js, fiber and drei all land in this chunk and nowhere else.
 const ModelScene = lazy(() => import('./ModelScene'));
 
-/** How far the drawn border sits inside the viewer's box. */
-const FRAME = { top: '9%', bottom: '9%', left: '7%', right: '7%' } as const;
+/**
+ * How far the drawn border sits inside the viewer's box. Kept shallow: the
+ * canvas needs headroom so the mesh is never clipped, and the overhang should
+ * come from the parts of the silhouette that genuinely stick out.
+ */
+const FRAME = { top: '5%', bottom: '5%', left: '4%', right: '4%' } as const;
 
 interface ModelViewerProps {
   url: string;
