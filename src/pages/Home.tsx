@@ -100,9 +100,13 @@ export function Home() {
         </div>
       </section>
 
-      {/* Tools */}
-      <section className="border-b border-line" aria-labelledby="tools-title">
-        <div className="mx-auto max-w-[1400px] px-4 py-16 sm:px-8 lg:py-24">
+      {/* Tools — contours; the grid returns on the section below it */}
+      <section
+        className="relative isolate border-b border-line"
+        aria-labelledby="tools-title">
+
+        <TopographyBackdrop bands={2} opacity={0.4} />
+        <div className="relative mx-auto max-w-[1400px] px-4 py-16 sm:px-8 lg:py-24">
           <div className="flex justify-end">
             <SectionHeading
               index="02 / Toolset"

@@ -106,7 +106,13 @@ void main() {
   vec2 res = iResolution.xy;
   vec2 uv = gl_FragCoord.xy / res;
 
-  vec2 suv = (uv - 0.5) / max(uScale, 0.001) + 0.5;
+  // LOCAL CHANGE: the field is evaluated in 0..1 UV on both axes, so on a wide
+  // banner the terrain is stretched by the container's aspect. Widening the x
+  // domain by that same ratio keeps one period spanning equal pixels in both
+  // directions, so the contours stay round whatever the section's shape.
+  vec2 centered = (uv - 0.5) / max(uScale, 0.001);
+  centered.x *= res.x / max(res.y, 1.0);
+  vec2 suv = centered + 0.5;
 
   vec2 sampleUv = suv;
   if (uPixelSize > 1.0) {
