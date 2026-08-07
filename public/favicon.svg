@@ -1,8 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#0d2137"/>
-  <g fill="none" stroke="#7fb2e5" stroke-width="1" opacity="0.35">
-    <path d="M8 0v32M16 0v32M24 0v32M0 8h32M0 16h32M0 24h32"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7 7">
+  <rect width="7" height="7" fill="#1e1e1e"/>
+  <g fill="#ffffff">
+    <rect x="1.03" y="1.03" width=".94" height=".94"/><rect x="5.03" y="1.03" width=".94" height=".94"/>
+    <rect x="1.03" y="2.03" width=".94" height=".94"/><rect x="5.03" y="2.03" width=".94" height=".94"/>
+    <rect x="1.03" y="3.03" width=".94" height=".94"/><rect x="3.03" y="3.03" width=".94" height=".94"/><rect x="5.03" y="3.03" width=".94" height=".94"/>
+    <rect x="1.03" y="4.03" width=".94" height=".94"/><rect x="2.03" y="4.03" width=".94" height=".94"/><rect x="4.03" y="4.03" width=".94" height=".94"/><rect x="5.03" y="4.03" width=".94" height=".94"/>
+    <rect x="1.03" y="5.03" width=".94" height=".94"/><rect x="5.03" y="5.03" width=".94" height=".94"/>
   </g>
-  <path d="M5 8l5 16 6-16 6 16 5-16" fill="none" stroke="#e8f1fa" stroke-width="2.5"
-        stroke-linecap="square" stroke-linejoin="miter"/>
+  <g fill="#adadad">
+    <rect x="2.03" y="2.03" width=".94" height=".94"/><rect x="4.03" y="2.03" width=".94" height=".94"/>
+    <rect x="2.03" y="3.03" width=".94" height=".94"/><rect x="4.03" y="3.03" width=".94" height=".94"/>
+    <rect x="3.03" y="4.03" width=".94" height=".94"/>
+  </g>
 </svg>

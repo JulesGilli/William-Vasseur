@@ -1,5 +1,5 @@
 /* @import url() FONT IMPORTS MUST ALWAYS BE AT THE VERY TOP OF THIS FILE, ABOVE THE TAILWIND IMPORTS — DO NOT DELETE THIS COMMENT */
-@import url('https://fonts.googleapis.com/css2?family=Bruno+Ace:wght@400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* CRITICAL: THE FOLLOWING TAILWIND IMPORTS MUST NEVER BE DELETED OR REORDERED — DO NOT DELETE THIS COMMENT */
 @import 'tailwindcss/base';
@@ -7,6 +7,17 @@
 @import 'tailwindcss/utilities';
 
 /* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
+
+/* Gulax by Morgan Gilbert (Velvetyne), SIL OFL 1.1 — licence ships at
+   /fonts/Gulax-OFL.txt. Self-hosted: 22 kB, no third-party call. The path is
+   relative so Vite fingerprints it and applies the Pages base prefix. */
+@font-face {
+  font-family: 'Gulax';
+  src: url('./fonts/Gulax-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --bg: #e4e4e4;

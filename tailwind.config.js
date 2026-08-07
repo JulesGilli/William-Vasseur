@@ -14,7 +14,7 @@ export default {
         line: 'var(--line)',
       },
       fontFamily: {
-        display: ['Bruno Ace', 'sans-serif'],
+        display: ['Gulax', 'sans-serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
       },

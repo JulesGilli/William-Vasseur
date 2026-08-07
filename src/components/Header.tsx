@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ThemeToggle } from './ThemeToggle';
+import { Logo } from './icons/Logo';
 import { ScrollProgress } from './motion/ScrollProgress';
 
 const links = [
@@ -33,12 +34,12 @@ export function Header() {
           aria-label="William Vasseur — home">
 
           <motion.span
-            className="flex h-7 w-7 items-center justify-center bg-ink font-display text-[11px] leading-none text-bg"
+            className="text-ink"
             whileHover={{ rotate: 90 }}
             transition={{ type: 'spring', stiffness: 300, damping: 18 }}
             aria-hidden="true">
 
-            W
+            <Logo className="h-7 w-7" />
           </motion.span>
           <span
             className={`hidden font-display text-xs tracking-tight transition-opacity duration-300 sm:block ${

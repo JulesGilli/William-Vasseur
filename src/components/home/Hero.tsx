@@ -17,17 +17,29 @@ export function Hero() {
       <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:py-24">
         {/* min-w-0 stops the oversized display type from starving the viewer
             column — fr tracks otherwise refuse to shrink below min-content. */}
-        <motion.div className="min-w-0" style={{ y: titleY, opacity: titleOpacity }}>
+        {/* --title drives the type size *and* the indent and measure derived
+            from it, so the whole block scales as one. In Gulax at 1em: "WI"
+            (the run before WILLIAM's first L) is 0.99 wide and VASSEUR is 3.46,
+            which caps the size at column / 4.45 to stay inside the track.
+            min-w-0 stops the display type from starving the viewer column —
+            fr tracks otherwise refuse to shrink below min-content. */}
+        <motion.div
+          className="min-w-0 [--title:19vw] lg:[--title:clamp(3.5rem,10vw,9rem)]"
+          style={{ y: titleY, opacity: titleOpacity }}>
+
           <h1
             id="hero-title"
-            // Bruno Ace runs ~7.3em wide for these seven letters, and the
-            // per-line overflow-hidden used by the reveal would clip any spill,
-            // so the sizes below are capped to always fit the column.
-            className="font-display text-[12vw] leading-[0.92] tracking-tight sm:text-[9vw] lg:text-[clamp(3rem,6.1vw,5.5rem)]"
+            className="font-display text-[length:var(--title)] leading-[0.92] tracking-tight"
             aria-label="William Vasseur">
 
             {['WILLIAM', 'VASSEUR'].map((line, row) =>
-            <span key={line} className="block overflow-hidden pb-[0.06em]">
+            <span
+              key={line}
+              // Drop VASSEUR to land under WILLIAM's first L.
+              className={`block overflow-hidden pb-[0.06em] ${
+              row === 1 ? 'pl-[calc(var(--title)*0.99)]' : ''}`
+              }>
+
                 <motion.span
                 aria-hidden="true"
                 className="block"
@@ -49,7 +61,9 @@ export function Hero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.45 }}
-            className="mt-5 max-w-md text-sm text-muted lg:ml-[6vw]">
+            // From large sizes up, the paragraph sits flush under VASSEUR and
+            // runs exactly its width. Below that it keeps a readable measure.
+            className="mt-5 max-w-md text-sm text-muted lg:ml-[calc(var(--title)*0.99)] lg:w-[calc(var(--title)*3.46)] lg:max-w-none">
 
             3D Artist — science-fiction environments, characters and the objects
             they leave behind.
