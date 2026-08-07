@@ -11,7 +11,7 @@ import { Magnetic } from '../components/motion/Magnetic';
 import { products } from '../data/products';
 import { asset } from '../lib/asset';
 
-const PORTRAIT = asset('/f7c3b8ed-4df2-40a4-be21-6170fb42fc44.jpg');
+const PORTRAIT = asset('/portrait.webp');
 
 const BAND = [
 'SCIENCE FICTION',
@@ -45,6 +45,8 @@ export function Home() {
         <div className="mx-auto grid max-w-[1400px] gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[minmax(240px,340px)_1fr] lg:py-24">
           <Reveal from="right" className="self-start">
             <BlueprintFrame label="July 2026 — Picture_of_me.png">
+              {/* The portrait is a cut-out, so the blueprint grid behind it
+                  shows through the corners instead of a photo background. */}
               <div className="overflow-hidden">
                 <motion.img
                   src={PORTRAIT}
