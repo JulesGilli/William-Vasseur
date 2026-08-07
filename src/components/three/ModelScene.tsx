@@ -158,7 +158,9 @@ export default function ModelScene({
       </Environment>
 
       <Suspense fallback={null}>
-        <Bounds fit clip observe margin={1.15}>
+        {/* Tight fit: the canvas overspills its frame, so filling the canvas is
+            what pushes the mesh past the border. */}
+        <Bounds fit clip observe margin={1}>
           <Center>
             <Float>
               <Model url={url} onReady={onReady} />

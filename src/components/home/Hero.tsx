@@ -1,9 +1,13 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDownIcon } from 'lucide-react';
 import { ModelViewer } from '../three/ModelViewer';
-import { projects } from '../../data/projects';
+import { projects, type Project } from '../../data/projects';
 
-const SIGNATURE = projects[0];
+// The hero leads on a live model, so pick the first piece that actually has
+// one — the catalogue also holds stills-only entries now.
+const SIGNATURE = projects.find(
+  (p): p is Project & {model: string;} => Boolean(p.model)
+);
 
 export function Hero() {
   const reduced = useReducedMotion();
@@ -118,13 +122,14 @@ export function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}>
 
+          {SIGNATURE ?
           <ModelViewer
             url={SIGNATURE.model}
             poster={SIGNATURE.image}
             label={`${SIGNATURE.ref} — ${SIGNATURE.title}`}
             spec={SIGNATURE.spec}
-            aspect="aspect-[4/3]" />
-
+            aspect="aspect-[4/3]" /> :
+          null}
 
           <div className="mt-3 flex items-center justify-between">
             <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">

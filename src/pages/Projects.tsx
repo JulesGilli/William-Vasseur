@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ModelViewer } from '../components/three/ModelViewer';
+import { ProcessScrubber } from '../components/ProcessScrubber';
 import { SplitText } from '../components/motion/SplitText';
 import { Reveal } from '../components/motion/Reveal';
 import { projects } from '../data/projects';
@@ -100,13 +101,34 @@ export function Projects() {
 
                 <article className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
                   <div className={flipped ? 'lg:order-2' : undefined}>
+                    {project.model ?
                     <ModelViewer
                       url={project.model}
                       poster={project.image}
                       label={project.ref}
                       spec={project.spec}
-                      aspect="aspect-[5/4]" />
+                      aspect="aspect-[5/4]" /> :
 
+                    // Stills-only pieces still get the frame, just no canvas.
+                    <figure className="relative aspect-[5/4] w-full border border-line bg-surface/30">
+                        <span
+                        aria-hidden="true"
+                        className="absolute -left-px -top-px z-20 h-6 w-6 border-b border-r border-line bg-bg" />
+
+                        <figcaption className="pointer-events-none absolute left-8 top-2 z-20 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+                          {project.ref}
+                        </figcaption>
+                        <img
+                        src={project.image}
+                        alt={project.title}
+                        loading="lazy"
+                        className="h-full w-full object-contain p-4" />
+
+                        <span className="pointer-events-none absolute bottom-2 right-3 z-20 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+                          {project.spec}
+                        </span>
+                      </figure>
+                    }
                   </div>
 
                   <div className={flipped ? 'lg:order-1 lg:pr-[8%]' : 'lg:pl-[8%]'}>
@@ -144,6 +166,10 @@ export function Projects() {
                         </div>
                       )}
                     </dl>
+
+                    {project.stages ?
+                    <ProcessScrubber stages={project.stages} title={project.title} /> :
+                    null}
                   </div>
                 </article>
               </motion.li>);
