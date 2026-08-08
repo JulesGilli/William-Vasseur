@@ -76,6 +76,10 @@ export const projects: Project[] = [
   'A canopy of fused mushroom crowns closing over a still pool. Built for the light: everything in the scene exists to catch the shafts coming through the gaps.',
   image: asset('/process/render.webp'),
   spec: 'Still · 1920 × 1080',
+  // Set in .env.local while we are testing with a scene we are not licensed to
+  // host. Undefined in a normal build, so the button stays hidden in production
+  // until this piece has a splat of its own.
+  world: import.meta.env.VITE_WORLD_NAVANA || undefined,
   gallery: [
   {
     src: asset('/gallery/navana-landscape.webp'),
