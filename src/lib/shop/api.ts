@@ -1,3 +1,4 @@
+import { asset } from '../asset';
 import { products } from '../../data/products';
 import type { CartLine, CheckoutResult, Product, ShopApi } from './types';
 
@@ -32,7 +33,14 @@ const remoteApi = (base: string): ShopApi => ({
   async listProducts() {
     const res = await fetch(`${base}/products`);
     if (!res.ok) throw new Error(`Catalogue unavailable (${res.status})`);
-    return (await res.json()) as Product[];
+    const items = (await res.json()) as Product[];
+    // The backend stores site-relative asset paths; the site's base prefix is
+    // deployment knowledge, so it is applied here rather than stored there.
+    return items.map((p) => ({
+      ...p,
+      image: asset(p.image),
+      model: p.model ? asset(p.model) : undefined,
+    }));
   },
 
   async createCheckout(lines: CartLine[]) {

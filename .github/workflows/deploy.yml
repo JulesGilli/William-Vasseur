@@ -32,6 +32,10 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # Repo variable; empty until the shop backend goes live, which
+          # leaves the site in its "storefront preview" mode.
+          VITE_SHOP_API: ${{ vars.VITE_SHOP_API }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { CheckIcon, Rotate3dIcon, ShoppingBagIcon, XIcon } from 'lucide-react';
 import { BlueprintFrame } from '../components/BlueprintFrame';
@@ -184,8 +184,33 @@ function ProductCard({ product, index }: {product: Product;index: number;}) {
 
 }
 
+/**
+ * Stripe sends the buyer back to /store?checkout=success|cancelled. Read it
+ * once, scrub the URL so refreshes stay clean, and clear the cart only on a
+ * success — a cancelled checkout keeps the basket for a second try.
+ */
+function useCheckoutReturn(clear: () => void): 'success' | 'cancelled' | null {
+  const [outcome] = useState<'success' | 'cancelled' | null>(() => {
+    const value = new URLSearchParams(window.location.search).get('checkout');
+    return value === 'success' || value === 'cancelled' ? value : null;
+  });
+
+  useEffect(() => {
+    if (!outcome) return;
+    if (outcome === 'success') clear();
+    const url = new URL(window.location.href);
+    url.searchParams.delete('checkout');
+    window.history.replaceState(null, '', url);
+    // Runs once for the value read at mount; `clear` is stable in context.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outcome]);
+
+  return outcome;
+}
+
 export function Store() {
-  const { products, loading, error } = useCart();
+  const { products, loading, error, clear } = useCart();
+  const checkoutOutcome = useCheckoutReturn(clear);
 
   return (
     <main className="mx-auto max-w-[1400px] px-4 py-14 sm:px-8">
@@ -207,6 +232,17 @@ export function Store() {
           </p>
         </Reveal>
       </header>
+
+      {checkoutOutcome ?
+      <p
+        role="status"
+        className="mt-6 border border-line px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+
+          {checkoutOutcome === 'success' ?
+        'Order received — a confirmation is on its way to your inbox. Thank you.' :
+        'Checkout cancelled — your cart is untouched.'}
+        </p> :
+      null}
 
       {!isBackendConnected ?
       <p
