@@ -11,6 +11,7 @@ import { Marquee } from '../components/motion/Marquee';
 import { Magnetic } from '../components/motion/Magnetic';
 import { TopographyBackdrop } from '../components/backgrounds/TopographyBackdrop';
 import { products } from '../data/products';
+import { cheapestVariant, formatPrice } from '../lib/shop/types';
 import { asset } from '../lib/asset';
 
 const PORTRAIT = asset('/portrait.webp');
@@ -168,8 +169,9 @@ export function Home() {
                     <span className="font-display text-sm tracking-tight transition-opacity group-hover:opacity-60">
                       {product.name.toUpperCase()}
                     </span>
+                    {/* Cheapest variant: the teaser quotes an entry price. */}
                     <span className="font-mono text-xs text-muted">
-                      {product.price}
+                      From {formatPrice(cheapestVariant(product).priceCents, product.currency)}
                     </span>
                   </span>
                 </Link>

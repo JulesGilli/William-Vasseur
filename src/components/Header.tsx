@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ThemeToggle } from './ThemeToggle';
 import { Logo } from './icons/Logo';
+import { CartButton } from './shop/CartButton';
 import { ScrollProgress } from './motion/ScrollProgress';
 
 const links = [
@@ -84,6 +85,7 @@ export function Header() {
             }
             </NavLink>
           )}
+          <CartButton />
           <span className="md:hidden">
             <ThemeToggle />
           </span>

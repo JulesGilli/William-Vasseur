@@ -1,19 +1,29 @@
 import { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Rotate3dIcon, ShoppingBagIcon, XIcon } from 'lucide-react';
-import { products, type Product } from '../data/products';
+import { CheckIcon, Rotate3dIcon, ShoppingBagIcon, XIcon } from 'lucide-react';
 import { BlueprintFrame } from '../components/BlueprintFrame';
 import { ModelViewer } from '../components/three/ModelViewer';
 import { SplitText } from '../components/motion/SplitText';
 import { Reveal } from '../components/motion/Reveal';
+import { useCart } from '../contexts/CartContext';
+import { isBackendConnected } from '../lib/shop/api';
+import { cheapestVariant, formatPrice, isInStock, type Product } from '../lib/shop/types';
 
-/**
- * Each card holds a still until asked. Mounting three WebGL contexts on a
- * shop grid is a lot to pay for something most visitors will scroll past.
- */
 function ProductCard({ product, index }: {product: Product;index: number;}) {
   const reduced = useReducedMotion();
+  const { add } = useCart();
+  const [variantId, setVariantId] = useState(() => cheapestVariant(product).id);
   const [inspecting, setInspecting] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
+
+  const variant = product.variants.find((v) => v.id === variantId) ?? product.variants[0];
+  const available = isInStock(variant);
+
+  const addToCart = () => {
+    add(product.id, variant.id);
+    setJustAdded(true);
+    window.setTimeout(() => setJustAdded(false), 1600);
+  };
 
   return (
     <Reveal as="li" delay={index * 0.08} className="flex flex-col">
@@ -32,7 +42,8 @@ function ProductCard({ product, index }: {product: Product;index: number;}) {
               poster={product.image}
               label={product.ref}
               spec="Live model"
-              aspect="aspect-square" />
+              aspect="aspect-square"
+              bleed="6%" />
 
             </motion.div> :
 
@@ -43,8 +54,6 @@ function ProductCard({ product, index }: {product: Product;index: number;}) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}>
 
-              {/* No caption here — the floating "Inspect in 3D" pill straddles
-                  the bottom border and would sit on top of it. */}
               <BlueprintFrame label={product.ref}>
                 <div className="overflow-hidden bg-surface/40">
                   <motion.img
@@ -90,26 +99,85 @@ function ProductCard({ product, index }: {product: Product;index: number;}) {
           <h2 className="font-display text-sm tracking-tight">
             {product.name.toUpperCase()}
           </h2>
-          <span className="font-mono text-sm">{product.price}</span>
+          <span className="font-mono text-sm">
+            {formatPrice(variant.priceCents, product.currency)}
+          </span>
         </div>
+
+        <p className="mt-2 text-xs leading-relaxed text-muted">{product.blurb}</p>
         <p className="mt-2 font-mono text-[11px] leading-relaxed text-muted">
           {product.spec}
         </p>
+
+        {/* Variants carry their own price and stock, so picking one changes
+            both the figure above and whether the button is live. */}
+        <fieldset className="mt-4">
+          <legend className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+            {product.variants.length > 1 ? 'Size' : 'Edition'}
+          </legend>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {product.variants.map((v) => {
+              const active = v.id === variant.id;
+              const sold = !isInStock(v);
+              return (
+                <button
+                  key={v.id}
+                  type="button"
+                  onClick={() => setVariantId(v.id)}
+                  aria-pressed={active}
+                  className={`border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] transition-colors ${
+                  active ?
+                  'border-ink text-ink' :
+                  'border-line text-muted hover:border-ink hover:text-ink'} ${
+
+                  sold ? 'line-through opacity-50' : ''}`}>
+
+                  {v.label}
+                </button>);
+
+            })}
+          </div>
+        </fieldset>
+
+        <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+          {available ?
+          variant.stock === null ?
+          product.leadTime :
+          `${variant.stock} left · ${product.leadTime}` :
+          'Sold out in this size'}
+        </p>
+
         <button
           type="button"
-          className="group relative mt-5 flex items-center justify-center gap-2 overflow-hidden rounded-full border border-ink px-5 py-2.5 text-sm">
+          onClick={addToCart}
+          disabled={!available}
+          className="group relative mt-4 flex items-center justify-center gap-2 overflow-hidden rounded-full border border-ink px-5 py-2.5 text-sm transition-opacity disabled:cursor-not-allowed disabled:opacity-40">
 
           <span
             aria-hidden="true"
-            className="absolute inset-0 origin-bottom scale-y-0 bg-ink transition-transform duration-400 ease-out group-hover:scale-y-100" />
+            className="absolute inset-0 origin-bottom scale-y-0 bg-ink transition-transform duration-300 ease-out group-hover:scale-y-100 group-disabled:scale-y-0" />
 
-          <ShoppingBagIcon
-            className="relative h-4 w-4 transition-colors group-hover:text-bg"
-            aria-hidden="true" />
+          {justAdded ?
+          <>
+              <CheckIcon
+              className="relative h-4 w-4 transition-colors group-hover:text-bg"
+              aria-hidden="true" />
 
-          <span className="relative transition-colors group-hover:text-bg">
-            Add to cart
-          </span>
+              <span className="relative transition-colors group-hover:text-bg">
+                Added
+              </span>
+            </> :
+
+          <>
+              <ShoppingBagIcon
+              className="relative h-4 w-4 transition-colors group-hover:text-bg"
+              aria-hidden="true" />
+
+              <span className="relative transition-colors group-hover:text-bg">
+                {available ? 'Add to cart' : 'Sold out'}
+              </span>
+            </>
+          }
         </button>
       </div>
     </Reveal>);
@@ -117,6 +185,8 @@ function ProductCard({ product, index }: {product: Product;index: number;}) {
 }
 
 export function Store() {
+  const { products, loading, error } = useCart();
+
   return (
     <main className="mx-auto max-w-[1400px] px-4 py-14 sm:px-8">
       <header className="border-b border-line pb-8">
@@ -138,11 +208,40 @@ export function Store() {
         </Reveal>
       </header>
 
+      {!isBackendConnected ?
+      <p
+        role="status"
+        className="mt-6 border border-line px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+
+          Storefront preview — the cart works, but no payment backend is
+          connected yet, so orders cannot be placed.
+        </p> :
+      null}
+
+      {error ?
+      <p
+        role="alert"
+        className="py-24 text-center font-mono text-xs uppercase tracking-[0.2em] text-muted">
+
+          {error}
+        </p> :
+      loading ?
       <ul className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-3">
-        {products.map((product, i) =>
+          {[0, 1, 2].map((i) =>
+        <li key={i} className="animate-pulse">
+              <div className="aspect-square w-full border border-line bg-surface/40" />
+              <div className="mt-8 h-3 w-1/3 bg-line" />
+              <div className="mt-3 h-3 w-2/3 bg-line" />
+            </li>
+        )}
+        </ul> :
+
+      <ul className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-3">
+          {products.map((product, i) =>
         <ProductCard key={product.id} product={product} index={i} />
         )}
-      </ul>
+        </ul>
+      }
 
       <p className="border-t border-line py-8 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
         More pieces in production — check back soon.
