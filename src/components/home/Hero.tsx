@@ -134,7 +134,7 @@ export function Hero() {
             // gives the canvas room; fit below 1 is what pushes the mesh into
             // it, and it stays inside the canvas so nothing is cut.
             bleed="22%"
-            fit={0.8} /> :
+            fit={1} /> :
           null}
 
           <div className="mt-3 flex items-center justify-between">
