@@ -53,6 +53,11 @@ export interface SplatWorld {
    * be turned over. One derived from a mesh is already the right way up.
    */
   upright?: boolean;
+  /**
+   * Idle camera path until the visitor takes over: 'orbit' circles an object,
+   * 'walk' wanders into an environment. Defaults to 'orbit'.
+   */
+  travel?: 'orbit' | 'walk';
 }
 
 /**
@@ -93,7 +98,7 @@ export const projects: Project[] = [
   // so the button stays hidden in production until this piece has its own splat.
   // Upright: SuperSplat bakes the author's orientation into what it publishes.
   world: import.meta.env.VITE_WORLD_NAVANA ?
-  { src: import.meta.env.VITE_WORLD_NAVANA, upright: true } :
+  { src: import.meta.env.VITE_WORLD_NAVANA, upright: true, travel: 'walk' as const } :
   undefined,
   gallery: [
   {

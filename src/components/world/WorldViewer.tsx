@@ -65,6 +65,7 @@ export function WorldViewer({ world, title, onClose }: WorldViewerProps) {
             <WorldScene
               src={world.src}
               upright={world.upright}
+              travel={world.travel}
               onReady={onReady}
               onError={onError} />
           </Suspense>
@@ -86,7 +87,7 @@ export function WorldViewer({ world, title, onClose }: WorldViewerProps) {
             </div>
 
             <span className="mx-auto border border-line bg-bg/70 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-muted backdrop-blur-sm">
-              Drag to look · scroll to move · Esc to leave
+              Drag to look · ZQSD / WASD to walk · Esc to leave
             </span>
           </div>
 
