@@ -110,8 +110,9 @@ export const projects: Project[] = [
   {
     src: import.meta.env.VITE_WORLD_NAVANA,
     travel: 'walk' as const,
-    eye: [0.105, 0.2, -3.116] as [number, number, number],
-    look: [0.037, 0.322, -0.958] as [number, number, number],
+    // Published pose raised a touch: the capture's own camera hugs the ground.
+    eye: [0.105, 0.6, -3.116] as [number, number, number],
+    look: [0.037, 0.72, -0.958] as [number, number, number],
     fov: 60
   } :
   undefined,
