@@ -22,6 +22,11 @@ export interface Project {
   model?: string;
   /** Technical caption shown in the viewer chrome. */
   spec: string;
+  /**
+   * Tailwind aspect utility for this piece's frames. Set it when the artwork
+   * is not landscape, or a portrait still ends up boxed inside a wide frame.
+   */
+  frameAspect?: string;
   /** Production stages, scrubbed through under the piece. */
   stages?: ProcessStage[];
 }
@@ -80,6 +85,37 @@ export const projects: Project[] = [
     caption:
     'Materials, volumetric light through the canopy, then a grade. Same camera as the blockout, so the two can be read against each other.',
     image: asset('/process/render.webp')
+  }]
+
+},
+{
+  id: 'navana-desert',
+  ref: 'PRJ—003',
+  title: 'Navana / Desert',
+  category: 'Environment',
+  year: '2026',
+  software: 'Blender · Cycles',
+  description:
+  'The dry side of the same world. Ribbon trunks arc over red rock and shallow pools, with a second planet sitting low behind the ridge.',
+  image: asset('/process/desert-render.webp'),
+  spec: 'Still · 1080 × 1920',
+  frameAspect: 'aspect-[3/4]',
+  stages: [
+  {
+    index: '01',
+    label: 'Clown pass',
+    tool: 'Blender · random colour',
+    caption:
+    'Every asset gets its own flat colour. Nothing to do with the final look — it is there to check that each element still reads as separate once they overlap.',
+    image: asset('/process/desert-clown.webp')
+  },
+  {
+    index: '02',
+    label: 'Render',
+    tool: 'Blender · Cycles',
+    caption:
+    'Shaded, lit and graded from the same camera, so the two passes can be read against each other.',
+    image: asset('/process/desert-render.webp')
   }]
 
 }];

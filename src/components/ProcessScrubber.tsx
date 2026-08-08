@@ -6,6 +6,8 @@ interface ProcessScrubberProps {
   stages: ProcessStage[];
   /** Used to keep the range input's label unique per instance. */
   title: string;
+  /** Match the artwork, or portrait stills get boxed inside a wide frame. */
+  aspect?: string;
 }
 
 /** Slider units per stage — fine enough that dragging crossfades smoothly. */
@@ -16,7 +18,11 @@ const PER_STAGE = 100;
  * one frame and is driven by a slider rather than by the page scroll, so it can
  * repeat under every project without each one eating a screen of runway.
  */
-export function ProcessScrubber({ stages, title }: ProcessScrubberProps) {
+export function ProcessScrubber({
+  stages,
+  title,
+  aspect = 'aspect-[16/10]'
+}: ProcessScrubberProps) {
   const reduced = useReducedMotion();
   const id = useId();
   const max = (stages.length - 1) * PER_STAGE;
@@ -37,7 +43,7 @@ export function ProcessScrubber({ stages, title }: ProcessScrubberProps) {
         </span>
       </div>
 
-      <div className="relative mt-3 aspect-[16/10] w-full border border-line bg-surface/30">
+      <div className={`relative mt-3 ${aspect} w-full border border-line bg-surface/30`}>
         <span
           aria-hidden="true"
           className="absolute -left-px -top-px z-20 h-5 w-5 border-b border-r border-line bg-bg" />

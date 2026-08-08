@@ -110,7 +110,10 @@ export function Projects() {
                       aspect="aspect-[5/4]" /> :
 
                     // Stills-only pieces still get the frame, just no canvas.
-                    <figure className="relative aspect-[5/4] w-full border border-line bg-surface/30">
+                    <figure
+                      className={`relative w-full border border-line bg-surface/30 ${
+                      project.frameAspect ?? 'aspect-[5/4]'}`
+                      }>
                         <span
                         aria-hidden="true"
                         className="absolute -left-px -top-px z-20 h-6 w-6 border-b border-r border-line bg-bg" />
@@ -168,7 +171,11 @@ export function Projects() {
                     </dl>
 
                     {project.stages ?
-                    <ProcessScrubber stages={project.stages} title={project.title} /> :
+                    <ProcessScrubber
+                      stages={project.stages}
+                      title={project.title}
+                      aspect={project.frameAspect} /> :
+
                     null}
                   </div>
                 </article>
