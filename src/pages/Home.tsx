@@ -120,9 +120,8 @@ export function Home() {
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-sm leading-relaxed text-muted lg:ml-[14%]">
               I learned 3D in Blender and still open it every day. Around it sit
-              Meshy AI for turning references into meshes, Unreal Engine for
-              real-time lighting, DaVinci Resolve for grading, and Nomad Sculpt
-              on the tablet when a shape needs hands.
+              Unreal Engine for real-time lighting, DaVinci Resolve for grading,
+              and Nomad Sculpt on the tablet when a shape needs hands.
             </p>
           </Reveal>
           <ToolsRail />

@@ -65,17 +65,6 @@ export function UnrealMark(props: IconProps) {
 
 }
 
-/** Meshy: the peak and the dune that sweeps out from behind it. */
-export function MeshyMark(props: IconProps) {
-  return (
-    <Glyph {...props}>
-      <path d="M3.4 18.2 9.5 7.4l4.1 7.2" />
-      <path d="M20.6 18.2c-.7-4.1-3.3-6.2-6.7-6.2-2.3 0-4.3.9-5.9 2.7" />
-      <path d="M3.4 18.2h17.2" />
-    </Glyph>);
-
-}
-
 /** Nomad Sculpt: a stylus shaping a mass of clay. */
 export function NomadMark(props: IconProps) {
   return (

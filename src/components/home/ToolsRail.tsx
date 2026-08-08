@@ -1,7 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   BlenderMark,
-  MeshyMark,
   NomadMark,
   ResolveMark,
   UnrealMark } from
@@ -9,7 +8,6 @@ import {
 
 const tools = [
 { name: 'Blender', role: 'Modeling · Shading · Render', Icon: BlenderMark },
-{ name: 'Meshy AI', role: 'Image to mesh', Icon: MeshyMark },
 { name: 'Unreal Engine', role: 'Real-time · Lighting', Icon: UnrealMark },
 { name: 'DaVinci Resolve', role: 'Grading · Edit', Icon: ResolveMark },
 { name: 'Nomad Sculpt', role: 'Sculpting · Tablet', Icon: NomadMark }];

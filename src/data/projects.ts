@@ -67,7 +67,7 @@ export const projects: Project[] = [
   title: 'Bloom Fragment',
   category: 'Environment',
   year: '2026',
-  software: 'Blender · Meshy AI',
+  software: 'Blender',
   description:
   'A drifting shard of bark, moss and quartz in bloom. The study that set the direction for everything since — technology used to look at nature closely.',
   image: asset('/models/posters/mossy-log.webp'),
