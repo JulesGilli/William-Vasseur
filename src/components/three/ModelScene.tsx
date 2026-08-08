@@ -26,6 +26,12 @@ export interface ModelSceneProps {
   resetKey: number;
   /** Fires once the glTF has finished streaming and is on screen. */
   onReady?: () => void;
+  /**
+   * Bounds margin. Above 1 pulls the camera back; below 1 pushes in so the
+   * mesh over-fills the canvas. Only go below 1 where the canvas has bleed to
+   * spare, otherwise the silhouette gets cut at the canvas edge.
+   */
+  fit?: number;
 }
 
 /** Every model ends up with its longest side spanning this many units. */
@@ -132,6 +138,7 @@ export default function ModelScene({
   autoRotate,
   resetKey,
   onReady,
+  fit = 1.18,
 }: ModelSceneProps) {
   const dark = theme === 'dark';
 
@@ -179,10 +186,10 @@ export default function ModelScene({
       </Environment>
 
       <Suspense fallback={null}>
-        {/* Bounds fits a cube of the model's longest side, so a margin of 1 sits
-            exactly on the frustum edge and the drift below is enough to clip
-            it. The headroom here is what keeps the silhouette whole. */}
-        <Bounds fit clip observe margin={1.18}>
+        {/* Bounds fits a cube of the model's longest side against the canvas's
+            shorter axis, so on a wide frame it under-fills horizontally. `fit`
+            is what compensates. */}
+        <Bounds fit clip observe margin={fit}>
           <Float>
             <Model url={url} onReady={onReady} />
           </Float>

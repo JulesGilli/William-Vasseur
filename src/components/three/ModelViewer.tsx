@@ -7,13 +7,6 @@ import { useInView } from '../../hooks/useInView';
 // three.js, fiber and drei all land in this chunk and nowhere else.
 const ModelScene = lazy(() => import('./ModelScene'));
 
-/**
- * How far the drawn border sits inside the viewer's box. Kept shallow: the
- * canvas needs headroom so the mesh is never clipped, and the overhang should
- * come from the parts of the silhouette that genuinely stick out.
- */
-const FRAME = { top: '5%', bottom: '5%', left: '4%', right: '4%' } as const;
-
 interface ModelViewerProps {
   url: string;
   /** Still frame shown until the canvas takes over. */
@@ -22,8 +15,16 @@ interface ModelViewerProps {
   /** Small technical caption, e.g. "GLB · 26K TRIS". */
   spec?: string;
   className?: string;
-  /** Tailwind aspect utility for the canvas box. */
+  /** Tailwind aspect utility for the frame. */
   aspect?: string;
+  /**
+   * How far the canvas spills past the frame, as a CSS length. The mesh is
+   * fitted to the canvas, so this is what makes it break the border — and it
+   * is the overhang that overlaps whatever sits alongside, which is the point.
+   */
+  bleed?: string;
+  /** How much of the canvas the mesh fills. Below 1 over-fills; needs bleed. */
+  fit?: number;
 }
 
 export function ModelViewer({
@@ -33,6 +34,8 @@ export function ModelViewer({
   spec,
   className = '',
   aspect = 'aspect-[4/3]',
+  bleed = '8%',
+  fit = 1.18,
 }: ModelViewerProps) {
   const { theme } = useTheme();
   // Start work a screen early so the model is usually ready on arrival.
@@ -47,33 +50,28 @@ export function ModelViewer({
   return (
     <figure ref={ref} className={`group relative ${className}`}>
       <div className={`relative ${aspect} w-full`}>
-        {/* The frame is inset rather than the canvas being blown up: the mesh
-            reads as breaking past the border either way, but this costs no
-            extra hit area from whatever sits alongside the viewer. */}
+        {/* Border sits on the box; the canvas is what grows past it. */}
         <span
           aria-hidden="true"
-          className="absolute z-0 border border-line bg-surface/40"
-          style={FRAME} />
+          className="absolute inset-0 z-0 border border-line bg-surface/40" />
 
 
-        {/* Frame furniture, repeated at the same inset so it tracks the border,
-            and lifted above the model. */}
-        <div className="pointer-events-none absolute z-30" style={FRAME}>
-          {/* Notched corner — the same tell as BlueprintFrame. */}
-          <span
-            aria-hidden="true"
-            className="absolute -left-px -top-px h-6 w-6 border-b border-r border-line bg-bg" />
+        {/* Notched corner — the same tell as BlueprintFrame. */}
+        <span
+          aria-hidden="true"
+          className="absolute -left-px -top-px z-30 h-6 w-6 border-b border-r border-line bg-bg" />
 
 
-          <figcaption className="absolute left-8 top-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-            {label}
-          </figcaption>
-        </div>
+        <figcaption className="pointer-events-none absolute left-8 top-2 z-30 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+          {label}
+        </figcaption>
 
-        {/* Canvas fills the cell and is never clipped, so the mesh spills over
-            the inset border. */}
+        {/* Overspills the frame on every side and is never clipped, so the mesh
+            — fitted to the canvas, not the frame — breaks the border and lands
+            over whatever sits alongside. */}
         <div
-          className="absolute inset-0 z-10"
+          className="absolute z-10"
+          style={{ top: `-${bleed}`, right: `-${bleed}`, bottom: `-${bleed}`, left: `-${bleed}` }}
           // Taking hold of the model hands control over: stop spinning it.
           onPointerDown={() => {
             setTouched(true);
@@ -88,7 +86,8 @@ export function ModelViewer({
               active={inView}
               autoRotate={spinning}
               resetKey={resetKey}
-              onReady={onReady} />
+              onReady={onReady}
+              fit={fit} />
 
             </Suspense> :
           null}
@@ -105,10 +104,8 @@ export function ModelViewer({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            // Matches the border, so the loading state fills the frame the
-            // model is about to break out of rather than the whole cell.
-            style={FRAME}
-            className="absolute z-20 flex items-center justify-center bg-bg">
+            // Fills the frame the model is about to break out of.
+            className="absolute inset-0 z-20 flex items-center justify-center bg-bg">
 
               {poster ?
             <img
@@ -149,7 +146,8 @@ export function ModelViewer({
           initial={false}
           animate={{ opacity: ready ? 1 : 0 }}
           transition={{ duration: 0.4 }}
-          className="absolute right-2 top-2 z-30 flex gap-1">
+          // Above the frame's top-right corner, clear of the mesh.
+          className="absolute -top-9 right-0 z-30 flex gap-1">
 
           <button
             type="button"
@@ -184,8 +182,7 @@ export function ModelViewer({
             exit={{ opacity: 0, y: 6, x: '-50%' }}
             transition={{ duration: 0.5, delay: 0.4 }}
             // Inside the border, and clear of the spec caption below it.
-            style={{ bottom: `calc(${FRAME.bottom} + 30px)` }}
-            className="pointer-events-none absolute left-1/2 z-30 whitespace-nowrap border border-line bg-bg/80 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.22em] text-muted backdrop-blur-sm">
+            className="pointer-events-none absolute bottom-8 left-1/2 z-30 whitespace-nowrap border border-line bg-bg/80 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.22em] text-muted backdrop-blur-sm">
 
               Drag to orbit · scroll to zoom
             </motion.span> :
@@ -193,10 +190,7 @@ export function ModelViewer({
         </AnimatePresence>
 
         {spec ?
-        <span
-          className="pointer-events-none absolute z-30 font-mono text-[10px] uppercase tracking-[0.18em] text-muted"
-          style={{ bottom: `calc(${FRAME.bottom} + 8px)`, right: `calc(${FRAME.right} + 12px)` }}>
-
+        <span className="pointer-events-none absolute bottom-2 right-3 z-30 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
             {spec}
           </span> :
         null}

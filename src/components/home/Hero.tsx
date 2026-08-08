@@ -128,7 +128,13 @@ export function Hero() {
             poster={SIGNATURE.image}
             label={`${SIGNATURE.ref} — ${SIGNATURE.title}`}
             spec={SIGNATURE.spec}
-            aspect="aspect-[4/3]" /> :
+            aspect="aspect-[4/3]"
+            // Generous here on purpose: the piece is meant to lift clean out of
+            // its frame and across the strapline, as in the design. The bleed
+            // gives the canvas room; fit below 1 is what pushes the mesh into
+            // it, and it stays inside the canvas so nothing is cut.
+            bleed="22%"
+            fit={0.8} /> :
           null}
 
           <div className="mt-3 flex items-center justify-between">
