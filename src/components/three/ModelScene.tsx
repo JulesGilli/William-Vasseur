@@ -1,8 +1,7 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import {
   Bounds,
-  ContactShadows,
   Environment,
   Lightformer,
   OrbitControls,
@@ -32,51 +31,29 @@ export interface ModelSceneProps {
 /** Every model ends up with its longest side spanning this many units. */
 const NORMALISED_SIZE = 2;
 
-export interface Footing {
-  /** World Y of the model's underside, once normalised. */
-  baseY: number;
-  /** Widest horizontal extent, for sizing the shadow. */
-  spread: number;
-}
-
-function Model({
-  url,
-  onReady,
-  onMeasure
-}: {
-  url: string;
-  onReady?: () => void;
-  onMeasure: (f: Footing) => void;
-}) {
+function Model({ url, onReady }: {url: string;onReady?: () => void;}) {
   const { scene } = useGLTF(url);
 
-  // These arrive from the generator at wildly different scales, so normalise
-  // to a common box. Without it nothing downstream can be positioned reliably
-  // — a fixed shadow plane ends up buried inside one model and off-screen
-  // under the next.
-  const { model, scale, offset, footing } = useMemo(() => {
+  // These arrive from the generator at wildly different scales. Normalising to
+  // a common box is what makes one camera fit margin safe for every piece —
+  // otherwise the framing is a guess per model and the silhouette gets clipped.
+  const { model, scale, offset } = useMemo(() => {
     // useGLTF caches per URL, so each mount needs its own copy of the graph.
     const clone = scene.clone(true);
     const box = new Box3().setFromObject(clone);
     const size = box.getSize(new Vector3());
     const centre = box.getCenter(new Vector3());
-    const s = NORMALISED_SIZE / Math.max(size.x, size.y, size.z, 1e-6);
     return {
       model: clone,
-      scale: s,
-      offset: centre.clone().multiplyScalar(-1),
-      footing: {
-        baseY: -(size.y * s) / 2,
-        spread: Math.max(size.x, size.z) * s
-      }
+      scale: NORMALISED_SIZE / Math.max(size.x, size.y, size.z, 1e-6),
+      offset: centre.clone().multiplyScalar(-1)
     };
   }, [scene]);
 
   // Runs only after Suspense resolves, which is exactly "the model is here".
   useEffect(() => {
-    onMeasure(footing);
     onReady?.();
-  }, [footing, onMeasure, onReady]);
+  }, [onReady]);
 
   return (
     <group scale={scale}>
@@ -157,10 +134,6 @@ export default function ModelScene({
   onReady,
 }: ModelSceneProps) {
   const dark = theme === 'dark';
-  // Filled in once the mesh is measured; the default keeps the shadow sane
-  // during the frame or two before that happens.
-  const [footing, setFooting] = useState<Footing>({ baseY: -1, spread: 2 });
-  const onMeasure = useCallback((f: Footing) => setFooting(f), []);
 
   return (
     <Canvas
@@ -211,25 +184,13 @@ export default function ModelScene({
             it. The headroom here is what keeps the silhouette whole. */}
         <Bounds fit clip observe margin={1.18}>
           <Float>
-            <Model url={url} onReady={onReady} onMeasure={onMeasure} />
+            <Model url={url} onReady={onReady} />
           </Float>
         </Bounds>
       </Suspense>
 
-      {/* Sits on the model's measured underside rather than a fixed plane,
-          which is the only way one setting works across every piece. Kept
-          close to the footprint: spread over a larger plane the same shadow
-          budget just washes out. Pure black in dark mode, which is genuinely
-          darker than the sheet and so still reads against it. */}
-      <ContactShadows
-        position={[0, footing.baseY - 0.02, 0]}
-        opacity={dark ? 0.85 : 0.55}
-        scale={Math.max(footing.spread * 1.5, 2.5)}
-        blur={1.9}
-        far={Math.max(footing.spread, 1.5)}
-        resolution={512}
-        color="#000000" />
-
+      {/* No contact shadow on purpose: grounding the mesh to a floor plane
+          fights the effect of it lifting out of its frame. */}
 
       <Rig resetKey={resetKey} />
       <AutoOrbit enabled={autoRotate && active} />
