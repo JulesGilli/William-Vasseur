@@ -1,5 +1,13 @@
 import { asset } from '../lib/asset';
 
+export interface GalleryImage {
+  src: string;
+  /** Shown in the carousel chrome and used to name the downloaded file. */
+  label: string;
+  /** Native pixel size, so the viewer can state what is being taken away. */
+  size: string;
+}
+
 export interface ProcessStage {
   index: string;
   label: string;
@@ -29,6 +37,8 @@ export interface Project {
   frameAspect?: string;
   /** Production stages, scrubbed through under the piece. */
   stages?: ProcessStage[];
+  /** Finished artwork, browsable and downloadable in place of a 3D viewer. */
+  gallery?: GalleryImage[];
 }
 
 /**
@@ -61,6 +71,18 @@ export const projects: Project[] = [
   'A canopy of fused mushroom crowns closing over a still pool. Built for the light: everything in the scene exists to catch the shafts coming through the gaps.',
   image: asset('/process/render.webp'),
   spec: 'Still · 1920 × 1080',
+  gallery: [
+  {
+    src: asset('/gallery/navana-landscape.webp'),
+    label: 'Landscape',
+    size: '1920 × 1080'
+  },
+  {
+    src: asset('/gallery/navana-concept.webp'),
+    label: 'Concept',
+    size: '862 × 1480'
+  }],
+
   stages: [
   {
     index: '01',
@@ -100,6 +122,13 @@ export const projects: Project[] = [
   image: asset('/process/desert-render.webp'),
   spec: 'Still · 1080 × 1920',
   frameAspect: 'aspect-[3/4]',
+  gallery: [
+  {
+    src: asset('/gallery/desert-portrait.webp'),
+    label: 'Portrait',
+    size: '1080 × 1920'
+  }],
+
   stages: [
   {
     index: '01',

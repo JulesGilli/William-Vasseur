@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ModelViewer } from '../components/three/ModelViewer';
 import { ProcessScrubber } from '../components/ProcessScrubber';
+import { ProjectGallery } from '../components/ProjectGallery';
 import { SplitText } from '../components/motion/SplitText';
 import { Reveal } from '../components/motion/Reveal';
 import { projects } from '../data/projects';
@@ -109,28 +110,17 @@ export function Projects() {
                       spec={project.spec}
                       aspect="aspect-[5/4]" /> :
 
-                    // Stills-only pieces still get the frame, just no canvas.
-                    <figure
-                      className={`relative w-full border border-line bg-surface/30 ${
-                      project.frameAspect ?? 'aspect-[5/4]'}`
-                      }>
-                        <span
-                        aria-hidden="true"
-                        className="absolute -left-px -top-px z-20 h-6 w-6 border-b border-r border-line bg-bg" />
+                    // Stills-only pieces get the same frame, browsable instead.
+                    <ProjectGallery
+                      images={
+                      project.gallery ?? [
+                      { src: project.image, label: 'Still', size: project.spec }]
+                      }
+                      title={project.title}
+                      label={project.ref}
+                      spec={project.spec}
+                      aspect={project.frameAspect} />
 
-                        <figcaption className="pointer-events-none absolute left-8 top-2 z-20 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-                          {project.ref}
-                        </figcaption>
-                        <img
-                        src={project.image}
-                        alt={project.title}
-                        loading="lazy"
-                        className="h-full w-full object-contain p-4" />
-
-                        <span className="pointer-events-none absolute bottom-2 right-3 z-20 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-                          {project.spec}
-                        </span>
-                      </figure>
                     }
                   </div>
 
