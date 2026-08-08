@@ -58,6 +58,12 @@ export interface SplatWorld {
    * 'walk' wanders into an environment. Defaults to 'orbit'.
    */
   travel?: 'orbit' | 'walk';
+  /** Where the camera starts, for scenes whose interest is not at the origin. */
+  eye?: [number, number, number];
+  /** What the starting camera looks at. */
+  look?: [number, number, number];
+  /** Vertical field of view; environments want a wider one than objects. */
+  fov?: number;
 }
 
 /**
@@ -96,9 +102,18 @@ export const projects: Project[] = [
   // "Forest path" by tanha (superspl.at/scene/2be1a75a, CC BY 4.0) while we
   // test navigation. Set in .env.development.local and undefined in any build,
   // so the button stays hidden in production until this piece has its own splat.
-  // Upright: SuperSplat bakes the author's orientation into what it publishes.
+  // No `upright`: SuperSplat publishes in the trainer's Y-down convention
+  // (checked against their own viewer), so the default flip applies.
+  // Start pose lifted from the scene's published settings.json, so the walk
+  // opens on the path exactly like the SuperSplat viewer does.
   world: import.meta.env.VITE_WORLD_NAVANA ?
-  { src: import.meta.env.VITE_WORLD_NAVANA, upright: true, travel: 'walk' as const } :
+  {
+    src: import.meta.env.VITE_WORLD_NAVANA,
+    travel: 'walk' as const,
+    eye: [0.105, 0.2, -3.116] as [number, number, number],
+    look: [0.037, 0.322, -0.958] as [number, number, number],
+    fov: 60
+  } :
   undefined,
   gallery: [
   {

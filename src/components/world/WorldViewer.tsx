@@ -66,6 +66,9 @@ export function WorldViewer({ world, title, onClose }: WorldViewerProps) {
               src={world.src}
               upright={world.upright}
               travel={world.travel}
+              eye={world.eye}
+              look={world.look}
+              fov={world.fov}
               onReady={onReady}
               onError={onError} />
           </Suspense>

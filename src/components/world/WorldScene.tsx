@@ -23,6 +23,10 @@ export interface WorldSceneProps {
   upright?: boolean;
   /** Idle camera path: circle an object, or wander into an environment. */
   travel?: 'orbit' | 'walk';
+  /** Start pose and lens, for scenes whose interest is not at the origin. */
+  eye?: [number, number, number];
+  look?: [number, number, number];
+  fov?: number;
   onReady?: () => void;
   onError?: (message: string) => void;
 }
@@ -33,7 +37,16 @@ const MOVE_CODES = new Set([
 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']
 );
 
-export default function WorldScene({ src, upright, travel = 'orbit', onReady, onError }: WorldSceneProps) {
+export default function WorldScene({
+  src,
+  upright,
+  travel = 'orbit',
+  eye,
+  look,
+  fov,
+  onReady,
+  onError,
+}: WorldSceneProps) {
   const host = useRef<HTMLDivElement>(null);
   // Callbacks are read through refs so re-renders never restart the engine.
   const ready = useRef(onReady);
@@ -86,7 +99,9 @@ export default function WorldScene({ src, upright, travel = 'orbit', onReady, on
 
       const camera = new Entity('Camera');
       camera.addComponent('camera', { clearColor: new Float32Array([0, 0, 0, 0]) } as never);
-      camera.setPosition(0, 0, 3);
+      if (fov && camera.camera) camera.camera.fov = fov;
+      camera.setPosition(...(eye ?? [0, 0, 3]));
+      if (look) camera.lookAt(...look);
       camera.addComponent('script');
       app.root.addChild(camera);
 
@@ -182,7 +197,7 @@ export default function WorldScene({ src, upright, travel = 'orbit', onReady, on
       app?.destroy();
       canvas.remove();
     };
-  }, [src, upright, travel]);
+  }, [src, upright, travel, eye, look, fov]);
 
   return <div ref={host} className="h-full w-full" />;
 }
