@@ -73,8 +73,8 @@ export const projects: Project[] = [
   image: asset('/models/posters/mossy-log.webp'),
   model: asset('/models/mossy-log.glb'),
   spec: 'GLB · 25K TRIS',
-  // Derived from the mesh above rather than trained from photographs, so it
-  // needs no flip. A stand-in until the real captures exist.
+  // Sampled from the Blooming Crystals mesh (tools/mesh-to-splat.mjs) rather
+  // than trained from photographs, so it needs no flip.
   world: { src: asset('/models/bloom-fragment.sog'), upright: true }
 },
 {
@@ -88,6 +88,13 @@ export const projects: Project[] = [
   'A canopy of fused mushroom crowns closing over a still pool. Built for the light: everything in the scene exists to catch the shafts coming through the gaps.',
   image: asset('/process/render.webp'),
   spec: 'Still · 1920 × 1080',
+  // "Forest path" by tanha (superspl.at/scene/2be1a75a, CC BY 4.0) while we
+  // test navigation. Set in .env.development.local and undefined in any build,
+  // so the button stays hidden in production until this piece has its own splat.
+  // Upright: SuperSplat bakes the author's orientation into what it publishes.
+  world: import.meta.env.VITE_WORLD_NAVANA ?
+  { src: import.meta.env.VITE_WORLD_NAVANA, upright: true } :
+  undefined,
   gallery: [
   {
     src: asset('/gallery/navana-landscape.webp'),
