@@ -10,7 +10,18 @@ interface ProjectGalleryProps {
   /** Frame reference, e.g. "PRJ—002". */
   label: string;
   spec?: string;
+  /** Fallback only, for images whose size cannot be read. */
   aspect?: string;
+}
+
+/**
+ * Read "1920 × 1080" as a ratio, clamped so a 9:16 still cannot stretch the
+ * frame into a column the length of the page.
+ */
+function ratioOf(size: string): number | null {
+  const [w, h] = size.split(/[^\d]+/).filter(Boolean).map(Number);
+  if (!w || !h) return null;
+  return Math.min(1.9, Math.max(0.62, w / h));
 }
 
 /**
@@ -42,11 +53,20 @@ export function ProjectGallery({
   );
 
   const offset = reduced ? 0 : 40;
+  // The frame takes the shape of whatever is in it, so a portrait still is not
+  // stranded in a landscape box, and eases between the two as you page.
+  const ratio = ratioOf(current.size);
 
   return (
     <>
       <figure className="group relative">
-        <div className={`relative ${aspect} w-full`}>
+        <div
+          className={`relative w-full ${ratio ? '' : aspect}`}
+          style={
+          ratio ?
+          { aspectRatio: String(ratio), transition: 'aspect-ratio .45s cubic-bezier(.16,1,.3,1)' } :
+          undefined
+          }>
           <span
             aria-hidden="true"
             className="absolute inset-0 z-0 border border-line bg-surface/40" />
@@ -96,11 +116,11 @@ export function ProjectGallery({
             <ExpandIcon className="h-3 w-3" aria-hidden="true" />
           </button>
 
-          {spec ?
+          {/* Reports the image on screen, not the project — they differ once a
+              gallery mixes formats. */}
           <span className="pointer-events-none absolute bottom-2 right-3 z-30 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-              {spec}
-            </span> :
-          null}
+            {current.size || spec}
+          </span>
         </div>
 
         {many ?
