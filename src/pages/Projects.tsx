@@ -1,5 +1,9 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { Rotate3dIcon } from 'lucide-react';
+import { Magnetic } from '../components/motion/Magnetic';
+import { WorldViewer } from '../components/world/WorldViewer';
+import type { Project } from '../data/projects';
 import { ModelViewer } from '../components/three/ModelViewer';
 import { ProcessScrubber } from '../components/ProcessScrubber';
 import { ProjectGallery } from '../components/ProjectGallery';
@@ -10,6 +14,7 @@ import { projects } from '../data/projects';
 export function Projects() {
   const reduced = useReducedMotion();
   const [filter, setFilter] = useState('All');
+  const [world, setWorld] = useState<Project | null>(null);
 
   const categories = useMemo(
     () => ['All', ...Array.from(new Set(projects.map((p) => p.category)))],
@@ -160,6 +165,24 @@ export function Projects() {
                       )}
                     </dl>
 
+                    {project.world ?
+                    <Magnetic className="mt-7 inline-block" strength={8}>
+                        <button
+                        type="button"
+                        onClick={() => setWorld(project)}
+                        className="group relative flex items-center gap-3 overflow-hidden rounded-full bg-ink px-6 py-3 font-display text-sm tracking-tight text-bg">
+
+                          <span
+                          aria-hidden="true"
+                          className="absolute inset-0 -translate-x-full bg-muted/30 transition-transform duration-500 ease-out group-hover:translate-x-0" />
+
+                          <Rotate3dIcon className="relative h-4 w-4" aria-hidden="true" />
+                          <span className="relative">VISIT THIS WORLD</span>
+                        </button>
+                      </Magnetic> :
+
+                    null}
+
                     {project.stages ?
                     <ProcessScrubber
                       stages={project.stages}
@@ -180,6 +203,12 @@ export function Projects() {
           No project in this category yet.
         </p> :
       null}
+
+      <WorldViewer
+        src={world?.world ?? null}
+        title={world?.title ?? ''}
+        onClose={() => setWorld(null)} />
+
     </main>);
 
 }

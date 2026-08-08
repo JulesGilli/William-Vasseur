@@ -39,6 +39,11 @@ export interface Project {
   stages?: ProcessStage[];
   /** Finished artwork, browsable and downloadable in place of a 3D viewer. */
   gallery?: GalleryImage[];
+  /**
+   * Gaussian splat of the scene, opened full-screen from the project. Left
+   * unset until a piece has one — the button only appears when it does.
+   */
+  world?: string;
 }
 
 /**
