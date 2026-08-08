@@ -40,10 +40,19 @@ export interface Project {
   /** Finished artwork, browsable and downloadable in place of a 3D viewer. */
   gallery?: GalleryImage[];
   /**
-   * Gaussian splat of the scene, opened full-screen from the project. Left
-   * unset until a piece has one — the button only appears when it does.
+   * Gaussian splat of the scene, opened full-screen from the project. The
+   * button only appears on pieces that have one.
    */
-  world?: string;
+  world?: SplatWorld;
+}
+
+export interface SplatWorld {
+  src: string;
+  /**
+   * Trainers emit Y-down, so a captured splat arrives upside down and has to
+   * be turned over. One derived from a mesh is already the right way up.
+   */
+  upright?: boolean;
 }
 
 /**
@@ -63,7 +72,10 @@ export const projects: Project[] = [
   'A drifting shard of bark, moss and quartz in bloom. The study that set the direction for everything since — technology used to look at nature closely.',
   image: asset('/models/posters/mossy-log.webp'),
   model: asset('/models/mossy-log.glb'),
-  spec: 'GLB · 25K TRIS'
+  spec: 'GLB · 25K TRIS',
+  // Derived from the mesh above rather than trained from photographs, so it
+  // needs no flip. A stand-in until the real captures exist.
+  world: { src: asset('/models/bloom-fragment.sog'), upright: true }
 },
 {
   id: 'navana',
@@ -76,10 +88,6 @@ export const projects: Project[] = [
   'A canopy of fused mushroom crowns closing over a still pool. Built for the light: everything in the scene exists to catch the shafts coming through the gaps.',
   image: asset('/process/render.webp'),
   spec: 'Still · 1920 × 1080',
-  // Set in .env.local while we are testing with a scene we are not licensed to
-  // host. Undefined in a normal build, so the button stays hidden in production
-  // until this piece has a splat of its own.
-  world: import.meta.env.VITE_WORLD_NAVANA || undefined,
   gallery: [
   {
     src: asset('/gallery/navana-landscape.webp'),

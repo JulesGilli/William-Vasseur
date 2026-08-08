@@ -19,11 +19,13 @@ import cameraControlsUrl from 'playcanvas/scripts/esm/camera-controls.mjs?url';
  */
 export interface WorldSceneProps {
   src: string;
+  /** Skip the Y-down correction for splats that are already the right way up. */
+  upright?: boolean;
   onReady?: () => void;
   onError?: (message: string) => void;
 }
 
-export default function WorldScene({ src, onReady, onError }: WorldSceneProps) {
+export default function WorldScene({ src, upright, onReady, onError }: WorldSceneProps) {
   const host = useRef<HTMLDivElement>(null);
   // Callbacks are read through refs so re-renders never restart the engine.
   const ready = useRef(onReady);
@@ -80,8 +82,8 @@ export default function WorldScene({ src, onReady, onError }: WorldSceneProps) {
       app.root.addChild(camera);
 
       const world = new Entity('World');
-      // Trainers emit Y-down, so the capture arrives upside down.
-      world.setEulerAngles(0, 0, 180);
+      // Trained splats arrive Y-down; mesh-derived ones do not.
+      if (!upright) world.setEulerAngles(0, 0, 180);
       world.addComponent('gsplat', { asset: assets[1] });
       app.root.addChild(world);
 
@@ -94,7 +96,7 @@ export default function WorldScene({ src, onReady, onError }: WorldSceneProps) {
       app?.destroy();
       canvas.remove();
     };
-  }, [src]);
+  }, [src, upright]);
 
   return <div ref={host} className="h-full w-full" />;
 }

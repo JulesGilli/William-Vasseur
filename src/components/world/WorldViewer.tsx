@@ -2,12 +2,13 @@ import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { OrbitIcon, XIcon } from 'lucide-react';
+import type { SplatWorld } from '../../data/projects';
 
 // PlayCanvas only reaches visitors who actually open a world.
 const WorldScene = lazy(() => import('./WorldScene'));
 
 interface WorldViewerProps {
-  src: string | null;
+  world: SplatWorld | null;
   title: string;
   onClose: () => void;
 }
@@ -17,7 +18,7 @@ interface WorldViewerProps {
  * from sit inside animated, overflowing containers that would otherwise clip
  * it or trap it in the wrong stacking context.
  */
-export function WorldViewer({ src, title, onClose }: WorldViewerProps) {
+export function WorldViewer({ world, title, onClose }: WorldViewerProps) {
   const reduced = useReducedMotion();
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,14 +28,14 @@ export function WorldViewer({ src, title, onClose }: WorldViewerProps) {
 
   // Reset between openings, or a second visit starts already "ready".
   useEffect(() => {
-    if (!src) {
+    if (!world) {
       setReady(false);
       setError(null);
     }
-  }, [src]);
+  }, [world]);
 
   useEffect(() => {
-    if (!src) return;
+    if (!world) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
@@ -45,11 +46,11 @@ export function WorldViewer({ src, title, onClose }: WorldViewerProps) {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = overflow;
     };
-  }, [src, onClose]);
+  }, [world, onClose]);
 
   return createPortal(
     <AnimatePresence>
-      {src ?
+      {world ?
       <motion.div
         role="dialog"
         aria-modal="true"
@@ -61,7 +62,11 @@ export function WorldViewer({ src, title, onClose }: WorldViewerProps) {
         className="fixed inset-0 z-[100] bg-bg">
 
           <Suspense fallback={null}>
-            <WorldScene src={src} onReady={onReady} onError={onError} />
+            <WorldScene
+              src={world.src}
+              upright={world.upright}
+              onReady={onReady}
+              onError={onError} />
           </Suspense>
 
           {/* Chrome sits above the canvas but never swallows the drag. */}

@@ -205,7 +205,7 @@ export function Projects() {
       null}
 
       <WorldViewer
-        src={world?.world ?? null}
+        world={world?.world ?? null}
         title={world?.title ?? ''}
         onClose={() => setWorld(null)} />
 
