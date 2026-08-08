@@ -127,6 +127,11 @@ export const projects: Project[] = [
     src: asset('/gallery/desert-portrait.webp'),
     label: 'Portrait',
     size: '1080 × 1920'
+  },
+  {
+    src: asset('/gallery/desert-clown.webp'),
+    label: 'Clown pass',
+    size: '912 × 1622'
   }],
 
   stages: [
