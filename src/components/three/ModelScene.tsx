@@ -188,8 +188,10 @@ export default function ModelScene({
       <Suspense fallback={null}>
         {/* Bounds fits a cube of the model's longest side against the canvas's
             shorter axis, so on a wide frame it under-fills horizontally. `fit`
-            is what compensates. */}
-        <Bounds fit clip observe margin={fit}>
+            is what compensates. No `clip`: it rewrites controls.maxDistance to
+            10× the fitted distance, letting visitors zoom out until the model
+            is a speck. The default near/far already cover a 2-unit scene. */}
+        <Bounds fit observe margin={fit}>
           <Float>
             <Model url={url} onReady={onReady} />
           </Float>
