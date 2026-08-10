@@ -7,9 +7,11 @@ import {
   FILLMODE_FILL_WINDOW,
   RESOLUTION_AUTO } from
 'playcanvas';
-// Bundled rather than pulled from a CDN, so the world still works offline and
-// nothing third-party is fetched at runtime.
-import cameraControlsUrl from 'playcanvas/scripts/esm/camera-controls.mjs?url';
+// Imported as a module, not as a URL handed to the asset loader: the file is
+// plain ESM that imports `playcanvas` by bare specifier, which the browser
+// cannot resolve on its own. Bundling it lets Vite rewrite that import — and
+// keeps the runtime free of any third-party fetch.
+import { CameraControls } from 'playcanvas/scripts/esm/camera-controls.mjs';
 
 /**
  * Default export so the whole PlayCanvas runtime lands in its own lazy chunk.
@@ -82,14 +84,11 @@ export default function WorldScene({
     const onResize = () => app?.resizeCanvas();
     window.addEventListener('resize', onResize);
 
-    const assets = [
-    new Asset('camera-controls', 'script', { url: cameraControlsUrl }),
-    new Asset('world', 'gsplat', { url: src })];
-
+    const worldAsset = new Asset('world', 'gsplat', { url: src });
 
     let cleanupHandover: (() => void) | null = null;
 
-    const loader = new AssetListLoader(assets, app.assets);
+    const loader = new AssetListLoader([worldAsset], app.assets);
     loader.load((err?: string | null) => {
       if (disposed || !app) return;
       if (err) {
@@ -108,7 +107,7 @@ export default function WorldScene({
       const world = new Entity('World');
       // Trained splats arrive Y-down; mesh-derived ones do not.
       if (!upright) world.setEulerAngles(0, 0, 180);
-      world.addComponent('gsplat', { asset: assets[1] });
+      world.addComponent('gsplat', { asset: worldAsset });
       app.root.addChild(world);
 
       // The camera travels on its own until the visitor reaches for it. The
@@ -150,7 +149,7 @@ export default function WorldScene({
         app.off('update', travelTick);
         removeHandover();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const controls = camera.script?.create('cameraControls') as any;
+        const controls = camera.script?.create(CameraControls) as any;
         if (travel === 'walk' && controls) {
           // In an environment there is nothing to orbit: orbiting recentres
           // on the world origin and yanks the camera back to the start. With
