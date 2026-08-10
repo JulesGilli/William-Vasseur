@@ -28,11 +28,14 @@ export function ToolsRail() {
         transition={{ duration: reduced ? 0.01 : 1.1, ease: [0.16, 1, 0.3, 1] }} />
 
 
-      <ul className="relative grid grid-cols-2 gap-y-10 sm:grid-cols-3 lg:grid-cols-5">
+      {/* Equal shares rather than a fixed column count: with a count that no
+          longer matches, the icons bunch up and the rail runs on past the last
+          one. Two per row until there is width for a single line. */}
+      <ul className="relative flex flex-wrap gap-y-10">
         {tools.map(({ name, role, Icon }, i) =>
         <motion.li
           key={name}
-          className="group flex flex-col items-center text-center"
+          className="group flex basis-1/2 flex-col items-center text-center lg:basis-0 lg:grow"
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-10% 0px' }}

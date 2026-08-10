@@ -14,25 +14,30 @@ export function Footer() {
         </div>
 
         <div className="flex flex-wrap items-end gap-8">
-          <div className="flex items-center gap-4">
-            <a
-              href="https://www.artstation.com/williamvasseur"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="William Vasseur on ArtStation"
-              className="text-muted transition-colors hover:text-ink">
-              
-              <TriangleIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
-            <a
-              href="https://www.instagram.com/v2s3d/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="William Vasseur on Instagram"
-              className="text-muted transition-colors hover:text-ink">
-              
-              <InstagramIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+              Social media
+            </p>
+            <div className="mt-2 flex items-center gap-4">
+              <a
+                href="https://www.artstation.com/williamvasseur"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="William Vasseur on ArtStation"
+                className="text-muted transition-colors hover:text-ink">
+
+                <TriangleIcon className="h-5 w-5" aria-hidden="true" />
+              </a>
+              <a
+                href="https://www.instagram.com/v2s3d/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="William Vasseur on Instagram"
+                className="text-muted transition-colors hover:text-ink">
+
+                <InstagramIcon className="h-5 w-5" aria-hidden="true" />
+              </a>
+            </div>
           </div>
 
           <div>

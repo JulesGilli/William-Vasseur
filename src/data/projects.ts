@@ -131,14 +131,22 @@ export const projects: Project[] = [
   stages: [
   {
     index: '01',
-    label: 'Concept',
-    tool: 'Painted study',
+    label: 'Drawing',
+    tool: 'Pen · perspective sketch',
     caption:
-    'A painted study first — the mood, the scale of the canopy and the palette get settled before a single vertex exists.',
-    image: asset('/process/concept.webp')
+    'It starts on paper. Perspective lines, the arch of the canopy and where the eye should land — the whole scene decided in pen before any of it is worth building.',
+    image: asset('/process/drawing.webp')
   },
   {
     index: '02',
+    label: 'Concept',
+    tool: 'Painted study',
+    caption:
+    'A painted study next — the mood, the scale of the canopy and the palette get settled before a single vertex exists.',
+    image: asset('/process/concept.webp')
+  },
+  {
+    index: '03',
     label: 'Blockout',
     tool: 'Blender · solid view',
     caption:
@@ -146,7 +154,7 @@ export const projects: Project[] = [
     image: asset('/process/blockout.webp')
   },
   {
-    index: '03',
+    index: '04',
     label: 'Render',
     tool: 'Blender · Cycles',
     caption:

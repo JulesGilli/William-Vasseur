@@ -45,7 +45,10 @@ export function Home() {
 
       {/* About */}
       <section className="border-b border-line" aria-labelledby="about-title">
-        <div className="mx-auto grid max-w-[1400px] gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[minmax(240px,340px)_1fr] lg:py-24">
+        {/* The two columns are sized to their content and the pair is centred:
+            the text stops at max-w-xl, so a 1fr second column would leave the
+            whole block sitting left of centre on a wide screen. */}
+        <div className="mx-auto grid max-w-[1400px] gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[minmax(240px,340px)_minmax(0,640px)] lg:justify-center lg:py-24">
           <Reveal from="right" className="self-start">
             <BlueprintFrame label="July 2026 — Picture_of_me.png">
               {/* The portrait is a cut-out, so the blueprint grid behind it

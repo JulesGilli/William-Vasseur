@@ -56,10 +56,14 @@ export function ProjectGallery({
   // The frame takes the shape of whatever is in it, so a portrait still is not
   // stranded in a landscape box, and eases between the two as you page.
   const ratio = ratioOf(current.size);
+  // At full column width a 9:16 still stands taller than the screen. Half the
+  // width is half the height, which is what it takes to read it against the
+  // text beside it. Only once there are two columns to be narrow inside.
+  const tall = ratio !== null && ratio < 1;
 
   return (
     <>
-      <figure className="group relative">
+      <figure className={`group relative ${tall ? 'mx-auto w-full lg:max-w-[50%]' : ''}`}>
         <div
           className={`relative w-full ${ratio ? '' : aspect}`}
           style={

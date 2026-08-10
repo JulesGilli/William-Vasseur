@@ -20,17 +20,26 @@ interface Stage {
 
 const STAGES: Stage[] = [
 {
-  id: 'concept',
+  id: 'drawing',
   index: '01',
+  label: 'Drawing',
+  caption:
+  'It starts on paper. Perspective lines, the arch of the canopy and where the eye should land — the whole scene decided in pen before any of it is worth building.',
+  tool: 'Pen · perspective sketch',
+  image: asset('/process/drawing.webp')
+},
+{
+  id: 'concept',
+  index: '02',
   label: 'Concept',
   caption:
-  'A painted study first — the mood, the scale of the canopy, and the palette get settled before a single vertex exists.',
+  'A painted study next — the mood, the scale of the canopy, and the palette get settled before a single vertex exists.',
   tool: 'Painted study',
   image: asset('/process/concept.webp')
 },
 {
   id: 'blockout',
-  index: '02',
+  index: '03',
   label: 'Blockout',
   caption:
   'Geometry only. Trunks, ground scatter and silhouettes are built and dressed in flat colour, so the composition can be judged without lighting hiding anything.',
@@ -39,7 +48,7 @@ const STAGES: Stage[] = [
 },
 {
   id: 'render',
-  index: '03',
+  index: '04',
   label: 'Render',
   caption:
   'Materials, volumetric light through the canopy, then a grade. Same camera as the blockout, so the two can be read against each other.',
