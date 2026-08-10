@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   motion,
+  useInView,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
@@ -16,6 +17,12 @@ interface Stage {
   caption: string;
   tool: string;
   image: string;
+  /**
+   * Timelapse wound onto this stage's share of the runway: scrolling through
+   * the stage plays it, scrolling back rewinds it. The still stays as the
+   * poster, for the wait before it loads and for reduced motion.
+   */
+  video?: string;
 }
 
 const STAGES: Stage[] = [
@@ -24,9 +31,10 @@ const STAGES: Stage[] = [
   index: '01',
   label: 'Drawing',
   caption:
-  'It starts on paper. Perspective lines, the arch of the canopy and where the eye should land — the whole scene decided in pen before any of it is worth building.',
+  'It starts on paper. Perspective lines, the arch of the canopy and where the eye should land — the whole scene decided in pen before any of it is worth building. Scroll to watch it drawn.',
   tool: 'Pen · perspective sketch',
-  image: asset('/process/drawing.webp')
+  image: asset('/process/drawing.webp'),
+  video: asset('/process/drawing-timelapse.mp4')
 },
 {
   id: 'concept',
@@ -63,13 +71,16 @@ function StageLayer({
   i,
   count,
   progress,
-  reduced
+  reduced,
+  armed
 }: {
   stage: Stage;
   i: number;
   count: number;
   progress: MotionValue<number>;
   reduced: boolean | null;
+  /** The runway is close enough to be worth spending the video's bytes on. */
+  armed: boolean;
 }) {
   const start = i / count;
   const end = (i + 1) / count;
@@ -86,6 +97,77 @@ function StageLayer({
     [start - fade, end + fade],
     reduced ? [1, 1] : [1.04, 1]
   );
+
+  const video = useRef<HTMLVideoElement>(null);
+  // Where the scroll says the film should be, 0–1 through its own stage.
+  const wanted = useRef(0);
+  // A seek was asked for while one was still running; run it on arrival.
+  const queued = useRef(false);
+
+  /**
+   * iOS will not seek a film it has never decoded, and a muted inline video is
+   * allowed to start without a gesture — so start it and stop it at once.
+   */
+  const prime = useCallback(() => {
+    const v = video.current;
+    if (!v) return;
+    v.play().then(() => v.pause()).catch(() => {
+      // Refused autoplay only costs us the priming; scrubbing still works.
+    });
+  }, []);
+
+  const seek = useCallback(() => {
+    const v = video.current;
+    if (!v || !v.duration) return;
+    if (v.seeking) {
+      queued.current = true;
+      return;
+    }
+    const at = wanted.current * v.duration;
+    // The film runs at 12fps; a finer seek is one nobody can see.
+    if (Math.abs(v.currentTime - at) < 1 / 12) return;
+    v.currentTime = at;
+  }, []);
+
+  useMotionValueEvent(progress, 'change', (p) => {
+    if (!stage.video || reduced) return;
+    wanted.current = Math.min(1, Math.max(0, (p - start) / (end - start)));
+    seek();
+  });
+
+  if (stage.video && !reduced) {
+    return (
+      <motion.div
+        style={{ opacity, scale }}
+        className="absolute inset-0 flex items-center justify-center p-4 sm:p-8">
+
+        {/* The drawing is portrait and the frame is wide, so rather than
+            letterbox it, it is bordered and sized by height — a sheet of paper
+            standing in the middle of the sheet. */}
+        <video
+          ref={video}
+          // Held back until the runway is within a screen: 2.5MB is not worth
+          // spending on a visitor who never scrolls this far.
+          src={armed ? stage.video : undefined}
+          poster={stage.image}
+          aria-label={`${stage.label} — Navana, drawn from first line to finished painting`}
+          muted
+          playsInline
+          preload="auto"
+          onLoadedMetadata={() => {
+            prime();
+            seek();
+          }}
+          onSeeked={() => {
+            if (!queued.current) return;
+            queued.current = false;
+            seek();
+          }}
+          className="h-full w-auto max-w-full border border-line object-contain" />
+
+      </motion.div>);
+
+  }
 
   return (
     <motion.img
@@ -108,6 +190,14 @@ export function ProcessStages() {
     target: ref,
     offset: ['start start', 'end end']
   });
+
+  // Latched: once the runway has been near, the film stays loaded, so scrolling
+  // back up never re-fetches it.
+  const near = useInView(ref, { margin: '100% 0px' });
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    if (near) setArmed(true);
+  }, [near]);
 
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     const next = Math.min(STAGES.length - 1, Math.max(0, Math.floor(v * STAGES.length)));
@@ -169,7 +259,8 @@ export function ProcessStages() {
                   i={i}
                   count={STAGES.length}
                   progress={scrollYProgress}
-                  reduced={reduced} />
+                  reduced={reduced}
+                  armed={armed} />
 
                 )}
               </div>
