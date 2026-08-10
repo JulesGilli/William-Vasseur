@@ -83,10 +83,9 @@ export const projects: Project[] = [
   'A drifting shard of bark, moss and quartz in bloom. The study that set the direction for everything since — technology used to look at nature closely.',
   image: asset('/models/posters/mossy-log.webp'),
   model: asset('/models/mossy-log.glb'),
-  spec: 'GLB · 25K TRIS',
-  // Sampled from the Blooming Crystals mesh (tools/mesh-to-splat.mjs) rather
-  // than trained from photographs, so it needs no flip.
-  world: { src: asset('/models/bloom-fragment.sog'), upright: true }
+  spec: 'GLB · 25K TRIS'
+  // No `world`: Gaussian splatting is held for a future piece, so none of the
+  // current work carries one. See docs/gaussian-splatting.md to switch it on.
 },
 {
   id: 'navana',
@@ -99,9 +98,10 @@ export const projects: Project[] = [
   'A canopy of fused mushroom crowns closing over a still pool. Built for the light: everything in the scene exists to catch the shafts coming through the gaps.',
   image: asset('/process/render.webp'),
   spec: 'Still · 1920 × 1080',
-  // "Forest path" by tanha (superspl.at/scene/2be1a75a, CC BY 4.0) while we
-  // test navigation. Set in .env.development.local and undefined in any build,
-  // so the button stays hidden in production until this piece has its own splat.
+  // The bench the splat viewer is exercised on: "Forest path" by tanha
+  // (superspl.at/scene/2be1a75a, CC BY 4.0). Set in .env.development.local and
+  // undefined in any build, so it never reaches the public site — the licence
+  // is fine for local work but this is not our asset to publish.
   // No `upright`: SuperSplat publishes in the trainer's Y-down convention
   // (checked against their own viewer), so the default flip applies.
   // Start pose lifted from the scene's published settings.json, so the walk
