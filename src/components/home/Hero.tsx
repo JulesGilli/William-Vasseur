@@ -1,13 +1,7 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDownIcon } from 'lucide-react';
 import { ModelViewer } from '../three/ModelViewer';
-import { projects, type Project } from '../../data/projects';
-
-// The hero leads on a live model, so pick the first piece that actually has
-// one — the catalogue also holds stills-only entries now.
-const SIGNATURE = projects.find(
-  (p): p is Project & {model: string;} => Boolean(p.model)
-);
+import { heroPiece } from '../../data/projects';
 
 export function Hero() {
   const reduced = useReducedMotion();
@@ -122,20 +116,21 @@ export function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}>
 
-          {SIGNATURE ?
           <ModelViewer
-            url={SIGNATURE.model}
-            poster={SIGNATURE.image}
-            label={`${SIGNATURE.ref} — ${SIGNATURE.title}`}
-            spec={SIGNATURE.spec}
+            url={heroPiece.model}
+            poster={heroPiece.image}
+            // No catalogue reference: this piece is not one of the numbered
+            // projects, so inventing a PRJ number for it would be a lie.
+            label={heroPiece.title.toUpperCase()}
+            spec={heroPiece.spec}
             aspect="aspect-[4/3]"
             // Generous here on purpose: the piece is meant to lift clean out of
             // its frame and across the strapline, as in the design. The bleed
             // gives the canvas room; fit below 1 is what pushes the mesh into
             // it, and it stays inside the canvas so nothing is cut.
             bleed="22%"
-            fit={1} /> :
-          null}
+            fit={1} />
+
 
           <div className="mt-3 flex items-center justify-between">
             <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">

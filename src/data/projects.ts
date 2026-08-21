@@ -67,6 +67,18 @@ export interface SplatWorld {
 }
 
 /**
+ * The piece the home page leads on. Deliberately not a `projects` entry: the
+ * hero is a shop window and the sheet below it is the catalogue, so putting
+ * the signature model in both would list the same piece twice.
+ */
+export const heroPiece = {
+  title: 'Couronne',
+  spec: 'GLB · 16K TRIS',
+  model: asset('/models/couronne.glb'),
+  image: asset('/models/posters/couronne.webp')
+};
+
+/**
  * Portfolio work only. The pieces sold as prints, figurines and dioramas live
  * in `products` and are deliberately absent here, so the Projects sheet stays
  * a body of work rather than a second shop window.
