@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ExpandIcon } from 'lucide-react';
+import { ExpandIcon, ShoppingBagIcon } from 'lucide-react';
 import type { GalleryImage } from '../data/projects';
 import { Lightbox } from './Lightbox';
 
@@ -12,6 +13,8 @@ interface ProjectGalleryProps {
   spec?: string;
   /** Shape of the frame. Every still is fitted inside it, whatever its own. */
   aspect?: string;
+  /** Product ids this render is sold as, if any. */
+  shop?: {poster?: string;figurine?: string;};
 }
 
 /**
@@ -23,7 +26,8 @@ export function ProjectGallery({
   title,
   label,
   spec,
-  aspect = 'aspect-[5/4]'
+  aspect = 'aspect-[5/4]',
+  shop
 }: ProjectGalleryProps) {
   const reduced = useReducedMotion();
   const [index, setIndex] = useState(0);
@@ -101,6 +105,29 @@ export function ProjectGallery({
 
             <ExpandIcon className="h-3 w-3" aria-hidden="true" />
           </button>
+
+          {/* On the render itself, as close to "buy this one" as the sheet
+              gets. A piece with no shop entry shows nothing rather than a
+              button that goes nowhere. */}
+          {shop ?
+          <div className="absolute bottom-2 left-3 z-30 flex gap-2">
+              {([
+              ['poster', 'Shop this poster'],
+              ['figurine', 'Shop this figurine']] as const).
+              map(([form, label]) =>
+              shop[form] ?
+              <Link
+                key={form}
+                to={`/store?product=${shop[form]}`}
+                className="flex items-center gap-1.5 border border-line bg-bg/80 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted backdrop-blur-sm transition-colors hover:border-ink hover:text-ink">
+
+                    <ShoppingBagIcon className="h-3 w-3" aria-hidden="true" />
+                    {label}
+                  </Link> :
+              null
+              )}
+            </div> :
+          null}
 
           {/* Reports the image on screen, not the project — they differ once a
               gallery mixes formats. */}

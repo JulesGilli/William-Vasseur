@@ -246,6 +246,20 @@ export function Store() {
   const [filter, setFilter] = useState<string>('All');
   const [detail, setDetail] = useState<Product | null>(null);
 
+  // /store?product=<id> opens straight onto a piece, which is what a "shop
+  // this poster" link from a project needs to land on. Read once the
+  // catalogue is in, and scrubbed from the URL so a refresh is not a
+  // different page from a reload.
+  const wanted = new URLSearchParams(window.location.search).get('product');
+  useEffect(() => {
+    if (!wanted || loading) return;
+    const match = products.find((product) => product.id === wanted);
+    if (match) setDetail(match);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('product');
+    window.history.replaceState({}, '', url);
+  }, [wanted, loading, products]);
+
   // The whole vocabulary, not just what is in stock today, so the shelves the
   // shop is meant to carry are visible even before every one of them is full.
   const filters = useMemo(() => ['All', ...productFamilies], []);

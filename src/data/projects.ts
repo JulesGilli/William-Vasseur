@@ -41,6 +41,13 @@ export interface Project {
   spec: string;
   /** Production stages, scrubbed through under the piece. */
   stages?: ProcessStage[];
+  /**
+   * Where the finished render can be bought, by product id in `products`.
+   * Only the forms named here get a button, so a piece sold as a print and
+   * not as a figurine offers one link, and a piece sold as neither offers
+   * none. Empty until the posters for these renders exist in the shop.
+   */
+  shop?: {poster?: string;figurine?: string;};
   /** Finished artwork, browsable and downloadable in place of a 3D viewer. */
   gallery?: GalleryImage[];
   /**

@@ -122,7 +122,8 @@ export function Projects() {
                       }
                       title={project.title}
                       label={project.ref}
-                      spec={project.spec} />
+                      spec={project.spec}
+                      shop={project.shop} />
 
                     }
                   </div>
