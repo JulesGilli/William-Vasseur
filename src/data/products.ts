@@ -12,11 +12,14 @@ export const products: Product[] = [
   ref: 'ART—01',
   name: 'Canal Arches of Seville',
   kind: 'Poster · Fine art print',
+  family: 'Poster',
   blurb:
   'Terraced arcades over still water, printed with a wide gamut so the reds in the stonework survive the paper.',
   spec: '250 g matte fine art paper · solid oak frame · signed',
   image: asset('/models/posters/canal-arches.webp'),
-  model: asset('/models/canal-arches.glb'),
+  // No `model`: a poster is a flat print, and offering to turn it around in
+  // 3D sells the scene rather than the thing in the frame. The mesh belongs
+  // to the artwork on the projects sheet.
   currency: 'EUR',
   leadTime: 'Printed to order · ships in 5–7 days',
   variants: [
@@ -30,6 +33,7 @@ export const products: Product[] = [
   ref: 'ART—02',
   name: 'Clockwork Colossus',
   kind: 'Figurine · Resin print',
+  family: 'Figurine',
   blurb:
   'Six limbs, pressure tanks and hose runs, printed at a layer height fine enough to hold the panel lines.',
   spec: 'Unpainted grey resin · numbered base · hand-finished',
@@ -48,6 +52,7 @@ export const products: Product[] = [
   ref: 'ART—03',
   name: 'Crash Landed / Planet Unknown',
   kind: 'Diorama · Scale 1/144',
+  family: 'Diorama',
   blurb:
   'A freighter down on dead rock, hand-painted and weathered, mounted on an engraved plate.',
   spec: '24 × 18 cm · hand-painted resin · engraved plate',

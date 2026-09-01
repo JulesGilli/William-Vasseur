@@ -17,12 +17,22 @@ export interface ProductVariant {
   stock: number | null;
 }
 
+/**
+ * What a piece physically is. Fixed rather than parsed back out of `kind`,
+ * which is a free-text line meant for reading, not for filtering on.
+ */
+export const productFamilies = ["Poster", "Figurine", "Diorama"] as const;
+
+export type ProductFamily = (typeof productFamilies)[number];
+
 export interface Product {
   id: string;
   ref: string;
   name: string;
   /** Category line, e.g. "Poster · Fine art print". */
   kind: string;
+  /** Which shelf it belongs on, for the filters. */
+  family: ProductFamily;
   blurb: string;
   /** Materials and finish, shown under the name. */
   spec: string;

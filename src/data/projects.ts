@@ -132,16 +132,13 @@ export const projects: Project[] = [
     fov: 60
   } :
   undefined,
+  // Finished renders only. The painted study and the passes are process,
+  // and process belongs to the scrubber beside this, not to the carousel.
   gallery: [
   {
     src: asset('/gallery/navana-landscape.webp'),
     label: 'Landscape',
     size: '1920 × 1080'
-  },
-  {
-    src: asset('/gallery/navana-concept.webp'),
-    label: 'Concept',
-    size: '862 × 1480'
   }],
 
   stages: [
@@ -195,11 +192,6 @@ export const projects: Project[] = [
     src: asset('/gallery/desert-portrait.webp'),
     label: 'Portrait',
     size: '1080 × 1920'
-  },
-  {
-    src: asset('/gallery/desert-clown.webp'),
-    label: 'Clown pass',
-    size: '912 × 1622'
   }],
 
   stages: [

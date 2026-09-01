@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { CheckIcon, Rotate3dIcon, ShoppingBagIcon, XIcon } from 'lucide-react';
 import { BlueprintFrame } from '../components/BlueprintFrame';
@@ -7,7 +7,13 @@ import { SplitText } from '../components/motion/SplitText';
 import { Reveal } from '../components/motion/Reveal';
 import { useCart } from '../contexts/CartContext';
 import { isBackendConnected } from '../lib/shop/api';
-import { cheapestVariant, formatPrice, isInStock, type Product } from '../lib/shop/types';
+import {
+  cheapestVariant,
+  formatPrice,
+  isInStock,
+  productFamilies,
+  type Product } from
+'../lib/shop/types';
 
 function ProductCard({ product, index }: {product: Product;index: number;}) {
   const reduced = useReducedMotion();
@@ -211,6 +217,18 @@ function useCheckoutReturn(clear: () => void): 'success' | 'cancelled' | null {
 export function Store() {
   const { products, loading, error, clear } = useCart();
   const checkoutOutcome = useCheckoutReturn(clear);
+  const [filter, setFilter] = useState<string>('All');
+
+  // The whole vocabulary, not just what is in stock today, so the shelves the
+  // shop is meant to carry are visible even before every one of them is full.
+  const filters = useMemo(() => ['All', ...productFamilies], []);
+  const visible = useMemo(
+    () =>
+    filter === 'All' ?
+    products :
+    products.filter((product) => product.family === filter),
+    [filter, products]
+  );
 
   return (
     <main className="mx-auto max-w-[1400px] px-4 py-14 sm:px-8">
@@ -232,6 +250,38 @@ export function Store() {
           </p>
         </Reveal>
       </header>
+
+      <div className="flex flex-wrap items-center gap-2 border-b border-line py-4">
+        {filters.map((family) => {
+          const active = family === filter;
+          return (
+            <button
+              key={family}
+              type="button"
+              onClick={() => setFilter(family)}
+              aria-pressed={active}
+              className={`relative rounded-full border px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] transition-colors duration-300 ${
+              active ?
+              'border-ink text-bg' :
+              'border-line text-muted hover:border-ink hover:text-ink'}`
+              }>
+
+              {active ?
+              <motion.span
+                layoutId="store-filter-pill"
+                aria-hidden="true"
+                className="absolute inset-0 rounded-full bg-ink"
+                transition={{ type: 'spring', stiffness: 380, damping: 32 }} /> :
+
+              null}
+              <span className="relative">{family}</span>
+            </button>);
+
+        })}
+        <span className="ml-auto font-mono text-[11px] text-muted">
+          {visible.length.toString().padStart(2, '0')} items
+        </span>
+      </div>
 
       {checkoutOutcome ?
       <p
@@ -272,8 +322,13 @@ export function Store() {
         )}
         </ul> :
 
+      visible.length === 0 ?
+      <p className="py-24 text-center font-mono text-xs uppercase tracking-[0.2em] text-muted">
+          Nothing on this shelf yet.
+        </p> :
+
       <ul className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product, i) =>
+          {visible.map((product, i) =>
         <ProductCard key={product.id} product={product} index={i} />
         )}
         </ul>
