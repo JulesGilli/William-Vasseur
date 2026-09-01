@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { OrbitIcon, PauseIcon, PlayIcon, RotateCcwIcon } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -47,6 +47,20 @@ export function ModelViewer({
 
   const onReady = useCallback(() => setReady(true), []);
 
+  const stage = useRef<HTMLDivElement>(null);
+  // OrbitControls listens for `wheel` on the canvas, so a viewer sitting in the
+  // middle of the page swallows the scroll and the visitor gets stuck on it.
+  // Stopping the event one level above, in the capture phase, means the controls
+  // never see it and the page scrolls normally. Nothing is prevented, and pinch
+  // zoom arrives through the pointer path rather than this one, so it survives.
+  useEffect(() => {
+    const el = stage.current;
+    if (!el) return;
+    const swallow = (e: WheelEvent) => e.stopPropagation();
+    el.addEventListener('wheel', swallow, { capture: true });
+    return () => el.removeEventListener('wheel', swallow, { capture: true });
+  }, []);
+
   return (
     <figure ref={ref} className={`group relative ${className}`}>
       <div className={`relative ${aspect} w-full`}>
@@ -70,6 +84,7 @@ export function ModelViewer({
             — fitted to the canvas, not the frame — breaks the border and lands
             over whatever sits alongside. */}
         <div
+          ref={stage}
           className="absolute z-10"
           style={{ top: `-${bleed}`, right: `-${bleed}`, bottom: `-${bleed}`, left: `-${bleed}` }}
           // Taking hold of the model hands control over: stop spinning it.

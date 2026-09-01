@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useMemo, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {
   Bounds,
   Environment,
@@ -68,6 +68,22 @@ function Model({ url, onReady }: {url: string;onReady?: () => void;}) {
       </group>
     </group>);
 
+}
+
+/**
+ * Brightness as one knob rather than five. Measured against this rig, the dark
+ * theme sat at 45.8 mean luminance and the light one at 55.2 — the models read
+ * as underlit, and the two themes did not match each other. These exposures put
+ * both at about 60, with highlight clipping still under a tenth of a percent.
+ */
+function Exposure({ value }: {value: number;}) {
+  const gl = useThree((state) => state.gl);
+
+  useEffect(() => {
+    gl.toneMappingExposure = value;
+  }, [gl, value]);
+
+  return null;
 }
 
 /** A slow drift that keeps the object alive even while the orbit is idle. */
@@ -150,6 +166,8 @@ export default function ModelScene({
       camera={{ fov: 32, position: [0, 0.6, 4.2] }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       style={{ touchAction: 'pan-y' }}>
+
+      <Exposure value={dark ? 1.5 : 1.2} />
 
       <ambientLight intensity={dark ? 0.85 : 1.15} />
       <directionalLight

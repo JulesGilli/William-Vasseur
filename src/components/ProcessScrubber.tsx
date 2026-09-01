@@ -13,6 +13,18 @@ interface ProcessScrubberProps {
 /** Slider units per stage — fine enough that dragging crossfades smoothly. */
 const PER_STAGE = 100;
 
+/** Handle diameter, matching the thumb rules below. */
+const THUMB = 12;
+
+/**
+ * Where a fraction of the way along the slider actually lands. A range thumb's
+ * centre travels from half its width to the track width less half, never 0% to
+ * 100%, so anything drawn under it — the notches, the filled part — has to use
+ * the same inset or it drifts from the handle by up to half a thumb at the ends.
+ */
+const at = (fraction: number) =>
+  `calc(${THUMB / 2}px + (100% - ${THUMB}px) * ${fraction})`;
+
 /**
  * Compact counterpart to the pinned Process section: the whole sequence sits in
  * one frame and is driven by a slider rather than by the page scroll, so it can
@@ -95,7 +107,7 @@ export function ProcessScrubber({
           <span
             aria-hidden="true"
             className="pointer-events-none absolute left-0 top-1/2 h-px -translate-y-1/2 bg-ink transition-[width] duration-75"
-            style={{ width: `${(value / max) * 100}%` }} />
+            style={{ width: at(value / max) }} />
 
 
           {/* Notches sit under the handle, one per stage. */}
@@ -103,10 +115,10 @@ export function ProcessScrubber({
           <span
             key={stage.index}
             aria-hidden="true"
-            className={`pointer-events-none absolute top-1/2 h-2 w-px -translate-y-1/2 transition-colors ${
+            className={`pointer-events-none absolute top-1/2 h-2 w-px -translate-x-1/2 -translate-y-1/2 transition-colors ${
             i <= pos ? 'bg-ink' : 'bg-line'}`
             }
-            style={{ left: `${(i / (stages.length - 1)) * 100}%` }} />
+            style={{ left: at(i / (stages.length - 1)) }} />
 
           )}
         </div>

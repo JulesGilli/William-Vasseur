@@ -46,7 +46,9 @@ export function Footer() {
             </p>
             <a
               href="mailto:contact@williamvasseur.fr"
-              className="mt-1 flex items-center gap-2 text-sm transition-opacity hover:opacity-70">
+              // mt-2 like the icon row beside it: these two rows are the same height,
+              // so matching the gap is what puts CONTACT and SOCIAL MEDIA on one line.
+              className="mt-2 flex items-center gap-2 text-sm transition-opacity hover:opacity-70">
               
               <MailIcon className="h-4 w-4" aria-hidden="true" />
               contact@williamvasseur.fr
