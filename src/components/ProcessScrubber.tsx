@@ -55,7 +55,12 @@ export function ProcessScrubber({
         </span>
       </div>
 
-      <div className={`relative mt-3 ${aspect} w-full border border-line bg-surface/30`}>
+      {/* Frame and controls side by side once there is width for it. Stacked,
+          this block ran to two thirds of the column and pushed a project past
+          the bottom of an HD screen; beside each other it is a third of that,
+          and the slider sits next to the work rather than under it. */}
+      <div className="mt-3 grid gap-4 sm:grid-cols-2 sm:items-start sm:gap-6">
+        <div className={`relative ${aspect} w-full border border-line bg-surface/30`}>
         <span
           aria-hidden="true"
           className="absolute -left-px -top-px z-20 h-5 w-5 border-b border-r border-line bg-bg" />
@@ -77,10 +82,10 @@ export function ProcessScrubber({
 
 
         })}
-      </div>
+        </div>
 
-      {/* Track */}
-      <div className="mt-4">
+        {/* Track */}
+        <div>
         <label htmlFor={id} className="sr-only">
           {`${title} — scrub through the production stages`}
         </label>
@@ -138,18 +143,19 @@ export function ProcessScrubber({
               </button>
             </li>
           )}
-        </ol>
+          </ol>
+
+          <motion.p
+            key={active}
+            initial={{ opacity: reduced ? 1 : 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: reduced ? 0.01 : 0.35 }}
+            className="mt-4 text-xs leading-relaxed text-muted">
+
+            {stages[active].caption}
+          </motion.p>
+        </div>
       </div>
-
-      <motion.p
-        key={active}
-        initial={{ opacity: reduced ? 1 : 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: reduced ? 0.01 : 0.35 }}
-        className="mt-4 text-xs leading-relaxed text-muted">
-
-        {stages[active].caption}
-      </motion.p>
     </div>);
 
 }
