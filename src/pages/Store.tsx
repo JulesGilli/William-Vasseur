@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { CheckIcon, Rotate3dIcon, ShoppingBagIcon, XIcon } from 'lucide-react';
 import { BlueprintFrame } from '../components/BlueprintFrame';
 import { ModelViewer } from '../components/three/ModelViewer';
+import { ProductDialog } from '../components/shop/ProductDialog';
 import { SplitText } from '../components/motion/SplitText';
 import { Reveal } from '../components/motion/Reveal';
 import { useCart } from '../contexts/CartContext';
@@ -15,7 +16,15 @@ import {
   type Product } from
 '../lib/shop/types';
 
-function ProductCard({ product, index }: {product: Product;index: number;}) {
+function ProductCard({
+  product,
+  index,
+  onOpen
+}: {
+  product: Product;
+  index: number;
+  onOpen: (product: Product) => void;
+}) {
   const reduced = useReducedMotion();
   const { add } = useCart();
   const [variantId, setVariantId] = useState(() => cheapestVariant(product).id);
@@ -33,7 +42,7 @@ function ProductCard({ product, index }: {product: Product;index: number;}) {
 
   return (
     <Reveal as="li" delay={index * 0.08} className="flex flex-col">
-      <div className="relative">
+      <div className="group relative">
         <AnimatePresence mode="wait">
           {inspecting && product.model ?
           <motion.div
@@ -75,6 +84,23 @@ function ProductCard({ product, index }: {product: Product;index: number;}) {
             </motion.div>
           }
         </AnimatePresence>
+
+        {/* Sits over the still rather than wrapping it: the frame contains
+            the 3D canvas and its own controls once inspecting, and a button
+            cannot hold buttons. Hidden while inspecting so the canvas keeps
+            the pointer. */}
+        {!inspecting ?
+        <button
+          type="button"
+          onClick={() => onOpen(product)}
+          aria-label={`${product.name} — details`}
+          className="absolute inset-0 z-20 flex items-end justify-center pb-6">
+
+            <span className="border border-line bg-bg/80 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
+              View details
+            </span>
+          </button> :
+        null}
 
         {product.model ?
         <button
@@ -218,6 +244,7 @@ export function Store() {
   const { products, loading, error, clear } = useCart();
   const checkoutOutcome = useCheckoutReturn(clear);
   const [filter, setFilter] = useState<string>('All');
+  const [detail, setDetail] = useState<Product | null>(null);
 
   // The whole vocabulary, not just what is in stock today, so the shelves the
   // shop is meant to carry are visible even before every one of them is full.
@@ -329,7 +356,12 @@ export function Store() {
 
       <ul className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((product, i) =>
-        <ProductCard key={product.id} product={product} index={i} />
+        <ProductCard
+          key={product.id}
+          product={product}
+          index={i}
+          onOpen={setDetail} />
+
         )}
         </ul>
       }
@@ -337,6 +369,8 @@ export function Store() {
       <p className="border-t border-line py-8 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
         More pieces in production — check back soon.
       </p>
+
+      <ProductDialog product={detail} onClose={() => setDetail(null)} />
     </main>);
 
 }

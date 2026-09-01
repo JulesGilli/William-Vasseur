@@ -7,10 +7,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: 'var(--bg)',
-        surface: 'var(--surface)',
-        ink: 'var(--ink)',
-        muted: 'var(--muted)',
+        // Through the channel triples, so an opacity modifier — bg-bg/80,
+        // bg-surface/40 — actually resolves instead of silently painting
+        // nothing. Without a modifier these are the same colours as before.
+        bg: 'rgb(var(--bg-rgb) / <alpha-value>)',
+        surface: 'rgb(var(--surface-rgb) / <alpha-value>)',
+        ink: 'rgb(var(--ink-rgb) / <alpha-value>)',
+        muted: 'rgb(var(--muted-rgb) / <alpha-value>)',
         line: 'var(--line)',
       },
       fontFamily: {
