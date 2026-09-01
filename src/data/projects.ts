@@ -16,11 +16,20 @@ export interface ProcessStage {
   image: string;
 }
 
+/**
+ * The families the work is filed under. Fixed rather than derived from what
+ * happens to be on the sheet, so the filters describe the body of work William
+ * is building — an empty one says "nothing here yet" rather than not existing.
+ */
+export const categories = ["Nature", "Civilisation", "Characters"] as const;
+
+export type Category = (typeof categories)[number];
+
 export interface Project {
   id: string;
   ref: string;
   title: string;
-  category: string;
+  category: Category;
   year: string;
   software: string;
   description: string;
@@ -30,11 +39,6 @@ export interface Project {
   model?: string;
   /** Technical caption shown in the viewer chrome. */
   spec: string;
-  /**
-   * Tailwind aspect utility for this piece's frames. Set it when the artwork
-   * is not landscape, or a portrait still ends up boxed inside a wide frame.
-   */
-  frameAspect?: string;
   /** Production stages, scrubbed through under the piece. */
   stages?: ProcessStage[];
   /** Finished artwork, browsable and downloadable in place of a 3D viewer. */
@@ -88,7 +92,7 @@ export const projects: Project[] = [
   id: 'mossy-log',
   ref: 'PRJ—001',
   title: 'Bloom Fragment',
-  category: 'Environment',
+  category: 'Nature',
   year: '2026',
   software: 'Blender',
   description:
@@ -103,7 +107,7 @@ export const projects: Project[] = [
   id: 'navana',
   ref: 'PRJ—002',
   title: 'Navana',
-  category: 'Environment',
+  category: 'Nature',
   year: '2026',
   software: 'Blender · Cycles',
   description:
@@ -179,14 +183,13 @@ export const projects: Project[] = [
   id: 'navana-desert',
   ref: 'PRJ—003',
   title: 'Navana / Desert',
-  category: 'Environment',
+  category: 'Nature',
   year: '2026',
   software: 'Blender · Cycles',
   description:
   'The dry side of the same world. Ribbon trunks arc over red rock and shallow pools, with a second planet sitting low behind the ridge.',
   image: asset('/process/desert-render.webp'),
   spec: 'Still · 1080 × 1920',
-  frameAspect: 'aspect-[3/4]',
   gallery: [
   {
     src: asset('/gallery/desert-portrait.webp'),

@@ -9,17 +9,16 @@ import { ProcessScrubber } from '../components/ProcessScrubber';
 import { ProjectGallery } from '../components/ProjectGallery';
 import { SplitText } from '../components/motion/SplitText';
 import { Reveal } from '../components/motion/Reveal';
-import { projects } from '../data/projects';
+import { categories, projects } from '../data/projects';
 
 export function Projects() {
   const reduced = useReducedMotion();
   const [filter, setFilter] = useState('All');
   const [world, setWorld] = useState<Project | null>(null);
 
-  const categories = useMemo(
-    () => ['All', ...Array.from(new Set(projects.map((p) => p.category)))],
-    []
-  );
+  // The full vocabulary, not just what is currently on the sheet: a family with
+  // no work in it yet still gets its chip, and says so when opened.
+  const filters = useMemo(() => ['All', ...categories], []);
 
   const visible = useMemo(
     () =>
@@ -55,7 +54,7 @@ export function Projects() {
       </header>
 
       <div className="flex flex-wrap items-center gap-2 border-b border-line py-4">
-        {categories.map((category) => {
+        {filters.map((category) => {
           const active = category === filter;
           return (
             <button
@@ -103,7 +102,7 @@ export function Projects() {
                   delay: reduced ? 0 : index * 0.06,
                   ease: [0.16, 1, 0.3, 1]
                 }}
-                className="py-12 lg:py-16">
+                className="py-10 lg:py-14">
 
                 <article className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
                   <div className={flipped ? 'lg:order-2' : undefined}>
@@ -123,8 +122,7 @@ export function Projects() {
                       }
                       title={project.title}
                       label={project.ref}
-                      spec={project.spec}
-                      aspect={project.frameAspect} />
+                      spec={project.spec} />
 
                     }
                   </div>
@@ -186,8 +184,7 @@ export function Projects() {
                     {project.stages ?
                     <ProcessScrubber
                       stages={project.stages}
-                      title={project.title}
-                      aspect={project.frameAspect} /> :
+                      title={project.title} /> :
 
                     null}
                   </div>

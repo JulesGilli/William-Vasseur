@@ -298,17 +298,27 @@ const Topography: React.FC<TopographyProps> = ({
     let mouseActive = 0;
     let mouseActiveTarget = 0;
 
+    // Local change: listen on the window, not the canvas. The field sits
+    // behind the section's content, so a heading or a paragraph over it
+    // swallowed the pointer and the ripple died exactly where there was
+    // something to look at. The window sees every move; the rect is what
+    // decides whether the pointer is over this field or another one further
+    // down the page.
     const onMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
-      targetMouse[0] = (e.clientX - rect.left) / rect.width;
-      targetMouse[1] = 1.0 - (e.clientY - rect.top) / rect.height;
-      mouseActiveTarget = 1;
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      const inside = x >= 0 && x <= 1 && y >= 0 && y <= 1;
+      mouseActiveTarget = inside ? 1 : 0;
+      if (!inside) return;
+      targetMouse[0] = x;
+      targetMouse[1] = 1.0 - y;
     };
     const onMouseLeave = () => {
       mouseActiveTarget = 0;
     };
-    canvas.addEventListener('mousemove', onMouseMove);
-    canvas.addEventListener('mouseleave', onMouseLeave);
+    window.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseleave', onMouseLeave);
 
     const ctrlArrays = [
     program.uniforms.uCtrlA.value as Float32Array,
@@ -403,8 +413,8 @@ const Topography: React.FC<TopographyProps> = ({
       ro.disconnect();
       io.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
-      canvas.removeEventListener('mousemove', onMouseMove);
-      canvas.removeEventListener('mouseleave', onMouseLeave);
+      window.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseleave', onMouseLeave);
       ctxMap.delete(container);
       try {
         container.removeChild(canvas);

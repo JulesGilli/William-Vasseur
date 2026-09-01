@@ -10,18 +10,8 @@ interface ProjectGalleryProps {
   /** Frame reference, e.g. "PRJ—002". */
   label: string;
   spec?: string;
-  /** Fallback only, for images whose size cannot be read. */
+  /** Shape of the frame. Every still is fitted inside it, whatever its own. */
   aspect?: string;
-}
-
-/**
- * Read "1920 × 1080" as a ratio, clamped so a 9:16 still cannot stretch the
- * frame into a column the length of the page.
- */
-function ratioOf(size: string): number | null {
-  const [w, h] = size.split(/[^\d]+/).filter(Boolean).map(Number);
-  if (!w || !h) return null;
-  return Math.min(1.9, Math.max(0.62, w / h));
 }
 
 /**
@@ -53,24 +43,16 @@ export function ProjectGallery({
   );
 
   const offset = reduced ? 0 : 40;
-  // The frame takes the shape of whatever is in it, so a portrait still is not
-  // stranded in a landscape box, and eases between the two as you page.
-  const ratio = ratioOf(current.size);
-  // At full column width a 9:16 still stands taller than the screen. Half the
-  // width is half the height, which is what it takes to read it against the
-  // text beside it. Only once there are two columns to be narrow inside.
-  const tall = ratio !== null && ratio < 1;
 
   return (
     <>
-      <figure className={`group relative ${tall ? 'mx-auto w-full lg:max-w-[50%]' : ''}`}>
-        <div
-          className={`relative w-full ${ratio ? '' : aspect}`}
-          style={
-          ratio ?
-          { aspectRatio: String(ratio), transition: 'aspect-ratio .45s cubic-bezier(.16,1,.3,1)' } :
-          undefined
-          }>
+      <figure className="group relative">
+        {/* One frame, one size, whatever is in it. Sizing the box to each
+            image meant the page reflowed as you paged through a project, and
+            a portrait still ran taller than the screen it was read on. The
+            stills are fitted inside a fixed frame instead, at their own
+            scale, so paging changes the picture and nothing else. */}
+        <div className={`relative w-full ${aspect}`}>
           <span
             aria-hidden="true"
             className="absolute inset-0 z-0 border border-line bg-surface/40" />
