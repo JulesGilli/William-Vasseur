@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
 /**
- * Wraps each route so navigation cross-fades instead of snapping, and resets
+ * Wraps each route so navigation fades in instead of snapping, and resets
  * the scroll position — which the router does not do on its own.
  */
 export function PageTransition({ children }: {children: React.ReactNode;}) {
@@ -18,7 +18,6 @@ export function PageTransition({ children }: {children: React.ReactNode;}) {
     <motion.div
       initial={{ opacity: 0, y: reduced ? 0 : 12 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: reduced ? 0 : -8 }}
       transition={{ duration: reduced ? 0.01 : 0.45, ease: [0.16, 1, 0.3, 1] }}>
 
       {children}
