@@ -101,8 +101,6 @@ function StageLayer({
   const video = useRef<HTMLVideoElement>(null);
   // Where the scroll says the film should be, 0–1 through its own stage.
   const wanted = useRef(0);
-  // A seek was asked for while one was still running; run it on arrival.
-  const queued = useRef(false);
 
   /**
    * iOS will not seek a film it has never decoded, and a muted inline video is
@@ -119,23 +117,29 @@ function StageLayer({
   const seek = useCallback(() => {
     const v = video.current;
     if (!v || !v.duration) return;
-    if (v.seeking) {
-      queued.current = true;
-      return;
-    }
     const at = wanted.current * v.duration;
     // The film runs at 12fps; a finer seek is one nobody can see.
+    //
+    // Deliberately not held back while a seek is in flight. Queuing the next
+    // one behind it reads as tidy until a seek into a stretch that has not
+    // downloaded yet never completes: nothing drains the queue, and the film
+    // stops answering the scroll for the rest of the visit. Browsers already
+    // coalesce a re-seek, so the honest thing is to always ask.
     if (Math.abs(v.currentTime - at) < 1 / 12) return;
     v.currentTime = at;
   }, []);
 
   useMotionValueEvent(progress, 'change', (p) => {
-    if (!stage.video || reduced) return;
+    if (!stage.video) return;
     wanted.current = Math.min(1, Math.max(0, (p - start) / (end - start)));
     seek();
   });
 
-  if (stage.video && !reduced) {
+  // Not gated on reduced motion. Nothing here moves on its own — the film is
+  // paused from first frame to last and only ever moves because the visitor
+  // moved, exactly like the scrollbar. Gating it meant anyone with the OS
+  // setting on got the still and no drawing at all.
+  if (stage.video) {
     return (
       <motion.div
         style={{ opacity, scale }}
@@ -156,11 +160,6 @@ function StageLayer({
           preload="auto"
           onLoadedMetadata={() => {
             prime();
-            seek();
-          }}
-          onSeeked={() => {
-            if (!queued.current) return;
-            queued.current = false;
             seek();
           }}
           className="h-full w-auto max-w-full border border-line object-contain" />
