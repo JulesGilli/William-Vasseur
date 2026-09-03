@@ -15,8 +15,24 @@ The infrastructure belongs to the client, not the developer:
   *Settings → Team* with the **Developer** role.
 - **Supabase** — organization created by **William** (free, just an email).
   He invites the developer from *Organization settings → Team* as
-  **Developer**. The shop project is created inside his organization, so when
-  the engagement ends he keeps everything by removing one member.
+  **Administrator**, not Developer: the Developer role is read-only on
+  organization resources and cannot apply migrations, deploy functions or set
+  secrets, which is the whole of the checklist below. Administrator can do all
+  of that while William keeps Owner — billing, transferring the project, and
+  removing members stay his alone. The shop project is created inside his
+  organization, so when the engagement ends he keeps everything by removing
+  one member.
+
+  Note that on the Free plan roles are organization-wide; project-scoped roles
+  need the Team plan. With one project in the org that makes no difference.
+
+## What it costs
+
+Stripe has no monthly fee; it takes a cut per sale. Supabase is free to build
+on, but the Free plan pauses a project after about a week without database
+activity — fine while we are working, not fine for a shop that must answer at
+3am on a Sunday. Budget the Pro plan (about $25/month) at the moment the first
+real payment can be taken, not before.
 
 ## Go-live checklist
 
