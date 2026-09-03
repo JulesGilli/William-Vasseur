@@ -251,7 +251,9 @@ export function ProcessStages() {
                 {STAGES[active].index} — {STAGES[active].tool}
               </span>
 
-              <div className="relative aspect-[16/10] w-full">
+              {/* Capped as well as proportioned: on a short window the ratio
+                  alone would size it past the height available. */}
+              <div className="relative aspect-[16/10] max-h-[calc(100vh-16rem)] w-full">
                 {STAGES.map((stage, i) =>
                 <StageLayer
                   key={stage.id}
@@ -312,13 +314,6 @@ export function ProcessStages() {
 
                       </span>
 
-                      <span
-                        className={`mt-3 hidden text-xs leading-relaxed transition-opacity lg:block ${
-                        on ? 'text-muted opacity-100' : 'text-muted opacity-0'}`
-                        }>
-
-                        {stage.caption}
-                      </span>
                     </button>
                   </li>);
 
@@ -326,7 +321,11 @@ export function ProcessStages() {
             </ol>
           </div>
 
-          <p className="mt-4 text-xs leading-relaxed text-muted lg:hidden">
+          {/* One caption, under the work. The rail used to carry all four,
+              three of them at opacity 0 — 600px of column reserved for text
+              nobody could read, which is what pushed the bottom of the panel
+              out of the pinned box on a short window. */}
+          <p className="mt-4 max-w-2xl text-xs leading-relaxed text-muted">
             {STAGES[active].caption}
           </p>
         </div>
