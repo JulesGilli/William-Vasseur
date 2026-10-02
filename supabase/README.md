@@ -26,6 +26,18 @@ The infrastructure belongs to the client, not the developer:
   Note that on the Free plan roles are organization-wide; project-scoped roles
   need the Team plan. With one project in the org that makes no difference.
 
+## Where it lives
+
+- Organization: **William Vasseur 3D Art** (William is Owner).
+- Project: **william-vasseur-shop**, ref `jgxguuviojnwjideytyb`, region
+  `eu-west-3` (Paris), Free plan.
+- Shop API: `https://jgxguuviojnwjideytyb.supabase.co/functions/v1/shop`
+- Webhook: `https://jgxguuviojnwjideytyb.supabase.co/functions/v1/stripe-webhook`
+
+Steps 1 to 3 of the checklist below are done: schema and seed applied, both
+functions deployed. `SITE_URL` is optional — the shop function falls back to
+the GitHub Pages address — so the only secrets left are the two Stripe ones.
+
 ## What it costs
 
 Stripe has no monthly fee; it takes a cut per sale. Supabase is free to build

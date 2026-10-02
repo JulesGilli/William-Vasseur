@@ -47,6 +47,7 @@ interface ProductRow {
   ref: string;
   name: string;
   kind: string;
+  family: 'Poster' | 'Figurine' | 'Diorama';
   blurb: string;
   spec: string;
   image: string;
@@ -70,6 +71,7 @@ async function listProducts(): Promise<Response> {
     ref: p.ref,
     name: p.name,
     kind: p.kind,
+    family: p.family,
     blurb: p.blurb,
     spec: p.spec,
     image: p.image,

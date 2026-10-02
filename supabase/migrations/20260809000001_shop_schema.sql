@@ -9,6 +9,8 @@ create table public.products (
   ref text not null,
   name text not null,
   kind text not null,
+  -- Which shelf the store files it under. Mirrors ProductFamily on the front.
+  family text not null check (family in ('Poster', 'Figurine', 'Diorama')),
   blurb text not null,
   spec text not null,
   -- Site-relative path ('/models/posters/x.webp'); the front prefixes its base.
@@ -73,3 +75,10 @@ as $$
     and oi.sku = v.sku
     and v.stock is not null;
 $$;
+
+-- Postgres grants EXECUTE to PUBLIC by default, and Supabase exposes public
+-- functions over its REST API, so the anon key — which ships in every page —
+-- could call this with an order id and drain stock a second time. Only the
+-- webhook, running as the service role, has any business calling it.
+revoke execute on function public.consume_stock(uuid) from public, anon, authenticated;
+grant execute on function public.consume_stock(uuid) to service_role;

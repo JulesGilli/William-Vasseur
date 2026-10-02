@@ -2,16 +2,18 @@
 -- goes live. From then on the database is the source of truth and stock is
 -- edited in Supabase, not in the code.
 
-insert into public.products (id, ref, name, kind, blurb, spec, image, model, currency, lead_time, position) values
+insert into public.products (id, ref, name, kind, family, blurb, spec, image, model, currency, lead_time, position) values
 (
   'canal-arches-print',
   'ART—01',
   'Canal Arches of Seville',
   'Poster · Fine art print',
+  'Poster',
   'Terraced arcades over still water, printed with a wide gamut so the reds in the stonework survive the paper.',
   '250 g matte fine art paper · solid oak frame · signed',
   '/models/posters/canal-arches.webp',
-  '/models/canal-arches.glb',
+  -- No mesh: a poster is a flat print, and the shop shows it as one.
+  null,
   'EUR',
   'Printed to order · ships in 5–7 days',
   0
@@ -21,6 +23,7 @@ insert into public.products (id, ref, name, kind, blurb, spec, image, model, cur
   'ART—02',
   'Clockwork Colossus',
   'Figurine · Resin print',
+  'Figurine',
   'Six limbs, pressure tanks and hose runs, printed at a layer height fine enough to hold the panel lines.',
   'Unpainted grey resin · numbered base · hand-finished',
   '/models/posters/clockwork-colossus.webp',
@@ -34,6 +37,7 @@ insert into public.products (id, ref, name, kind, blurb, spec, image, model, cur
   'ART—03',
   'Crash Landed / Planet Unknown',
   'Diorama · Scale 1/144',
+  'Diorama',
   'A freighter down on dead rock, hand-painted and weathered, mounted on an engraved plate.',
   '24 × 18 cm · hand-painted resin · engraved plate',
   '/models/posters/crash-landed.webp',
