@@ -8,6 +8,7 @@ import {
   useTransform,
   type MotionValue } from
 'framer-motion';
+import { ArrowDownIcon } from 'lucide-react';
 import { asset } from '../../lib/asset';
 
 interface Stage {
@@ -212,6 +213,18 @@ export function ProcessStages() {
     window.scrollTo({ top: target, behavior: reduced ? 'auto' : 'smooth' });
   };
 
+  const last = active === STAGES.length - 1;
+
+  /** From the last stage, the next thing down is the section after this one. */
+  const leave = () => {
+    const el = ref.current;
+    if (!el) return;
+    window.scrollTo({
+      top: el.offsetTop + el.offsetHeight - 56,
+      behavior: reduced ? 'auto' : 'smooth'
+    });
+  };
+
   return (
     <section
       ref={ref}
@@ -227,12 +240,37 @@ export function ProcessStages() {
               <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
                 03 / Process
               </span>
-              <h2
-                id="process-title"
-                className="mt-3 font-display text-2xl leading-tight tracking-tight sm:text-3xl">
+              <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-3">
+                <h2
+                  id="process-title"
+                  className="font-display text-2xl leading-tight tracking-tight sm:text-3xl">
 
-                FROM A SKETCH TO A WORLD
-              </h2>
+                  FROM A SKETCH TO A WORLD
+                </h2>
+
+                {/* The section is driven by the scroll, which nothing on screen
+                    said. The cue says it, counts where you are, and doubles as
+                    a button for anyone who would rather click through. */}
+                <button
+                  type="button"
+                  onClick={() => last ? leave() : goTo(active + 1)}
+                  aria-label={last ? 'Continue down the page' : `Next stage: ${STAGES[active + 1].label}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted transition-colors hover:border-ink hover:text-ink">
+
+                  <motion.span
+                    aria-hidden="true"
+                    className="inline-flex"
+                    animate={reduced ? undefined : { y: [0, 3, 0] }}
+                    transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>
+
+                    <ArrowDownIcon className="h-3.5 w-3.5" />
+                  </motion.span>
+                  Scroll
+                  <span className="tabular-nums text-ink">
+                    {String(active + 1).padStart(2, '0')} / {String(STAGES.length).padStart(2, '0')}
+                  </span>
+                </button>
+              </div>
             </div>
             <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-muted sm:block">
               Navana · 2026
