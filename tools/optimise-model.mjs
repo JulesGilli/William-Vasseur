@@ -27,15 +27,21 @@ if (!IN || !OUT || rest.length) {
 }
 
 /**
- * Longest edge, in pixels, each material slot is allowed to keep. These are
- * where the models already on the site sit; override per asset, because what a
- * slot can afford to lose depends on the map. A packed roughness/metal map
- * with real detail in it goes visibly wrong at 256 — the detail averages out
- * and the whole surface turns glossy — while a near-flat one never notices.
+ * Longest edge, in pixels, each material slot is allowed to keep. Override per
+ * asset, because what a slot can afford to lose depends on the map. A packed
+ * roughness/metal map with real detail in it goes visibly wrong at 256 — the
+ * detail averages out and the whole surface turns glossy — while a near-flat
+ * one never notices.
+ *
+ * The normal map gets the bigger budget, measured on the crown at the site's
+ * own lighting: fine surface detail lives in the relief, not the colour.
+ * Normals 512 -> 1024 lifted resolved detail by 27% for +326kB; colour
+ * 1024 -> 2048 managed 9% for +564kB. Anisotropic filtering, for the record,
+ * changed nothing measurable.
  */
 const BUDGET = {
   baseColor: 1024,
-  normal: 512,
+  normal: 1024,
   emissive: 256,
   metallicRoughness: 256,
   occlusion: 256
