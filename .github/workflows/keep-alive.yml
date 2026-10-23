@@ -1,0 +1,26 @@
+name: Keep the database awake
+
+# The Free plan pauses a project after about a week without database
+# activity. Paused, William's editor cannot load, publishing cannot pull
+# content, and every deploy fails on purpose rather than ship stale content.
+# A read every third day counts as activity. Remove this once the project is
+# on the Pro plan, which never pauses.
+
+on:
+  schedule:
+    - cron: "17 6 */3 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read one published project
+        # The publishable key is public by design: it ships in every page.
+        run: |
+          curl --fail --silent --show-error \
+            -H "apikey: sb_publishable_BQ-X9n353xfbdy-CqFqeVg_0E4s2YXW" \
+            "https://jgxguuviojnwjideytyb.supabase.co/rest/v1/projects?select=id&limit=1"

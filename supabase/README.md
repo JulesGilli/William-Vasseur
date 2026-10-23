@@ -38,6 +38,30 @@ Steps 1 to 3 of the checklist below are done: schema and seed applied, both
 functions deployed. `SITE_URL` is optional — the shop function falls back to
 the GitHub Pages address — so the only secrets left are the two Stripe ones.
 
+## William's editor
+
+Served at `/William-Vasseur/admin/`. Content lives in `projects`,
+`site_content` and the `media` bucket; every build pulls it
+(`tools/pull-content.mjs`), so the public site never calls the database.
+
+Setting up an editor account — done in the dashboard, never in chat:
+
+1. *Authentication → Users → Add user → Create new user*: the person's
+   email and a password they choose, **Auto Confirm** ticked.
+2. Grant edit rights — in the SQL editor:
+   `insert into admins select id from auth.users where email = '…';`
+3. Recommended: *Authentication → Sign In / Providers* → turn off
+   **Allow new users to sign up**. The access policies already refuse
+   writes to anyone not in `admins`, but nobody needs an account here.
+
+The Publish button calls the `publish` function, which asks GitHub to run
+the deploy workflow. It needs one secret, `GITHUB_PUBLISH_TOKEN`: a
+fine-grained GitHub token limited to this repository with
+**Actions: read and write**, pasted into *Edge Functions → Secrets*.
+
+`.github/workflows/keep-alive.yml` reads the database every third day so
+the Free plan never pauses it. Delete it once on Pro.
+
 ## What it costs
 
 Stripe has no monthly fee; it takes a cut per sale. Supabase is free to build
