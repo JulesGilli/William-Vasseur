@@ -62,10 +62,23 @@ async function fetchMedia(key, { optimise = false } = {}) {
 
 const resolve = (ref, options) => (!ref || ref.startsWith('/') ? ref : fetchMedia(ref, options));
 
+/** "1920 × 1080", read from the file itself, so nobody has to type it. */
+async function measure(sitePath) {
+  const { default: sharp } = await import('sharp');
+  const { width, height } = await sharp(join('public', sitePath)).metadata();
+  return `${width} × ${height}`;
+}
+
 async function pull() {
-  const [projects, blocks] = await Promise.all([
+  const [projects, blocks, products] = await Promise.all([
     rest('projects?select=*&published=eq.true&order=position'),
-    rest('site_content?select=key,value')
+    rest('site_content?select=key,value'),
+    // The catalogue as the shop function serves it: the same shape the store
+    // renders, so the build and the live checkout can never disagree on it.
+    fetch(`${URL}/functions/v1/shop/products`).then((res) => {
+      if (!res.ok) throw new Error(`shop/products → HTTP ${res.status}`);
+      return res.json();
+    })
   ]);
 
   const site = Object.fromEntries(blocks.map((b) => [b.key, b.value]));
@@ -73,7 +86,10 @@ async function pull() {
   for (const p of projects) {
     p.poster = await resolve(p.poster);
     p.model = await resolve(p.model, { optimise: true });
-    for (const r of p.renders) r.src = await resolve(r.src);
+    for (const r of p.renders) {
+      r.src = await resolve(r.src);
+      if (!r.size) r.size = await measure(r.src);
+    }
     for (const s of p.stages) s.image = await resolve(s.image);
   }
 
@@ -87,11 +103,18 @@ async function pull() {
     if (s.video) s.video = await resolve(s.video);
   }
 
+  for (const product of products) {
+    product.image = await resolve(product.image);
+    product.model = (await resolve(product.model, { optimise: true })) ?? undefined;
+  }
+
   // Only the fields the site renders: no timestamps, so an unchanged
   // publish produces an unchanged file.
   const clean = projects.map(({ updated_at, published, position, ...rest }) => rest);
-  await writeFile(OUT, JSON.stringify({ projects: clean, site }, null, 2) + '\n');
-  console.log(`content: ${clean.length} projects, ${blocks.length} text blocks → ${OUT}`);
+  await writeFile(OUT, JSON.stringify({ projects: clean, site, products }, null, 2) + '\n');
+  console.log(
+    `content: ${clean.length} projects, ${blocks.length} text blocks, ${products.length} products → ${OUT}`
+  );
 }
 
 try {

@@ -34,12 +34,15 @@ const remoteApi = (base: string): ShopApi => ({
     const res = await fetch(`${base}/products`);
     if (!res.ok) throw new Error(`Catalogue unavailable (${res.status})`);
     const items = (await res.json()) as Product[];
-    // The backend stores site-relative asset paths; the site's base prefix is
-    // deployment knowledge, so it is applied here rather than stored there.
+    // The backend stores either a repository path ("/models/…") or, for what
+    // William uploaded, a storage key. Publishing copies every upload into
+    // the site under /media/ — optimising 3D on the way — so a key resolves
+    // to that copy, never to the raw multi-megabyte upload in storage.
+    const media = (ref: string) => asset(ref.startsWith('/') ? ref : `/media/${ref}`);
     return items.map((p) => ({
       ...p,
-      image: asset(p.image),
-      model: p.model ? asset(p.model) : undefined,
+      image: media(p.image),
+      model: p.model ? media(p.model) : undefined,
     }));
   },
 

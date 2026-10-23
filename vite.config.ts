@@ -11,6 +11,16 @@ const rootDir = dirname(fileURLToPath(import.meta.url))
 export default defineConfig({
   base: '/William-Vasseur/',
   plugins: [react(), spaFallback()],
+  build: {
+    rollupOptions: {
+      // Two sites from one project: the portfolio, and William's editor at
+      // /admin/. Separate bundles, so visitors never download the editor.
+      input: {
+        main: resolve(rootDir, 'index.html'),
+        admin: resolve(rootDir, 'admin/index.html'),
+      },
+    },
+  },
 })
 
 // GitHub Pages has no server-side rewrite: a direct hit on /projects returns its

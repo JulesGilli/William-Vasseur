@@ -1,4 +1,5 @@
 import raw from './content.json';
+import type { Product } from '../lib/shop/types';
 
 /**
  * Everything William edits, as the build pulled it from the database
@@ -75,6 +76,8 @@ export interface SiteContent {
 export interface ContentFile {
   projects: ProjectRecord[];
   site: SiteContent;
+  /** The shop's catalogue at publish time, as the shop function serves it. */
+  products: Product[];
 }
 
 export const content = raw as ContentFile;
