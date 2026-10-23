@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 bench/
+
+# Uploaded media, fetched by tools/pull-content.mjs at build time
+public/media/

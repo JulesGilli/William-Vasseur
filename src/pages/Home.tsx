@@ -13,24 +13,12 @@ import { TopographyBackdrop } from '../components/backgrounds/TopographyBackdrop
 import { products } from '../data/products';
 import { cheapestVariant, formatPrice } from '../lib/shop/types';
 import { asset } from '../lib/asset';
+import { site } from '../data/content';
 
-const PORTRAIT = asset('/portrait.webp');
-
-const BAND = [
-'SCIENCE FICTION',
-'NATURE',
-'REAL-TIME',
-'RESIN PRINTS',
-'DIORAMAS',
-'ENVIRONMENTS',
-'CHARACTERS'];
-
-
-const STATS = [
-['Based in', 'Toulouse, FR'],
-['Experience', '5 years'],
-['Focus', 'Sci-fi / Nature']];
-
+// The words and figures on this page are William's to edit; they arrive from
+// the database through src/data/content.json at build time.
+const { band, about, tools, physical, cta } = site;
+const PORTRAIT = asset(about.portrait);
 
 export function Home() {
   const reduced = useReducedMotion();
@@ -40,7 +28,7 @@ export function Home() {
       <Hero />
 
       <div className="border-b border-line py-5">
-        <Marquee items={BAND} duration={38} />
+        <Marquee items={band.words} duration={38} />
       </div>
 
       {/* About */}
@@ -50,7 +38,7 @@ export function Home() {
             whole block sitting left of centre on a wide screen. */}
         <div className="mx-auto grid max-w-[1400px] gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[minmax(240px,340px)_minmax(0,640px)] lg:justify-center lg:py-24">
           <Reveal from="right" className="self-start">
-            <BlueprintFrame label="July 2026 — Picture_of_me.png">
+            <BlueprintFrame label={about.portraitLabel}>
               {/* The portrait is a cut-out, so the blueprint grid behind it
                   shows through the corners instead of a photo background. */}
               <div className="overflow-hidden">
@@ -68,27 +56,19 @@ export function Home() {
           </Reveal>
 
           <div className="lg:pl-[10%]">
-            <SectionHeading index="01 / Profile" title="ABOUT ME" id="about-title" />
+            <SectionHeading index="01 / Profile" title={about.title} id="about-title" />
 
             <Reveal delay={0.1}>
               <div className="mt-6 max-w-xl space-y-4 text-sm leading-relaxed text-muted">
-                <p>
-                  Hello, I'm a 3D artist from Toulouse, in France. I'm 25 and
-                  I've been making things for as long as I can remember. I came
-                  to 3D about five years ago through a love of new tools, and
-                  I've been pushing at its edges ever since — in medium as much
-                  as in subject.
-                </p>
-                <p>
-                  Welcome to my world: equal parts technology and nature. I build
-                  science fiction, then print it, frame it and put it on a shelf.
-                </p>
+                {about.paragraphs.map((text) =>
+                <p key={text}>{text}</p>
+                )}
               </div>
             </Reveal>
 
             <Reveal delay={0.2}>
               <dl className="mt-8 grid max-w-xl grid-cols-2 gap-px border border-line bg-line sm:grid-cols-3">
-                {STATS.map(([term, value]) =>
+                {about.stats.map(({ term, value }) =>
                 <div
                   key={term}
                   className="bg-bg px-4 py-3 transition-colors duration-300 hover:bg-surface">
@@ -115,16 +95,14 @@ export function Home() {
           <div className="flex justify-end">
             <SectionHeading
               index="02 / Toolset"
-              title="CREATING 3D, WITH DIFFERENT TOOLS"
+              title={tools.title}
               align="right"
               id="tools-title" />
 
           </div>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-sm leading-relaxed text-muted lg:ml-[14%]">
-              I learned 3D in Blender and still open it every day. Around it sit
-              Unreal Engine for real-time lighting, DaVinci Resolve for grading,
-              and Nomad Sculpt on the tablet when a shape needs hands.
+              {tools.intro}
             </p>
           </Reveal>
           <ToolsRail />
@@ -138,14 +116,12 @@ export function Home() {
         <div className="mx-auto max-w-[1400px] px-4 py-16 sm:px-8 lg:py-24">
           <SectionHeading
             index="04 / Physical"
-            title="PUT MY IMAGINATION IN THE REAL LIFE"
+            title={physical.title}
             id="real-title" />
 
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-sm leading-relaxed text-muted lg:ml-[10%]">
-              Once an environment or a character is finished, I bring it out of
-              the screen — printed on paper as posters, and run through a resin
-              printer for models and dioramas.
+              {physical.intro}
             </p>
           </Reveal>
 
@@ -195,11 +171,10 @@ export function Home() {
               id="cta-title"
               className="mt-3 font-display text-2xl tracking-tight sm:text-3xl">
 
-              FOLLOW ME, I WILL SHOW YOU
+              {cta.title}
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-muted">
-              New work turns up whenever the inspiration does. Every piece below
-              can be turned around in your browser — no render, the actual mesh.
+              {cta.text}
             </p>
           </Reveal>
 
@@ -214,7 +189,7 @@ export function Home() {
                   aria-hidden="true"
                   className="absolute inset-0 -translate-x-full bg-muted/30 transition-transform duration-500 ease-out group-hover:translate-x-0" />
 
-                <span className="relative">MY PROJECTS</span>
+                <span className="relative">{cta.button}</span>
                 <ArrowRightIcon
                   className="relative h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5"
                   aria-hidden="true" />

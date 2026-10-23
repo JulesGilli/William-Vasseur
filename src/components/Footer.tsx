@@ -1,4 +1,5 @@
 import { InstagramIcon, MailIcon, TriangleIcon } from 'lucide-react';
+import { site } from '../data/content';
 
 export function Footer() {
   return (
@@ -20,7 +21,7 @@ export function Footer() {
             </p>
             <div className="mt-2 flex items-center gap-4">
               <a
-                href="https://www.artstation.com/williamvasseur"
+                href={site.contact.artstation}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="William Vasseur on ArtStation"
@@ -29,7 +30,7 @@ export function Footer() {
                 <TriangleIcon className="h-5 w-5" aria-hidden="true" />
               </a>
               <a
-                href="https://www.instagram.com/v2s3d/"
+                href={site.contact.instagram}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="William Vasseur on Instagram"
@@ -45,13 +46,13 @@ export function Footer() {
               Contact
             </p>
             <a
-              href="mailto:contact@williamvasseur.fr"
+              href={`mailto:${site.contact.email}`}
               // mt-2 like the icon row beside it: these two rows are the same height,
               // so matching the gap is what puts CONTACT and SOCIAL MEDIA on one line.
               className="mt-2 flex items-center gap-2 text-sm transition-opacity hover:opacity-70">
               
               <MailIcon className="h-4 w-4" aria-hidden="true" />
-              contact@williamvasseur.fr
+              {site.contact.email}
             </a>
           </div>
         </div>

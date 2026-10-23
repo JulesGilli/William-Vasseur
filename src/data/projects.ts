@@ -1,4 +1,5 @@
 import { asset } from '../lib/asset';
+import { content, site } from './content';
 
 export interface GalleryImage {
   src: string;
@@ -45,7 +46,7 @@ export interface Project {
    * Where the finished render can be bought, by product id in `products`.
    * Only the forms named here get a button, so a piece sold as a print and
    * not as a figurine offers one link, and a piece sold as neither offers
-   * none. Empty until the posters for these renders exist in the shop.
+   * none.
    */
   shop?: {poster?: string;figurine?: string;};
   /** Finished artwork, browsable and downloadable in place of a 3D viewer. */
@@ -83,140 +84,52 @@ export interface SplatWorld {
  * the signature model in both would list the same piece twice.
  */
 export const heroPiece = {
-  title: 'Couronne',
-  spec: 'GLB · 16K TRIS',
-  model: asset('/models/couronne.glb'),
-  image: asset('/models/posters/couronne.webp')
+  title: site.hero.piece.title,
+  spec: site.hero.piece.spec,
+  model: asset(site.hero.piece.model),
+  image: asset(site.hero.piece.poster)
 };
 
 /**
- * Portfolio work only. The pieces sold as prints, figurines and dioramas live
- * in `products` and are deliberately absent here, so the Projects sheet stays
- * a body of work rather than a second shop window.
+ * The bench the splat viewer is exercised on: "Forest path" by tanha
+ * (superspl.at/scene/2be1a75a, CC BY 4.0). Set in .env.development.local and
+ * undefined in any build, so it never reaches the public site — the licence
+ * is fine for local work but this is not our asset to publish. Splatting is
+ * parked for a future piece; see docs/gaussian-splatting.md.
  */
-export const projects: Project[] = [
+const benchWorld: SplatWorld | undefined = import.meta.env.VITE_WORLD_NAVANA ?
 {
-  id: 'mossy-log',
-  ref: 'PRJ—001',
-  title: 'Bloom Fragment',
-  category: 'Nature',
-  year: '2026',
-  software: 'Blender',
-  description:
-  'A drifting shard of bark, moss and quartz in bloom. The study that set the direction for everything since — technology used to look at nature closely.',
-  image: asset('/models/posters/mossy-log.webp'),
-  model: asset('/models/mossy-log.glb'),
-  spec: 'GLB · 25K TRIS'
-  // No `world`: Gaussian splatting is held for a future piece, so none of the
-  // current work carries one. See docs/gaussian-splatting.md to switch it on.
-},
-{
-  id: 'navana',
-  ref: 'PRJ—002',
-  title: 'Navana',
-  category: 'Nature',
-  year: '2026',
-  software: 'Blender · Cycles',
-  description:
-  'A canopy of fused mushroom crowns closing over a still pool. Built for the light: everything in the scene exists to catch the shafts coming through the gaps.',
-  image: asset('/process/render.webp'),
-  spec: 'Still · 1920 × 1080',
-  // The bench the splat viewer is exercised on: "Forest path" by tanha
-  // (superspl.at/scene/2be1a75a, CC BY 4.0). Set in .env.development.local and
-  // undefined in any build, so it never reaches the public site — the licence
-  // is fine for local work but this is not our asset to publish.
-  // No `upright`: SuperSplat publishes in the trainer's Y-down convention
-  // (checked against their own viewer), so the default flip applies.
-  // Start pose lifted from the scene's published settings.json, so the walk
-  // opens on the path exactly like the SuperSplat viewer does.
-  world: import.meta.env.VITE_WORLD_NAVANA ?
-  {
-    src: import.meta.env.VITE_WORLD_NAVANA,
-    travel: 'walk' as const,
-    // Published pose raised a touch: the capture's own camera hugs the ground.
-    eye: [0.105, 0.6, -3.116] as [number, number, number],
-    look: [0.037, 0.72, -0.958] as [number, number, number],
-    fov: 60
-  } :
+  src: import.meta.env.VITE_WORLD_NAVANA,
+  travel: 'walk',
+  // Published pose raised a touch: the capture's own camera hugs the ground.
+  eye: [0.105, 0.6, -3.116],
+  look: [0.037, 0.72, -0.958],
+  fov: 60
+} :
+undefined;
+
+/**
+ * Portfolio work only, in the order William set. The pieces sold as prints,
+ * figurines and dioramas live in `products`, so the Projects sheet stays a
+ * body of work rather than a second shop window.
+ */
+export const projects: Project[] = content.projects.map((p) => ({
+  id: p.id,
+  ref: p.ref,
+  title: p.title,
+  category: p.category as Category,
+  year: p.year,
+  software: p.software,
+  description: p.description,
+  image: asset(p.poster),
+  model: p.model ? asset(p.model) : undefined,
+  spec: p.spec,
+  // Empty lists stay undefined: the sheet treats "no renders" and "no stages"
+  // as reasons to fall back, not as things to draw empty.
+  gallery: p.renders.length ? p.renders.map((r) => ({ ...r, src: asset(r.src) })) : undefined,
+  stages: p.stages.length ? p.stages.map((s) => ({ ...s, image: asset(s.image) })) : undefined,
+  shop: p.shop_poster || p.shop_figurine ?
+  { poster: p.shop_poster ?? undefined, figurine: p.shop_figurine ?? undefined } :
   undefined,
-  // Finished renders only. The painted study and the passes are process,
-  // and process belongs to the scrubber beside this, not to the carousel.
-  gallery: [
-  {
-    src: asset('/gallery/navana-landscape.webp'),
-    label: 'Landscape',
-    size: '1920 × 1080'
-  }],
-
-  stages: [
-  {
-    index: '01',
-    label: 'Drawing',
-    tool: 'Pen · perspective sketch',
-    caption:
-    'It starts on paper. Perspective lines, the arch of the canopy and where the eye should land — the whole scene decided in pen before any of it is worth building.',
-    image: asset('/process/drawing.webp')
-  },
-  {
-    index: '02',
-    label: 'Concept',
-    tool: 'Painted study',
-    caption:
-    'A painted study next — the mood, the scale of the canopy and the palette get settled before a single vertex exists.',
-    image: asset('/process/concept.webp')
-  },
-  {
-    index: '03',
-    label: 'Blockout',
-    tool: 'Blender · solid view',
-    caption:
-    'Geometry only. Trunks, ground scatter and silhouettes are built and dressed in flat colour, so the composition can be judged without lighting hiding anything.',
-    image: asset('/process/blockout.webp')
-  },
-  {
-    index: '04',
-    label: 'Render',
-    tool: 'Blender · Cycles',
-    caption:
-    'Materials, volumetric light through the canopy, then a grade. Same camera as the blockout, so the two can be read against each other.',
-    image: asset('/process/render.webp')
-  }]
-
-},
-{
-  id: 'navana-desert',
-  ref: 'PRJ—003',
-  title: 'Navana / Desert',
-  category: 'Nature',
-  year: '2026',
-  software: 'Blender · Cycles',
-  description:
-  'The dry side of the same world. Ribbon trunks arc over red rock and shallow pools, with a second planet sitting low behind the ridge.',
-  image: asset('/process/desert-render.webp'),
-  spec: 'Still · 1080 × 1920',
-  gallery: [
-  {
-    src: asset('/gallery/desert-portrait.webp'),
-    label: 'Portrait',
-    size: '1080 × 1920'
-  }],
-
-  stages: [
-  {
-    index: '01',
-    label: 'Clown pass',
-    tool: 'Blender · random colour',
-    caption:
-    'Every asset gets its own flat colour. Nothing to do with the final look — it is there to check that each element still reads as separate once they overlap.',
-    image: asset('/process/desert-clown.webp')
-  },
-  {
-    index: '02',
-    label: 'Render',
-    tool: 'Blender · Cycles',
-    caption:
-    'Shaded, lit and graded from the same camera, so the two passes can be read against each other.',
-    image: asset('/process/desert-render.webp')
-  }]
-
-}];
+  world: p.id === 'navana' ? benchWorld : undefined
+}));

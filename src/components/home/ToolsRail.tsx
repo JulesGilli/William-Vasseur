@@ -5,12 +5,18 @@ import {
   ResolveMark,
   UnrealMark } from
 '../icons/ToolIcons';
+import { site } from '../../data/content';
 
-const tools = [
-{ name: 'Blender', role: 'Modeling · Shading · Render', Icon: BlenderMark },
-{ name: 'Unreal Engine', role: 'Real-time · Lighting', Icon: UnrealMark },
-{ name: 'DaVinci Resolve', role: 'Grading · Edit', Icon: ResolveMark },
-{ name: 'Nomad Sculpt', role: 'Sculpting · Tablet', Icon: NomadMark }];
+// Icons are drawn here, in the site's line style; the names and roles are
+// William's, edited with the rest of the home page.
+const ICONS = {
+  blender: BlenderMark,
+  unreal: UnrealMark,
+  resolve: ResolveMark,
+  nomad: NomadMark
+};
+
+const tools = site.tools.tools.map((t) => ({ ...t, Icon: ICONS[t.icon] ?? BlenderMark }));
 
 
 export function ToolsRail() {

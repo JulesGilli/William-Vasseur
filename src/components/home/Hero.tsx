@@ -2,6 +2,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { ArrowDownIcon } from 'lucide-react';
 import { ModelViewer } from '../three/ModelViewer';
 import { heroPiece } from '../../data/projects';
+import { site } from '../../data/content';
 
 export function Hero() {
   const reduced = useReducedMotion();
@@ -81,10 +82,9 @@ export function Hero() {
             // runs exactly its width. Below that it keeps a readable measure.
             className="mt-5 max-w-md text-sm text-muted lg:ml-[calc(var(--title)*0.99)] lg:w-[calc(var(--title)*3.46)] lg:max-w-none">
 
-            3D Artist — science-fiction environments, characters and the objects
-            they leave behind.
+            {site.hero.tagline}
             <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.2em]">
-              Toulouse, France
+              {site.hero.location}
             </span>
           </motion.p>
 

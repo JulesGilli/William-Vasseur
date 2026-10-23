@@ -7,12 +7,15 @@
     "dev": "npx vite",
     "build": "npx vite build",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "preview": "npx vite preview"
+    "preview": "npx vite preview",
+    "content": "node tools/pull-content.mjs",
+    "prebuild": "node tools/pull-content.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
+    "@supabase/supabase-js": "^2.118.0",
     "framer-motion": "^11.5.4",
     "lucide-react": "0.522.0",
     "ogl": "^1.0.11",
@@ -23,6 +26,9 @@
     "three": "^0.169.0"
   },
   "devDependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
     "@types/node": "^20.11.18",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
@@ -34,7 +40,9 @@
     "eslint": "^8.50.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.1",
+    "meshoptimizer": "^1.3.0",
     "postcss": "latest",
+    "sharp": "^0.35.5",
     "tailwindcss": "3.4.17",
     "typescript": "^5.5.4",
     "vite": "^5.2.0"

@@ -10,6 +10,7 @@ import {
 'framer-motion';
 import { ArrowDownIcon } from 'lucide-react';
 import { asset } from '../../lib/asset';
+import { site } from '../../data/content';
 
 interface Stage {
   id: string;
@@ -26,44 +27,17 @@ interface Stage {
   video?: string;
 }
 
-const STAGES: Stage[] = [
-{
-  id: 'drawing',
-  index: '01',
-  label: 'Drawing',
-  caption:
-  'It starts on paper. Perspective lines, the arch of the canopy and where the eye should land — the whole scene decided in pen before any of it is worth building. Scroll to watch it drawn.',
-  tool: 'Pen · perspective sketch',
-  image: asset('/process/drawing.webp'),
-  video: asset('/process/drawing-timelapse.mp4')
-},
-{
-  id: 'concept',
-  index: '02',
-  label: 'Concept',
-  caption:
-  'A painted study next — the mood, the scale of the canopy, and the palette get settled before a single vertex exists.',
-  tool: 'Painted study',
-  image: asset('/process/concept.webp')
-},
-{
-  id: 'blockout',
-  index: '03',
-  label: 'Blockout',
-  caption:
-  'Geometry only. Trunks, ground scatter and silhouettes are built and dressed in flat colour, so the composition can be judged without lighting hiding anything.',
-  tool: 'Blender · solid view',
-  image: asset('/process/blockout.webp')
-},
-{
-  id: 'render',
-  index: '04',
-  label: 'Render',
-  caption:
-  'Materials, volumetric light through the canopy, then a grade. Same camera as the blockout, so the two can be read against each other.',
-  tool: 'Blender · Cycles',
-  image: asset('/process/render.webp')
-}];
+// William edits these with the rest of the home page; numbering and ids
+// follow from the order he puts them in.
+const STAGES: Stage[] = site.process.stages.map((stage, i) => ({
+  id: stage.label.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+  index: String(i + 1).padStart(2, '0'),
+  label: stage.label,
+  caption: stage.caption,
+  tool: stage.tool,
+  image: asset(stage.image),
+  video: stage.video ? asset(stage.video) : undefined
+}));
 
 
 /** Hooks live in the child so the count stays fixed as stages are mapped. */
@@ -245,7 +219,7 @@ export function ProcessStages() {
                   id="process-title"
                   className="font-display text-2xl leading-tight tracking-tight sm:text-3xl">
 
-                  FROM A SKETCH TO A WORLD
+                  {site.process.title}
                 </h2>
 
                 {/* The section is driven by the scroll, which nothing on screen
@@ -273,7 +247,7 @@ export function ProcessStages() {
               </div>
             </div>
             <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-muted sm:block">
-              Navana · 2026
+              {site.process.project}
             </span>
           </div>
 

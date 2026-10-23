@@ -1,0 +1,225 @@
+{
+  "projects": [
+    {
+      "id": "mossy-log",
+      "ref": "PRJ—001",
+      "title": "Bloom Fragment",
+      "category": "Nature",
+      "year": "2026",
+      "software": "Blender",
+      "description": "A drifting shard of bark, moss and quartz in bloom. The study that set the direction for everything since — technology used to look at nature closely.",
+      "spec": "GLB · 25K TRIS",
+      "poster": "/models/posters/mossy-log.webp",
+      "model": "/models/mossy-log.glb",
+      "renders": [],
+      "stages": [],
+      "shop_poster": null,
+      "shop_figurine": null
+    },
+    {
+      "id": "navana",
+      "ref": "PRJ—002",
+      "title": "Navana",
+      "category": "Nature",
+      "year": "2026",
+      "software": "Blender · Cycles",
+      "description": "A canopy of fused mushroom crowns closing over a still pool. Built for the light: everything in the scene exists to catch the shafts coming through the gaps.",
+      "spec": "Still · 1920 × 1080",
+      "poster": "/process/render.webp",
+      "model": null,
+      "renders": [
+        {
+          "src": "/gallery/navana-landscape.webp",
+          "size": "1920 × 1080",
+          "label": "Landscape"
+        }
+      ],
+      "stages": [
+        {
+          "tool": "Pen · perspective sketch",
+          "image": "/process/drawing.webp",
+          "index": "01",
+          "label": "Drawing",
+          "caption": "It starts on paper. Perspective lines, the arch of the canopy and where the eye should land — the whole scene decided in pen before any of it is worth building."
+        },
+        {
+          "tool": "Painted study",
+          "image": "/process/concept.webp",
+          "index": "02",
+          "label": "Concept",
+          "caption": "A painted study next — the mood, the scale of the canopy and the palette get settled before a single vertex exists."
+        },
+        {
+          "tool": "Blender · solid view",
+          "image": "/process/blockout.webp",
+          "index": "03",
+          "label": "Blockout",
+          "caption": "Geometry only. Trunks, ground scatter and silhouettes are built and dressed in flat colour, so the composition can be judged without lighting hiding anything."
+        },
+        {
+          "tool": "Blender · Cycles",
+          "image": "/process/render.webp",
+          "index": "04",
+          "label": "Render",
+          "caption": "Materials, volumetric light through the canopy, then a grade. Same camera as the blockout, so the two can be read against each other."
+        }
+      ],
+      "shop_poster": null,
+      "shop_figurine": null
+    },
+    {
+      "id": "navana-desert",
+      "ref": "PRJ—003",
+      "title": "Navana / Desert",
+      "category": "Nature",
+      "year": "2026",
+      "software": "Blender · Cycles",
+      "description": "The dry side of the same world. Ribbon trunks arc over red rock and shallow pools, with a second planet sitting low behind the ridge.",
+      "spec": "Still · 1080 × 1920",
+      "poster": "/process/desert-render.webp",
+      "model": null,
+      "renders": [
+        {
+          "src": "/gallery/desert-portrait.webp",
+          "size": "1080 × 1920",
+          "label": "Portrait"
+        }
+      ],
+      "stages": [
+        {
+          "tool": "Blender · random colour",
+          "image": "/process/desert-clown.webp",
+          "index": "01",
+          "label": "Clown pass",
+          "caption": "Every asset gets its own flat colour. Nothing to do with the final look — it is there to check that each element still reads as separate once they overlap."
+        },
+        {
+          "tool": "Blender · Cycles",
+          "image": "/process/desert-render.webp",
+          "index": "02",
+          "label": "Render",
+          "caption": "Shaded, lit and graded from the same camera, so the two passes can be read against each other."
+        }
+      ],
+      "shop_poster": null,
+      "shop_figurine": null
+    }
+  ],
+  "site": {
+    "hero": {
+      "piece": {
+        "spec": "GLB · 16K TRIS",
+        "model": "/models/couronne.glb",
+        "title": "Couronne",
+        "poster": "/models/posters/couronne.webp"
+      },
+      "tagline": "3D Artist — science-fiction environments, characters and the objects they leave behind.",
+      "location": "Toulouse, France"
+    },
+    "band": {
+      "words": [
+        "SCIENCE FICTION",
+        "NATURE",
+        "REAL-TIME",
+        "RESIN PRINTS",
+        "DIORAMAS",
+        "ENVIRONMENTS",
+        "CHARACTERS"
+      ]
+    },
+    "about": {
+      "stats": [
+        {
+          "term": "Based in",
+          "value": "Toulouse, FR"
+        },
+        {
+          "term": "Experience",
+          "value": "5 years"
+        },
+        {
+          "term": "Focus",
+          "value": "Sci-fi / Nature"
+        }
+      ],
+      "title": "ABOUT ME",
+      "portrait": "/portrait.webp",
+      "paragraphs": [
+        "Hello, I'm a 3D artist from Toulouse, in France. I'm 25 and I've been making things for as long as I can remember. I came to 3D about five years ago through a love of new tools, and I've been pushing at its edges ever since — in medium as much as in subject.",
+        "Welcome to my world: equal parts technology and nature. I build science fiction, then print it, frame it and put it on a shelf."
+      ],
+      "portraitLabel": "July 2026 — Picture_of_me.png"
+    },
+    "tools": {
+      "intro": "I learned 3D in Blender and still open it every day. Around it sit Unreal Engine for real-time lighting, DaVinci Resolve for grading, and Nomad Sculpt on the tablet when a shape needs hands.",
+      "title": "CREATING 3D, WITH DIFFERENT TOOLS",
+      "tools": [
+        {
+          "icon": "blender",
+          "name": "Blender",
+          "role": "Modeling · Shading · Render"
+        },
+        {
+          "icon": "unreal",
+          "name": "Unreal Engine",
+          "role": "Real-time · Lighting"
+        },
+        {
+          "icon": "resolve",
+          "name": "DaVinci Resolve",
+          "role": "Grading · Edit"
+        },
+        {
+          "icon": "nomad",
+          "name": "Nomad Sculpt",
+          "role": "Sculpting · Tablet"
+        }
+      ]
+    },
+    "process": {
+      "title": "FROM A SKETCH TO A WORLD",
+      "stages": [
+        {
+          "tool": "Pen · perspective sketch",
+          "image": "/process/drawing.webp",
+          "label": "Drawing",
+          "video": "/process/drawing-timelapse.mp4",
+          "caption": "It starts on paper. Perspective lines, the arch of the canopy and where the eye should land — the whole scene decided in pen before any of it is worth building. Scroll to watch it drawn."
+        },
+        {
+          "tool": "Painted study",
+          "image": "/process/concept.webp",
+          "label": "Concept",
+          "caption": "A painted study next — the mood, the scale of the canopy, and the palette get settled before a single vertex exists."
+        },
+        {
+          "tool": "Blender · solid view",
+          "image": "/process/blockout.webp",
+          "label": "Blockout",
+          "caption": "Geometry only. Trunks, ground scatter and silhouettes are built and dressed in flat colour, so the composition can be judged without lighting hiding anything."
+        },
+        {
+          "tool": "Blender · Cycles",
+          "image": "/process/render.webp",
+          "label": "Render",
+          "caption": "Materials, volumetric light through the canopy, then a grade. Same camera as the blockout, so the two can be read against each other."
+        }
+      ],
+      "project": "Navana · 2026"
+    },
+    "physical": {
+      "intro": "Once an environment or a character is finished, I bring it out of the screen — printed on paper as posters, and run through a resin printer for models and dioramas.",
+      "title": "PUT MY IMAGINATION IN THE REAL LIFE"
+    },
+    "cta": {
+      "text": "New work turns up whenever the inspiration does. Every piece below can be turned around in your browser — no render, the actual mesh.",
+      "title": "FOLLOW ME, I WILL SHOW YOU",
+      "button": "MY PROJECTS"
+    },
+    "contact": {
+      "email": "contact@williamvasseur.fr",
+      "instagram": "https://www.instagram.com/v2s3d/",
+      "artstation": "https://www.artstation.com/williamvasseur"
+    }
+  }
+}
