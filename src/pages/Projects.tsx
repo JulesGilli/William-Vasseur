@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Rotate3dIcon } from 'lucide-react';
+import { ArrowUpRightIcon, Rotate3dIcon } from 'lucide-react';
 import { Magnetic } from '../components/motion/Magnetic';
 import { WorldViewer } from '../components/world/WorldViewer';
+import { ProjectDialog } from '../components/ProjectDialog';
 import type { Project } from '../data/projects';
 import { ModelViewer } from '../components/three/ModelViewer';
 import { ProcessScrubber } from '../components/ProcessScrubber';
@@ -15,6 +16,7 @@ export function Projects() {
   const reduced = useReducedMotion();
   const [filter, setFilter] = useState('All');
   const [world, setWorld] = useState<Project | null>(null);
+  const [opened, setOpened] = useState<Project | null>(null);
 
   // The full vocabulary, not just what is currently on the sheet: a family with
   // no work in it yet still gets its chip, and says so when opened.
@@ -164,6 +166,18 @@ export function Projects() {
                       )}
                     </dl>
 
+                    <button
+                      type="button"
+                      onClick={() => setOpened(project)}
+                      className="group mt-6 inline-flex items-center gap-2 border border-ink px-4 py-2 font-display text-sm tracking-tight transition-colors hover:bg-ink hover:text-bg">
+
+                      VIEW PROJECT
+                      <ArrowUpRightIcon
+                        className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                        aria-hidden="true" />
+
+                    </button>
+
                     {project.world ?
                     <Magnetic className="mt-7 inline-block" strength={8}>
                         <button
@@ -207,6 +221,7 @@ export function Projects() {
         title={world?.title ?? ''}
         onClose={() => setWorld(null)} />
 
+      <ProjectDialog project={opened} onClose={() => setOpened(null)} />
     </main>);
 
 }
