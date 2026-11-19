@@ -60,15 +60,39 @@ fine-grained GitHub token limited to this repository with
 **Actions: read and write**, pasted into *Edge Functions → Secrets*.
 
 `.github/workflows/keep-alive.yml` reads the database every third day so
-the Free plan never pauses it. Delete it once on Pro.
+the Free plan never pauses it, and re-enables its own schedule each run so
+GitHub does not switch it off after 60 days without a commit.
+
+### Languages
+
+The site reads in English, French, German and Spanish. English is the base
+text; the others are overlays stored with what they translate: every object
+in the jsonb content carries its own `_i18n: { fr, de, es }`, and rows that
+are columns (`projects`, `products`, `variants`) carry the same in an
+`i18n` column. `src/i18n/localize.ts` folds one language in; anything
+missing falls back to English. In the editor, the language bar turns every
+screen into that language's translation sheet.
+
+### Shipping and legal pages
+
+Two more `site_content` rows, edited under *Livraison & légal*:
+
+- `shipping` — `franceCents`, `europeCents`, `freeFromCents`. Read live at
+  checkout like prices. The buyer picks a country in the cart and the
+  payment page is held to that country.
+- `legal` — the seller's name, SIRET, address, mediator. The legal notice,
+  terms of sale and privacy pages are templates in `src/i18n/legal/` filled
+  with these; the footer links to them only once name, SIRET and address
+  are set. French is the reference text.
 
 ## What it costs
 
-Stripe has no monthly fee; it takes a cut per sale. Supabase is free to build
-on, but the Free plan pauses a project after about a week without database
-activity — fine while we are working, not fine for a shop that must answer at
-3am on a Sunday. Budget the Pro plan (about $25/month) at the moment the first
-real payment can be taken, not before.
+Stripe has no monthly fee; it takes a cut per sale. Supabase stays on the
+Free plan: its one drawback, pausing a project after about a week without
+database activity, is what the keep-alive workflow prevents. What Free does
+not include is automated backups — the content is rebuilt into the site at
+every publish and payments live in Stripe, but the `orders` table has no
+copy elsewhere.
 
 ## Go-live checklist
 
@@ -99,10 +123,10 @@ real payment can be taken, not before.
 
 ## Day-to-day for William
 
-- **Stock and prices**: edit rows in the `variants` table
-  (Supabase dashboard → Table Editor). `stock` empty = made to order;
-  `0` = shows as sold out.
-- **Orders**: the `orders` table, newest first; `paid` rows carry the buyer's
-  email and the total. Shipping details live in the Stripe dashboard next to
-  each payment.
+Everything goes through the editor; `docs/guide-editeur.html` is his manual.
+
+- **Texts, projects, products, prices, stock, shipping fees, translations**:
+  the editor, then *Publier*.
+- **Orders**: the editor's *Commandes* screen. Shipping addresses live in the
+  Stripe dashboard next to each payment.
 - **Refunds / disputes**: handled entirely from the Stripe dashboard.

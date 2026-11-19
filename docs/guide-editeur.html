@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Le mode d’emploi de l’éditeur du site de William Vasseur.">
+<title>Modifier ton site</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #e9eaec;
+    --sheet: #f4f5f6;
+    --ink: #14161a;
+    --muted: #5c626b;
+    --line: rgba(20, 22, 26, 0.18);
+    --hair: rgba(20, 22, 26, 0.09);
+    --accent: #1f4fd8;
+    --accent-soft: rgba(31, 79, 216, 0.09);
+    --warn-ink: #8a3d00;
+    --warn-soft: rgba(197, 106, 24, 0.12);
+    --warn-line: rgba(197, 106, 24, 0.4);
+
+    --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #15171a;
+      --sheet: #1d2024;
+      --ink: #e9eaec;
+      --muted: #9aa1aa;
+      --line: rgba(233, 234, 236, 0.2);
+      --hair: rgba(233, 234, 236, 0.1);
+      --accent: #6e93ff;
+      --accent-soft: rgba(110, 147, 255, 0.14);
+      --warn-ink: #f0b27a;
+      --warn-soft: rgba(240, 178, 122, 0.12);
+      --warn-line: rgba(240, 178, 122, 0.38);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #15171a;
+    --sheet: #1d2024;
+    --ink: #e9eaec;
+    --muted: #9aa1aa;
+    --line: rgba(233, 234, 236, 0.2);
+    --hair: rgba(233, 234, 236, 0.1);
+    --accent: #6e93ff;
+    --accent-soft: rgba(110, 147, 255, 0.14);
+    --warn-ink: #f0b27a;
+    --warn-soft: rgba(240, 178, 122, 0.12);
+    --warn-line: rgba(240, 178, 122, 0.38);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(to right, var(--hair) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--hair) 1px, transparent 1px);
+    background-size: 32px 32px;
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sheet {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: clamp(1.75rem, 5vw, 4rem) clamp(1.1rem, 4vw, 2.5rem) 5rem;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2.3rem, 7vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 0.6rem 0 0;
+  }
+
+  .standfirst {
+    margin: 1.4rem 0 0;
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 34rem;
+  }
+
+  .rule {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin: 2.75rem 0;
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.45rem;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    letter-spacing: 0;
+    margin: 0 0 0.35rem;
+  }
+
+  p { margin: 0 0 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .stack { display: flex; flex-direction: column; gap: 1rem; }
+  .stack-lg { display: flex; flex-direction: column; gap: 2.25rem; }
+
+  /* Part header — the plate label on a drawing sheet */
+  .part {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .part-no {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    padding-top: 0.2rem;
+  }
+  .part-meta {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .lede { margin-top: 1.1rem; color: var(--muted); }
+
+  /* Steps hung off a vertical hairline, like margin annotations */
+  ol.steps {
+    list-style: none;
+    margin: 1.75rem 0 0;
+    padding: 0 0 0 1.5rem;
+    border-left: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  ol.steps > li { position: relative; }
+  ol.steps > li::before {
+    content: counter(step, decimal-leading-zero);
+    counter-increment: step;
+    position: absolute;
+    left: -1.5rem;
+    transform: translateX(-100%);
+    padding-right: 0.85rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    line-height: 1.7;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  ol.steps { counter-reset: step; }
+
+  @media (max-width: 33rem) {
+    ol.steps { padding-left: 1rem; }
+    ol.steps > li::before {
+      position: static;
+      transform: none;
+      display: block;
+      padding: 0 0 0.2rem;
+    }
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.85em;
+    background: var(--sheet);
+    border: 1px solid var(--line);
+    padding: 0.1em 0.4em;
+    white-space: nowrap;
+  }
+
+  .role {
+    font-family: var(--mono);
+    font-size: 0.85em;
+    font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    padding: 0.1em 0.45em;
+    white-space: nowrap;
+  }
+
+  .card {
+    background: var(--sheet);
+    border: 1px solid var(--line);
+    padding: 1.15rem 1.3rem;
+  }
+
+  .card-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 0.6rem;
+  }
+
+  ul.plain {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  ul.plain > li { padding-left: 1.1rem; position: relative; }
+  ul.plain > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 0.5rem;
+    height: 1px;
+    background: var(--muted);
+  }
+
+  .warn {
+    border: 1px solid var(--warn-line);
+    border-left-width: 3px;
+    background: var(--warn-soft);
+    padding: 1.15rem 1.3rem;
+  }
+  .warn .card-label { color: var(--warn-ink); }
+  .warn strong { color: var(--warn-ink); }
+
+  .addr {
+    font-family: var(--mono);
+    font-size: 0.9em;
+    color: var(--accent);
+    border-bottom: 1px solid var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, li:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  dl.cost {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.55rem 1.5rem;
+    margin: 1.1rem 0 0;
+    align-items: baseline;
+  }
+  dl.cost dt {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  dl.cost dd { margin: 0; }
+
+  footer.sign {
+    margin-top: 3.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+</style>
+</head>
+<body>
+<main class="sheet">
+  <header class="stack">
+    <p class="eyebrow">Éditeur — William Vasseur</p>
+    <h1>Modifier ton site</h1>
+    <p class="standfirst">
+      Tout ce que tu peux changer toi-même, sans passer par Jules : les textes,
+      les projets, la boutique, les frais de port et les traductions.
+    </p>
+  </header>
+
+  <div class="card" style="margin-top:2rem">
+    <p class="card-label">L'adresse de l'éditeur</p>
+    <p style="margin:0">
+      <a class="addr" href="https://julesgilli.github.io/William-Vasseur/admin/" target="_blank" rel="noreferrer">julesgilli.github.io/William-Vasseur/admin/</a>
+    </p>
+    <p style="margin:0.6rem 0 0">
+      Mets-la en favori. Tu t'y connectes avec ton e-mail et ton mot de passe.
+      Elle marche aussi sur téléphone.
+    </p>
+  </div>
+
+  <hr class="rule">
+
+  <section>
+    <div class="part">
+      <span class="part-no">01</span>
+      <h2>La seule règle à retenir</h2>
+      <span class="part-meta">Enregistrer<br>puis publier</span>
+    </div>
+
+    <p class="lede">
+      Il y a deux boutons, et ils ne font pas la même chose.
+    </p>
+
+    <ol class="steps">
+      <li>
+        <h3>Enregistrer garde ton travail</h3>
+        <p>
+          Chaque écran a son bouton <em>Enregistrer</em>. Il met ta modification
+          de côté dans l'éditeur. Le site, lui, ne bouge pas : tu peux préparer
+          un projet sur plusieurs jours, personne ne le voit.
+        </p>
+      </li>
+      <li>
+        <h3>Publier met le site à jour</h3>
+        <p>
+          Quand tout est prêt, va dans <code>Publier</code> et clique sur
+          <em>Publier le site</em>. Le site se reconstruit avec tout ce qui est
+          enregistré. Compte environ deux minutes avant de voir le changement en
+          ligne.
+        </p>
+      </li>
+    </ol>
+
+    <div class="warn" style="margin-top:1.9rem">
+      <p class="card-label">Trois exceptions</p>
+      <p style="margin:0">
+        Les <strong>prix</strong>, les <strong>stocks</strong> et les
+        <strong>frais de port</strong> comptent dès que tu enregistres : c'est
+        ce que le client paiera, même si tu n'as pas encore publié. Publie quand
+        même juste après, pour que le site affiche les mêmes chiffres.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="part">
+      <span class="part-no">02</span>
+      <h2>Accueil</h2>
+      <span class="part-meta">Les textes<br>de la première page</span>
+    </div>
+
+    <p class="lede">
+      La page d'accueil est découpée en blocs, dans l'ordre où ils apparaissent :
+      en-tête, bandeau défilant, à propos, outils, process, œuvres physiques,
+      appel final, contact.
+    </p>
+
+    <ul class="plain">
+      <li>Clique sur un bloc pour l'ouvrir. Chaque bloc s'enregistre séparément.</li>
+      <li>Pour changer une image ou le modèle 3D de l'en-tête, clique sur <em>Remplacer</em>.</li>
+      <li>Dans les listes (chiffres, logiciels, étapes), les flèches changent l'ordre et la corbeille supprime.</li>
+    </ul>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="part">
+      <span class="part-no">03</span>
+      <h2>Projets</h2>
+      <span class="part-meta">Ajouter, modifier<br>réordonner</span>
+    </div>
+
+    <ol class="steps">
+      <li>
+        <h3>Crée le projet</h3>
+        <p>
+          <em>Nouveau projet</em>, puis un titre et une image principale : ce
+          sont les deux seuls champs obligatoires. Le reste peut attendre.
+        </p>
+      </li>
+      <li>
+        <h3>Ajoute les images</h3>
+        <p>
+          <strong>Rendus finaux</strong> : les images finies, celles qu'on fait
+          défiler. <strong>Étapes du process</strong> : dessin, blockout, etc.,
+          dans l'ordre où tu les as faites. La numérotation suit toute seule.
+        </p>
+      </li>
+      <li>
+        <h3>Ou un modèle 3D</h3>
+        <p>
+          Si tu envoies un fichier <code>.glb</code>, le projet s'affiche en 3D
+          tournable à la place des rendus. Envoie ton export Blender tel quel
+          (50 Mo maximum) : il est allégé automatiquement à la publication.
+        </p>
+      </li>
+      <li>
+        <h3>Relie-le à la boutique</h3>
+        <p>
+          En bas, <em>En vente en poster</em> et <em>En vente en figurine</em> :
+          choisis le produit correspondant et un bouton d'achat apparaît sur le
+          projet.
+        </p>
+      </li>
+      <li>
+        <h3>Rends-le visible</h3>
+        <p>
+          Un nouveau projet est un <strong>brouillon</strong>. Coche
+          <em>Visible sur le site</em>, enregistre, puis publie.
+        </p>
+      </li>
+    </ol>
+
+    <p style="margin-top:1.6rem">
+      Dans la liste, les flèches changent l'ordre des projets sur le site.
+    </p>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="part">
+      <span class="part-no">04</span>
+      <h2>Boutique</h2>
+      <span class="part-meta">Produits, prix<br>stocks</span>
+    </div>
+
+    <p class="lede">
+      Un produit a un ou plusieurs <strong>formats</strong> (30 × 40 cm, 18 cm…),
+      et chaque format a son prix et son stock.
+    </p>
+
+    <dl class="cost">
+      <dt>Prix</dt>
+      <dd>En euros. <code>60</code> ou <code>59,90</code>.</dd>
+      <dt>Stock vide</dt>
+      <dd>Fabriqué à la commande : toujours disponible.</dd>
+      <dt>Stock à 0</dt>
+      <dd>Épuisé : le format reste affiché, barré, et ne peut plus être acheté.</dd>
+      <dt>Stock à 6</dt>
+      <dd>Il en reste 6. Le chiffre baisse tout seul à chaque vente.</dd>
+    </dl>
+
+    <div class="warn" style="margin-top:1.9rem">
+      <p class="card-label">À savoir</p>
+      <p style="margin:0">
+        Un format qui a déjà été commandé ne peut plus être supprimé : il fait
+        partie de l'historique des commandes. Pour le retirer de la vente,
+        passe son stock à <strong>0</strong>.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="part">
+      <span class="part-no">05</span>
+      <h2>Commandes</h2>
+      <span class="part-meta">Ce qui a été<br>acheté</span>
+    </div>
+
+    <ul class="plain">
+      <li>Chaque commande payée apparaît ici avec l'e-mail du client, les articles, le pays et le montant.</li>
+      <li>L'adresse de livraison est dans ton tableau de bord Stripe, avec le paiement.</li>
+      <li>Une fois le colis parti, clique sur <em>Marquer comme expédiée</em> pour garder ta liste à jour.</li>
+    </ul>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="part">
+      <span class="part-no">06</span>
+      <h2>Livraison &amp; légal</h2>
+      <span class="part-meta">À remplir avant<br>d'ouvrir la boutique</span>
+    </div>
+
+    <ol class="steps">
+      <li>
+        <h3>Les frais de port</h3>
+        <p>
+          Trois montants : la France, les autres pays d'Europe, et le montant de
+          panier à partir duquel la livraison est offerte. Vide ou 0 veut dire
+          offert. Le client choisit son pays dans le panier et voit le total
+          avant de payer.
+        </p>
+      </li>
+      <li>
+        <h3>Tes informations légales</h3>
+        <p>
+          Ton nom, ton SIRET, ton adresse, et le médiateur de la consommation
+          auquel tu as adhéré. Les trois pages légales du site (mentions
+          légales, conditions de vente, confidentialité) se remplissent toutes
+          seules avec ces informations, dans les quatre langues.
+        </p>
+      </li>
+    </ol>
+
+    <div class="warn" style="margin-top:1.9rem">
+      <p class="card-label">Avant d'ouvrir la boutique</p>
+      <ul class="plain" style="margin:0">
+        <li>Les pages légales n'apparaissent en bas du site qu'une fois le nom, le SIRET et l'adresse remplis.</li>
+        <li>Ton adresse sera publique : la loi l'exige pour un site qui vend.</li>
+        <li>Un vendeur français doit adhérer à un <strong>médiateur de la consommation</strong>. C'est une démarche à faire de ton côté, en ligne.</li>
+        <li>Relis les trois pages une fois remplies. Elles ont été rédigées avec soin, mais pas par un juriste.</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <div class="part">
+      <span class="part-no">07</span>
+      <h2>Les quatre langues</h2>
+      <span class="part-meta">Anglais, français<br>allemand, espagnol</span>
+    </div>
+
+    <p class="lede">
+      Le site s'affiche dans la langue du visiteur. L'anglais est le texte
+      principal ; les trois autres en sont des traductions.
+    </p>
+
+    <ol class="steps">
+      <li>
+        <h3>Écris d'abord en anglais</h3>
+        <p>
+          La barre <code>Langue</code>, en haut de l'éditeur, est sur
+          <span class="role">EN</span> par défaut. C'est là qu'on ajoute,
+          supprime et réordonne.
+        </p>
+      </li>
+      <li>
+        <h3>Puis traduis</h3>
+        <p>
+          Clique sur <span class="role">FR</span>, <span class="role">DE</span>
+          ou <span class="role">ES</span>. L'écran ne montre plus que les textes,
+          avec l'anglais rappelé sous chaque champ. Remplis, enregistre.
+        </p>
+      </li>
+      <li>
+        <h3>Rien d'obligatoire</h3>
+        <p>
+          Un champ laissé vide affiche l'anglais sur le site. Un projet ajouté
+          à la va-vite reste donc lisible partout, simplement pas encore
+          traduit.
+        </p>
+      </li>
+    </ol>
+
+    <p style="margin-top:1.6rem">
+      Les traductions actuelles ont été écrites pour toi. Relis au moins le
+      français : c'est ta voix, change ce qui ne te ressemble pas.
+    </p>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <h2>Les fichiers que tu envoies</h2>
+    <dl class="cost">
+      <dt>Images</dt>
+      <dd><code>.webp</code>, <code>.png</code> ou <code>.jpg</code>. Autour de 2 500 pixels de large suffit largement.</dd>
+      <dt>Modèles 3D</dt>
+      <dd><code>.glb</code>, export Blender brut. Allégé à la publication.</dd>
+      <dt>Vidéo</dt>
+      <dd><code>.mp4</code>, pour un timelapse dans le bloc Process de l'accueil.</dd>
+      <dt>Taille</dt>
+      <dd>50 Mo maximum par fichier.</dd>
+    </dl>
+  </section>
+
+  <hr class="rule">
+
+  <section class="stack">
+    <h2>Si quelque chose coince</h2>
+    <p>
+      Tu ne peux pas casser le site depuis l'éditeur. Tant que tu n'as pas
+      publié, rien ne change en ligne ; et si une publication échoue, le site
+      reste tel qu'il était.
+    </p>
+    <ul class="plain">
+      <li><strong>Mot de passe à changer</strong> : dans <code>Mon compte</code>.</li>
+      <li><strong>Mot de passe oublié</strong> : écris à Jules, il t'en remet un.</li>
+      <li><strong>Le site n'a pas changé dix minutes après avoir publié</strong> : envoie un message à Jules.</li>
+    </ul>
+  </section>
+
+  <footer class="sign">
+    <span>Éditeur — William Vasseur</span>
+    <span>Préparé par Jules Gilli</span>
+  </footer>
+</main>
+</body>
+</html>
