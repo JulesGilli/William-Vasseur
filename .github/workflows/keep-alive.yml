@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: read
+  actions: write
 
 jobs:
   ping:
@@ -27,3 +28,11 @@ jobs:
             --retry 5 --retry-delay 30 --retry-all-errors \
             -H "apikey: sb_publishable_BQ-X9n353xfbdy-CqFqeVg_0E4s2YXW" \
             "https://jgxguuviojnwjideytyb.supabase.co/rest/v1/projects?select=id&limit=1"
+
+      - name: Keep this schedule from being switched off
+        # GitHub disables scheduled workflows after 60 days without a commit,
+        # and publishing from the editor is not a commit. Re-enabling the
+        # workflow resets that clock, so a quiet repository keeps pinging.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/keep-alive.yml/enable"
