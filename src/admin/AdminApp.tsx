@@ -7,13 +7,15 @@ import { ProjectsSection } from './sections/ProjectsSection';
 import { ShopSection } from './sections/ShopSection';
 import { OrdersSection } from './sections/OrdersSection';
 import { PublishSection } from './sections/PublishSection';
+import { AccountSection } from './sections/AccountSection';
 
 const SECTIONS = [
 { id: 'home', label: 'Accueil', hint: 'Textes et pièce de la page d’accueil', Component: HomeSection },
 { id: 'projects', label: 'Projets', hint: 'Rendus, étapes, modèles 3D', Component: ProjectsSection },
 { id: 'shop', label: 'Boutique', hint: 'Produits, prix, stock', Component: ShopSection },
 { id: 'orders', label: 'Commandes', hint: 'Ce qui a été acheté', Component: OrdersSection },
-{ id: 'publish', label: 'Publier', hint: 'Mettre le site à jour', Component: PublishSection }] as
+{ id: 'publish', label: 'Publier', hint: 'Mettre le site à jour', Component: PublishSection },
+{ id: 'account', label: 'Mon compte', hint: 'Changer de mot de passe', Component: AccountSection }] as
 const;
 
 type SectionId = (typeof SECTIONS)[number]['id'];

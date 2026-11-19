@@ -20,7 +20,10 @@ jobs:
     steps:
       - name: Read one published project
         # The publishable key is public by design: it ships in every page.
+        # Retries ride out a runner's network blip (a DNS failure skipped the
+        # 16 Nov ping), which would otherwise stretch the gap toward a pause.
         run: |
           curl --fail --silent --show-error \
+            --retry 5 --retry-delay 30 --retry-all-errors \
             -H "apikey: sb_publishable_BQ-X9n353xfbdy-CqFqeVg_0E4s2YXW" \
             "https://jgxguuviojnwjideytyb.supabase.co/rest/v1/projects?select=id&limit=1"
