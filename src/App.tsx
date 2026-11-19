@@ -4,7 +4,6 @@ import { CartProvider } from './contexts/CartContext';
 import { CartDrawer } from './components/shop/CartDrawer';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { EdgeFlora } from './components/backgrounds/EdgeFlora';
 import { PageTransition } from './components/motion/PageTransition';
 import { Home } from './pages/Home';
 import { Projects } from './pages/Projects';
@@ -81,7 +80,6 @@ export function App() {
               <AnimatedRoutes />
             </div>
             <Footer />
-            <EdgeFlora />
           </div>
           <CartDrawer />
         </BrowserRouter>
