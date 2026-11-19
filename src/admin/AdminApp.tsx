@@ -8,12 +8,15 @@ import { ShopSection } from './sections/ShopSection';
 import { OrdersSection } from './sections/OrdersSection';
 import { PublishSection } from './sections/PublishSection';
 import { AccountSection } from './sections/AccountSection';
+import { SettingsSection } from './sections/SettingsSection';
+import { EDIT_LANGS, EditLangContext, type EditLang } from './form';
 
 const SECTIONS = [
 { id: 'home', label: 'Accueil', hint: 'Textes et pièce de la page d’accueil', Component: HomeSection },
 { id: 'projects', label: 'Projets', hint: 'Rendus, étapes, modèles 3D', Component: ProjectsSection },
 { id: 'shop', label: 'Boutique', hint: 'Produits, prix, stock', Component: ShopSection },
 { id: 'orders', label: 'Commandes', hint: 'Ce qui a été acheté', Component: OrdersSection },
+{ id: 'settings', label: 'Livraison & légal', hint: 'Frais de port, mentions légales', Component: SettingsSection },
 { id: 'publish', label: 'Publier', hint: 'Mettre le site à jour', Component: PublishSection },
 { id: 'account', label: 'Mon compte', hint: 'Changer de mot de passe', Component: AccountSection }] as
 const;
@@ -155,8 +158,10 @@ function NotAdmin({ email }: {email: string;}) {
 
 function Shell({ email }: {email: string;}) {
   const [current, setCurrent] = useState<SectionId>('home');
+  const [lang, setLang] = useState<EditLang>('en');
   const section = SECTIONS.find((s) => s.id === current) ?? SECTIONS[0];
   const Section = section.Component;
+  const editing = EDIT_LANGS.find((l) => l.code === lang) ?? EDIT_LANGS[0];
 
   return (
     <div className="min-h-screen bg-bg text-ink">
@@ -202,7 +207,34 @@ function Shell({ email }: {email: string;}) {
         </nav>
 
         <main className="min-w-0">
-          <Section />
+          {/* The site is written in English and translated from it. Picking
+              another language here turns every screen into its translation
+              sheet: only the words, each beside its English. */}
+          <div className="mb-6 flex flex-wrap items-center gap-2 border border-line p-2">
+            <span className="px-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">Langue</span>
+            {EDIT_LANGS.map((l) =>
+            <button
+              key={l.code}
+              type="button"
+              onClick={() => setLang(l.code)}
+              aria-pressed={l.code === lang}
+              title={`${l.label} — ${l.hint}`}
+              className={`border px-3 py-1 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors ${
+              l.code === lang ? 'border-ink bg-ink text-bg' : 'border-line text-muted hover:border-ink hover:text-ink'}`
+              }>
+
+                {l.code}
+              </button>
+            )}
+            <span className="min-w-0 flex-1 px-2 text-[11px] text-muted">
+              {lang === 'en' ?
+              'Anglais : le texte principal du site. C’est ici qu’on ajoute, supprime et réordonne.' :
+              `${editing.label} : tu traduis. Seuls les textes sont affichés ; un champ laissé vide garde l’anglais sur le site.`}
+            </span>
+          </div>
+          <EditLangContext.Provider value={lang}>
+            <Section />
+          </EditLangContext.Provider>
         </main>
       </div>
     </div>);

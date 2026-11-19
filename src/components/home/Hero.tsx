@@ -3,6 +3,7 @@ import { ArrowDownIcon } from 'lucide-react';
 import { ModelViewer } from '../three/ModelViewer';
 import { heroPiece } from '../../data/projects';
 import { site } from '../../data/content';
+import { t } from '../../i18n';
 
 export function Hero() {
   const reduced = useReducedMotion();
@@ -96,7 +97,7 @@ export function Hero() {
 
             <span className="flex h-16 w-6 items-center justify-center rounded-full border border-line">
               <span className="rotate-90 font-mono text-[9px] uppercase tracking-[0.28em] text-muted">
-                Scroll
+                {t.home.scroll}
               </span>
             </span>
             <motion.span
@@ -134,7 +135,7 @@ export function Hero() {
 
           <div className="mt-3 flex items-center justify-between">
             <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-              Live model · not a render
+              {t.home.liveModel}
             </span>
             <div className="flex gap-2" aria-hidden="true">
               {[0, 1, 2].map((dot) =>

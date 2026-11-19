@@ -14,6 +14,7 @@ import { products } from '../data/products';
 import { cheapestVariant, formatPrice } from '../lib/shop/types';
 import { asset } from '../lib/asset';
 import { site } from '../data/content';
+import { t } from '../i18n';
 
 // The words and figures on this page are William's to edit; they arrive from
 // the database through src/data/content.json at build time.
@@ -44,7 +45,7 @@ export function Home() {
               <div className="overflow-hidden">
                 <motion.img
                   src={PORTRAIT}
-                  alt="Portrait of William Vasseur, 3D artist"
+                  alt={t.home.portraitAlt}
                   className="aspect-[4/5] w-full object-cover"
                   initial={{ scale: reduced ? 1 : 1.12 }}
                   whileInView={{ scale: 1 }}
@@ -56,7 +57,7 @@ export function Home() {
           </Reveal>
 
           <div className="lg:pl-[10%]">
-            <SectionHeading index="01 / Profile" title={about.title} id="about-title" />
+            <SectionHeading index={t.home.profile} title={about.title} id="about-title" />
 
             <Reveal delay={0.1}>
               <div className="mt-6 max-w-xl space-y-4 text-sm leading-relaxed text-muted">
@@ -94,7 +95,7 @@ export function Home() {
         <div className="relative mx-auto max-w-[1400px] px-4 py-16 sm:px-8 lg:py-24">
           <div className="flex justify-end">
             <SectionHeading
-              index="02 / Toolset"
+              index={t.home.toolset}
               title={tools.title}
               align="right"
               id="tools-title" />
@@ -115,7 +116,7 @@ export function Home() {
       <section className="border-b border-line" aria-labelledby="real-title">
         <div className="mx-auto max-w-[1400px] px-4 py-16 sm:px-8 lg:py-24">
           <SectionHeading
-            index="04 / Physical"
+            index={t.home.physical}
             title={physical.title}
             id="real-title" />
 
@@ -131,7 +132,7 @@ export function Home() {
                 <Link
                 to="/store"
                 className="group block"
-                aria-label={`${product.name} — see it in the store`}>
+                aria-label={t.home.seeInStore(product.name)}>
 
                   <BlueprintFrame label={product.ref} caption={product.kind}>
                     <div className="overflow-hidden bg-surface/40">
@@ -149,7 +150,7 @@ export function Home() {
                     </span>
                     {/* Cheapest variant: the teaser quotes an entry price. */}
                     <span className="font-mono text-xs text-muted">
-                      From {formatPrice(cheapestVariant(product).priceCents, product.currency)}
+                      {t.home.from(formatPrice(cheapestVariant(product).priceCents, product.currency))}
                     </span>
                   </span>
                 </Link>
@@ -165,7 +166,7 @@ export function Home() {
         <div className="relative mx-auto max-w-[1400px] px-4 py-16 text-center sm:px-8 lg:py-24">
           <Reveal>
             <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
-              05 / Next
+              {t.home.next}
             </span>
             <h2
               id="cta-title"

@@ -13,6 +13,7 @@ interface VariantRow {
   price_cents: number;
   stock: number | null;
   position: number;
+  i18n?: Record<string, unknown>;
 }
 
 interface ProductRow extends Value {
@@ -32,7 +33,7 @@ const euros = (cents: number) => (cents / 100).toLocaleString('fr-FR', { style: 
 
 const FIELDS: FieldSpec[] = [
 { kind: 'text', key: 'name', label: 'Nom' },
-{ kind: 'text', key: 'ref', label: 'Référence', hint: 'Ex. « ART—04 ».' },
+{ kind: 'text', key: 'ref', label: 'Référence', hint: 'Ex. « ART—04 ».', fixed: true },
 {
   kind: 'select',
   key: 'family',
@@ -64,8 +65,8 @@ const FIELDS: FieldSpec[] = [
   hint: 'Chaque format a son prix et son stock.',
   item: [
   { kind: 'text', key: 'label', label: 'Format', hint: 'Ex. « 50 × 70 cm », « 18 cm ».' },
-  { kind: 'text', key: 'price', label: 'Prix (€)', hint: 'Ex. 60 ou 59,90.' },
-  { kind: 'text', key: 'stock', label: 'Stock', hint: 'Vide = fabriqué à la commande. 0 = épuisé.' }],
+  { kind: 'text', key: 'price', label: 'Prix (€)', hint: 'Ex. 60 ou 59,90.', fixed: true },
+  { kind: 'text', key: 'stock', label: 'Stock', hint: 'Vide = fabriqué à la commande. 0 = épuisé.', fixed: true }],
 
   itemTitle: (v) => `${v.label || 'Nouveau format'}${v.price ? ` — ${v.price} €` : ''}`,
   newItem: () => ({ label: '', price: '', stock: '' })
@@ -74,8 +75,11 @@ const FIELDS: FieldSpec[] = [
 
 /** The variants as the form edits them: prices in euros and stock as text. */
 function toForm(row: ProductRow): Value {
+  // Translations sit in "i18n" columns; the form engine reads "_i18n".
+  const { i18n, ...columns } = row;
   return {
-    ...row,
+    ...columns,
+    _i18n: i18n ?? {},
     model: row.model ?? null,
     variants: [...row.variants].
     sort((a, b) => a.position - b.position).
@@ -84,7 +88,8 @@ function toForm(row: ProductRow): Value {
       id: v.id,
       label: v.label,
       price: String(v.price_cents / 100).replace('.', ','),
-      stock: v.stock === null ? '' : String(v.stock)
+      stock: v.stock === null ? '' : String(v.stock),
+      _i18n: v.i18n ?? {}
     }))
   };
 }
@@ -140,6 +145,7 @@ export function ShopSection() {
             currency: 'EUR',
             lead_time: '',
             position: rows?.length ?? 0,
+            i18n: {},
             variants: []
           })
           }
@@ -233,7 +239,8 @@ function ProductEditor({
         label,
         price_cents: Math.round(price * 100),
         stock,
-        position: i
+        position: i,
+        i18n: (raw._i18n as Record<string, unknown>) ?? {}
       });
     }
     if (!variants.length) return setNotice('Il faut au moins un format, avec son prix.');
@@ -263,7 +270,8 @@ function ProductEditor({
       model: v.model || null,
       lead_time: v.lead_time,
       currency: 'EUR',
-      position: initial.position
+      position: initial.position,
+      i18n: v._i18n ?? {}
     };
     const { error: productError } = await supabase.from('products').upsert(product);
     if (productError) {

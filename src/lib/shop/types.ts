@@ -62,6 +62,9 @@ export interface ResolvedCartLine extends CartLine {
 export interface CartTotals {
   itemCount: number;
   subtotalCents: number;
+  /** For the country currently chosen; zero when it is free. */
+  shippingCents: number;
+  totalCents: number;
   currency: Currency;
 }
 
@@ -75,8 +78,28 @@ export type CheckoutResult =
  */
 export interface ShopApi {
   listProducts(): Promise<Product[]>;
+  /** What delivery costs right now, so the cart never quotes a stale fee. */
+  getShipping(): Promise<ShippingRates>;
   /** Server-side price and stock check; the client's totals are never trusted. */
-  createCheckout(lines: CartLine[]): Promise<CheckoutResult>;
+  createCheckout(lines: CartLine[], country: ShipCountry): Promise<CheckoutResult>;
+}
+
+/** Where the shop delivers. Mirrors COUNTRIES in the shop function. */
+export const shipCountries = ['FR', 'BE', 'LU', 'DE', 'ES', 'IT', 'NL', 'PT', 'AT', 'IE'] as const;
+
+export type ShipCountry = (typeof shipCountries)[number];
+
+export interface ShippingRates {
+  franceCents: number;
+  europeCents: number;
+  /** Order value from which shipping is free; 0 means never. */
+  freeFromCents: number;
+}
+
+/** The same rule the shop function charges by. */
+export function shippingFor(rates: ShippingRates, country: ShipCountry, subtotalCents: number): number {
+  if (rates.freeFromCents > 0 && subtotalCents >= rates.freeFromCents) return 0;
+  return country === 'FR' ? rates.franceCents : rates.europeCents;
 }
 
 const LOCALE = 'fr-FR';

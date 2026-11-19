@@ -1,4 +1,5 @@
 import raw from './content.json';
+import { lang, localize } from '../i18n';
 import type { Product } from '../lib/shop/types';
 
 /**
@@ -9,6 +10,9 @@ import type { Product } from '../lib/shop/types';
  * Every media path here starts with "/": the pull rewrites uploaded files to
  * where it saved them under public/media, so `asset()` resolves all of them
  * the same way.
+ *
+ * The file holds English with every translation alongside it; what is
+ * exported here is already folded down to the language of this visit.
  */
 
 export interface RenderRecord {
@@ -71,6 +75,17 @@ export interface SiteContent {
   physical: {title: string;intro: string;};
   cta: {title: string;text: string;button: string;};
   contact: {email: string;artstation: string;instagram: string;};
+  /** Cents. Zero fees mean free shipping; freeFromCents 0 means no threshold. */
+  shipping?: {franceCents: number;europeCents: number;freeFromCents: number;};
+  /** Who is selling. The legal pages are built from this. */
+  legal?: {
+    name: string;
+    siret: string;
+    address: string;
+    email: string;
+    mediator: string;
+    mediatorUrl: string;
+  };
 }
 
 export interface ContentFile {
@@ -80,5 +95,5 @@ export interface ContentFile {
   products: Product[];
 }
 
-export const content = raw as ContentFile;
+export const content = localize(raw as unknown as ContentFile, lang);
 export const site = content.site;

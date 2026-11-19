@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ExpandIcon, ShoppingBagIcon } from 'lucide-react';
 import type { GalleryImage } from '../data/projects';
 import { Lightbox } from './Lightbox';
+import { t } from '../i18n';
 
 interface ProjectGalleryProps {
   images: GalleryImage[];
@@ -100,7 +101,7 @@ export function ProjectGallery({
           <button
             type="button"
             onClick={() => setZoomed(true)}
-            aria-label={`View ${title} — ${current.label} full size`}
+            aria-label={t.gallery.viewFull(title, current.label)}
             className="absolute right-2 top-2 z-30 flex h-7 w-7 items-center justify-center border border-line bg-bg/80 text-muted opacity-0 backdrop-blur-sm transition-all duration-300 hover:border-ink hover:text-ink focus-visible:opacity-100 group-hover:opacity-100">
 
             <ExpandIcon className="h-3 w-3" aria-hidden="true" />
@@ -112,8 +113,8 @@ export function ProjectGallery({
           {shop ?
           <div className="absolute bottom-2 left-3 z-30 flex gap-2">
               {([
-              ['poster', 'Shop this poster'],
-              ['figurine', 'Shop this figurine']] as const).
+              ['poster', t.projects.shopPoster],
+              ['figurine', t.projects.shopFigurine]] as const).
               map(([form, label]) =>
               shop[form] ?
               <Link
@@ -180,7 +181,7 @@ function Arrow({ side, onClick }: {side: 'left' | 'right';onClick: () => void;})
     <button
       type="button"
       onClick={onClick}
-      aria-label={side === 'left' ? 'Previous image' : 'Next image'}
+      aria-label={side === 'left' ? t.gallery.previous : t.gallery.next}
       className={`absolute top-1/2 z-30 flex h-9 w-9 -translate-y-1/2 items-center justify-center border border-line bg-bg text-muted transition-colors hover:border-ink hover:text-ink ${
       side === 'left' ? '-left-4' : '-right-4'}`
       }>

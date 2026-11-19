@@ -9,6 +9,7 @@ import { PageTransition } from './components/motion/PageTransition';
 import { Home } from './pages/Home';
 import { Projects } from './pages/Projects';
 import { Store } from './pages/Store';
+import { Legal } from './pages/Legal';
 
 /** Needs to sit inside the router so it can read the current location. */
 function AnimatedRoutes() {
@@ -45,6 +46,18 @@ function AnimatedRoutes() {
             <Store />
           </PageTransition>
         } />
+
+      {(['legal', 'terms', 'privacy'] as const).map((page) =>
+      <Route
+        key={page}
+        path={`/${page}`}
+        element={
+        <PageTransition>
+            <Legal page={page} />
+          </PageTransition>
+        } />
+
+      )}
 
     </Routes>);
 

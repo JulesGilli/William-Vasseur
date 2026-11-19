@@ -28,15 +28,15 @@ function fieldsFor(products: {id: string;name: string;}[]): FieldSpec[] {
   return [
   { kind: 'checkbox', key: 'published', label: 'Visible sur le site', hint: 'Décoche pour garder un projet en brouillon.' },
   { kind: 'text', key: 'title', label: 'Titre' },
-  { kind: 'text', key: 'ref', label: 'Référence', hint: 'Affichée dans le cadre, ex. « PRJ—004 ».' },
+  { kind: 'text', key: 'ref', label: 'Référence', hint: 'Affichée dans le cadre, ex. « PRJ—004 ».', fixed: true },
   {
     kind: 'select',
     key: 'category',
     label: 'Famille',
     options: Object.entries(CATEGORY_LABELS).map(([value, label]) => ({ value, label }))
   },
-  { kind: 'text', key: 'year', label: 'Année' },
-  { kind: 'text', key: 'software', label: 'Logiciels', hint: 'Ex. « Blender · Cycles ».' },
+  { kind: 'text', key: 'year', label: 'Année', fixed: true },
+  { kind: 'text', key: 'software', label: 'Logiciels', hint: 'Ex. « Blender · Cycles ».', fixed: true },
   { kind: 'textarea', key: 'description', label: 'Description' },
   { kind: 'text', key: 'spec', label: 'Légende technique', hint: 'Ex. « Still · 1920 × 1080 » ou « GLB · 25K TRIS ».' },
   { kind: 'media', key: 'poster', label: 'Image principale', accept: 'image', folder: 'projects' },
@@ -57,7 +57,7 @@ function fieldsFor(products: {id: string;name: string;}[]): FieldSpec[] {
     item: [
     { kind: 'media', key: 'src', label: 'Image', accept: 'image', folder: 'renders' },
     { kind: 'text', key: 'label', label: 'Nom', hint: 'Ex. « Paysage », « Portrait ».' },
-    { kind: 'text', key: 'size', label: 'Dimensions', hint: 'Laisse vide : elles sont lues dans l’image à la publication.' }],
+    { kind: 'text', key: 'size', label: 'Dimensions', hint: 'Laisse vide : elles sont lues dans l’image à la publication.', fixed: true }],
 
     itemTitle: (v, i) => String(v.label || `Rendu ${i + 1}`),
     newItem: () => ({ src: '', label: '', size: '' })
@@ -81,14 +81,14 @@ function fieldsFor(products: {id: string;name: string;}[]): FieldSpec[] {
     key: 'shop_poster',
     label: 'En vente en poster',
     options: productOptions,
-    hint: 'Ajoute un bouton « Shop this poster » sur le projet.'
+    hint: 'Ajoute un bouton « Acheter ce poster » sur le projet.'
   },
   {
     kind: 'select',
     key: 'shop_figurine',
     label: 'En vente en figurine',
     options: productOptions,
-    hint: 'Ajoute un bouton « Shop this figurine ».'
+    hint: 'Ajoute un bouton « Acheter cette figurine ».'
   }];
 
 }
@@ -144,7 +144,8 @@ export function ProjectsSection() {
     shop_poster: '',
     shop_figurine: '',
     position: rows?.length ?? 0,
-    published: false
+    published: false,
+    i18n: {}
   });
 
   if (editing) {
@@ -247,7 +248,16 @@ function ProjectEditor({
 
 }: {initial: ProjectRow;fields: FieldSpec[];existingIds: string[];onDone: (message: string | null) => void;}) {
   const isNew = !initial.id;
-  const start = { ...initial, shop_poster: initial.shop_poster ?? '', shop_figurine: initial.shop_figurine ?? '' };
+  // The row keeps its translations in an "i18n" column; the form engine
+  // expects them under "_i18n" like everywhere else, so they are renamed on
+  // the way in and back on the way out.
+  const { i18n, ...columns } = initial;
+  const start = {
+    ...columns,
+    _i18n: i18n ?? {},
+    shop_poster: initial.shop_poster ?? '',
+    shop_figurine: initial.shop_figurine ?? ''
+  };
   const [draft, setDraft] = useState<Value>(start);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -258,8 +268,10 @@ function ProjectEditor({
     if (!v.title) return setNotice('Il faut au moins un titre.');
     if (!v.poster) return setNotice('Il faut une image principale : c’est elle qui représente le projet.');
 
+    const { _i18n, ...texts } = v;
     const record = {
-      ...v,
+      ...texts,
+      i18n: _i18n ?? {},
       // Numbering follows the order of the list, so it can never drift.
       stages: ((v.stages as Value[]) ?? []).map((s, i) => ({ ...s, index: String(i + 1).padStart(2, '0') })),
       shop_poster: v.shop_poster || null,

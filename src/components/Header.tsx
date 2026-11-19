@@ -5,11 +5,12 @@ import { ThemeToggle } from './ThemeToggle';
 import { Logo } from './icons/Logo';
 import { CartButton } from './shop/CartButton';
 import { ScrollProgress } from './motion/ScrollProgress';
+import { LANGS, LANG_NAMES, lang, setLang, t, type Lang } from '../i18n';
 
 const links = [
-{ to: '/', label: 'Home' },
-{ to: '/projects', label: 'Projects' },
-{ to: '/store', label: 'Store' }];
+{ to: '/', label: t.nav.home },
+{ to: '/projects', label: t.nav.projects },
+{ to: '/store', label: t.nav.store }];
 
 
 export function Header() {
@@ -32,7 +33,7 @@ export function Header() {
         <Link
           to="/"
           className="group flex items-center gap-3"
-          aria-label="William Vasseur — home">
+          aria-label={t.nav.homeAria}>
 
           <motion.span
             className="text-ink"
@@ -55,7 +56,7 @@ export function Header() {
           <ThemeToggle />
         </div>
 
-        <nav aria-label="Main navigation" className="flex items-center gap-5">
+        <nav aria-label={t.nav.main} className="flex items-center gap-2.5 sm:gap-5">
           {links.map((link) =>
           <NavLink
             key={link.to}
@@ -86,8 +87,23 @@ export function Header() {
             </NavLink>
           )}
           <CartButton />
+          {/* A native select: four options do not earn a custom menu, and this
+              one is keyboard- and touch-correct for free. Changing it reloads
+              the page in the chosen language. */}
+          <select
+            aria-label={t.nav.language}
+            value={lang}
+            onChange={(e) => setLang(e.target.value as Lang)}
+            className="cursor-pointer appearance-none border border-line bg-bg px-1.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted outline-none transition-colors hover:border-ink hover:text-ink focus-visible:border-ink">
+
+            {LANGS.map((code) =>
+            <option key={code} value={code} title={LANG_NAMES[code]}>
+                {code.toUpperCase()}
+              </option>
+            )}
+          </select>
           <span className="md:hidden">
-            <ThemeToggle />
+            <ThemeToggle compact />
           </span>
         </nav>
       </div>

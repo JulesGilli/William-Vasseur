@@ -18,7 +18,7 @@ const BLOCKS: {key: string;title: string;fields: FieldSpec[];}[] = [
     label: 'Pièce en vedette',
     fields: [
     { kind: 'text', key: 'title', label: 'Nom' },
-    { kind: 'text', key: 'spec', label: 'Légende technique', hint: 'Par exemple « GLB · 16K TRIS ».' },
+    { kind: 'text', key: 'spec', label: 'Légende technique', hint: 'Par exemple « GLB · 16K TRIS ».', fixed: true },
     {
       kind: 'media',
       key: 'model',
@@ -69,7 +69,7 @@ const BLOCKS: {key: string;title: string;fields: FieldSpec[];}[] = [
     key: 'tools',
     label: 'Logiciels',
     item: [
-    { kind: 'text', key: 'name', label: 'Nom' },
+    { kind: 'text', key: 'name', label: 'Nom', fixed: true },
     { kind: 'text', key: 'role', label: 'À quoi il sert' },
     {
       kind: 'select',
@@ -140,9 +140,9 @@ const BLOCKS: {key: string;title: string;fields: FieldSpec[];}[] = [
   key: 'contact',
   title: 'Contact',
   fields: [
-  { kind: 'text', key: 'email', label: 'Email' },
-  { kind: 'text', key: 'artstation', label: 'Lien ArtStation' },
-  { kind: 'text', key: 'instagram', label: 'Lien Instagram' }]
+  { kind: 'text', key: 'email', label: 'Email', fixed: true },
+  { kind: 'text', key: 'artstation', label: 'Lien ArtStation', fixed: true },
+  { kind: 'text', key: 'instagram', label: 'Lien Instagram', fixed: true }]
 
 }];
 
@@ -188,7 +188,7 @@ export function HomeSection() {
 
 }
 
-function Block({
+export function Block({
   blockKey,
   title,
   fields,

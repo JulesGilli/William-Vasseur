@@ -11,6 +11,7 @@ import { ProjectGallery } from '../components/ProjectGallery';
 import { SplitText } from '../components/motion/SplitText';
 import { Reveal } from '../components/motion/Reveal';
 import { categories, projects } from '../data/projects';
+import { t } from '../i18n';
 
 export function Projects() {
   const reduced = useReducedMotion();
@@ -38,19 +39,17 @@ export function Projects() {
           animate={{ opacity: 1 }}
           className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
 
-          Index / Sheet 02
+          {t.projects.sheet}
         </motion.span>
         <SplitText
           as="h1"
           by="letter"
-          text="PROJECTS"
+          text={t.projects.title}
           className="mt-3 font-display text-3xl tracking-tight sm:text-5xl" />
 
         <Reveal delay={0.15}>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">
-            Environments, characters and props — each one modelled, shaded and
-            rendered in-house. Every piece below is the real mesh: drag it,
-            spin it, look underneath.
+            {t.projects.intro}
           </p>
         </Reveal>
       </header>
@@ -79,12 +78,12 @@ export function Projects() {
                 transition={{ type: 'spring', stiffness: 380, damping: 32 }} /> :
 
               null}
-              <span className="relative">{category}</span>
+              <span className="relative">{category === 'All' ? t.projects.all : t.projects.categories[category] ?? category}</span>
             </button>);
 
         })}
         <span className="ml-auto font-mono text-[11px] text-muted">
-          {visible.length.toString().padStart(2, '0')} items
+          {t.projects.items(visible.length.toString().padStart(2, '0'))}
         </span>
       </div>
 
@@ -120,7 +119,7 @@ export function Projects() {
                     <ProjectGallery
                       images={
                       project.gallery ?? [
-                      { src: project.image, label: 'Still', size: project.spec }]
+                      { src: project.image, label: t.projects.still, size: project.spec }]
                       }
                       title={project.title}
                       label={project.ref}
@@ -132,7 +131,7 @@ export function Projects() {
 
                   <div className={flipped ? 'lg:order-1 lg:pr-[8%]' : 'lg:pl-[8%]'}>
                     <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
-                      {String(index + 1).padStart(2, '0')} / {project.category}
+                      {String(index + 1).padStart(2, '0')} / {t.projects.categories[project.category] ?? project.category}
                     </span>
 
                     <h2 className="mt-3 font-display text-xl leading-tight tracking-tight sm:text-2xl">
@@ -154,8 +153,8 @@ export function Projects() {
 
                     <dl className="mt-7 grid max-w-lg grid-cols-2 gap-px border border-line bg-line">
                       {[
-                      ['Year', project.year],
-                      ['Software', project.software]].
+                      [t.projects.year, project.year],
+                      [t.projects.software, project.software]].
                       map(([term, value]) =>
                       <div key={term} className="bg-bg px-4 py-3">
                           <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
@@ -171,7 +170,7 @@ export function Projects() {
                       onClick={() => setOpened(project)}
                       className="group mt-6 inline-flex items-center gap-2 border border-ink px-4 py-2 font-display text-sm tracking-tight transition-colors hover:bg-ink hover:text-bg">
 
-                      VIEW PROJECT
+                      {t.projects.view}
                       <ArrowUpRightIcon
                         className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                         aria-hidden="true" />
@@ -190,7 +189,7 @@ export function Projects() {
                           className="absolute inset-0 -translate-x-full bg-muted/30 transition-transform duration-500 ease-out group-hover:translate-x-0" />
 
                           <Rotate3dIcon className="relative h-4 w-4" aria-hidden="true" />
-                          <span className="relative">VISIT THIS WORLD</span>
+                          <span className="relative">{t.projects.visitWorld}</span>
                         </button>
                       </Magnetic> :
 
@@ -212,7 +211,7 @@ export function Projects() {
 
       {visible.length === 0 ?
       <p className="py-24 text-center font-mono text-xs uppercase tracking-[0.2em] text-muted">
-          No project in this category yet.
+          {t.projects.empty}
         </p> :
       null}
 

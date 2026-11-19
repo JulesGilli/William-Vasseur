@@ -7,6 +7,8 @@ interface OrderRow {
   status: 'pending' | 'paid' | 'canceled';
   email: string | null;
   amount_total_cents: number | null;
+  country: string | null;
+  shipping_cents: number | null;
   created_at: string;
   paid_at: string | null;
   shipped_at: string | null;
@@ -34,7 +36,7 @@ export function OrdersSection() {
     const [{ data, error }, { data: variants }] = await Promise.all([
     supabase.
     from('orders').
-    select('id, status, email, amount_total_cents, created_at, paid_at, shipped_at, order_items(sku, quantity, unit_price_cents)').
+    select('id, status, email, amount_total_cents, country, shipping_cents, created_at, paid_at, shipped_at, order_items(sku, quantity, unit_price_cents)').
     order('created_at', { ascending: false }),
     supabase.from('variants').select('sku, label, products(name)')]
     );
@@ -99,7 +101,14 @@ export function OrdersSection() {
                   {order.amount_total_cents !== null ? euros(order.amount_total_cents) : '—'}
                 </span>
               </div>
-              <p className="mt-1 text-sm">{order.email ?? 'Email inconnu'}</p>
+              <p className="mt-1 text-sm">
+                {order.email ?? 'Email inconnu'}
+                {order.country ?
+            <span className="ml-2 font-mono text-[11px] text-muted">
+                    · {order.country} · port {order.shipping_cents ? euros(order.shipping_cents) : 'offert'}
+                  </span> :
+            null}
+              </p>
               <ul className="mt-3 flex flex-col gap-1 text-sm text-muted">
                 {order.order_items.map((item) =>
             <li key={item.sku}>

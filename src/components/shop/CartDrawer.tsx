@@ -4,11 +4,14 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { MinusIcon, PlusIcon, ShoppingBagIcon, XIcon } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import { shopApi } from '../../lib/shop/api';
-import { formatPrice, isInStock } from '../../lib/shop/types';
+import { Link } from 'react-router-dom';
+import { formatPrice, isInStock, shipCountries, type ShipCountry } from '../../lib/shop/types';
+import { t } from '../../i18n';
+import { legalReady, vatExempt } from '../../lib/legal';
 
 export function CartDrawer() {
   const reduced = useReducedMotion();
-  const { isOpen, close, lines, totals, setQuantity, remove } = useCart();
+  const { isOpen, close, lines, totals, setQuantity, remove, country, setCountry, shipping } = useCart();
   const [checkingOut, setCheckingOut] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -41,7 +44,8 @@ export function CartDrawer() {
           productId,
           variantId,
           quantity,
-        }))
+        })),
+        country
       );
       if (result.status === 'redirect') {
         window.location.href = result.url;
@@ -49,7 +53,7 @@ export function CartDrawer() {
         setNotice(result.reason);
       }
     } catch (e) {
-      setNotice(e instanceof Error ? e.message : 'Checkout could not be started.');
+      setNotice(e instanceof Error ? e.message : t.cart.failed);
     } finally {
       setCheckingOut(false);
     }
@@ -74,7 +78,7 @@ export function CartDrawer() {
           <motion.aside
           role="dialog"
           aria-modal="true"
-          aria-label="Cart"
+          aria-label={t.cart.aria}
           initial={{ x: reduced ? 0 : '100%' }}
           animate={{ x: 0 }}
           exit={{ x: reduced ? 0 : '100%' }}
@@ -83,12 +87,12 @@ export function CartDrawer() {
 
             <header className="flex items-center justify-between border-b border-line px-5 py-4">
               <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted">
-                Cart · {totals.itemCount} {totals.itemCount === 1 ? 'item' : 'items'}
+                {t.cart.header(totals.itemCount)}
               </span>
               <button
               type="button"
               onClick={close}
-              aria-label="Close the cart"
+              aria-label={t.cart.close}
               className="flex h-8 w-8 items-center justify-center border border-line text-muted transition-colors hover:border-ink hover:text-ink">
 
                 <XIcon className="h-4 w-4" aria-hidden="true" />
@@ -99,7 +103,7 @@ export function CartDrawer() {
           <div className="flex flex-1 flex-col items-center justify-center gap-3 px-8 text-center">
                 <ShoppingBagIcon className="h-6 w-6 text-muted" aria-hidden="true" />
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-                  Nothing in the cart yet
+                  {t.cart.empty}
                 </p>
               </div> :
 
@@ -127,19 +131,19 @@ export function CartDrawer() {
 
                       <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
                         {line.variant.label} ·{' '}
-                        {formatPrice(line.variant.priceCents, line.product.currency)} each
+                        {formatPrice(line.variant.priceCents, line.product.currency)} {t.cart.each}
                       </span>
 
                       {!isInStock(line.variant) ?
                 <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ink">
-                          Out of stock — will be removed at checkout
+                          {t.cart.outOfStock}
                         </span> :
                 null}
 
                       <div className="mt-auto flex items-center justify-between gap-3 pt-3">
                         <div className="flex items-center border border-line">
                           <Step
-                    label={`Decrease ${line.product.name}`}
+                    label={t.cart.decrease(line.product.name)}
                     onClick={() =>
                     setQuantity(line.productId, line.variantId, line.quantity - 1)
                     }>
@@ -150,7 +154,7 @@ export function CartDrawer() {
                             {line.quantity}
                           </span>
                           <Step
-                    label={`Increase ${line.product.name}`}
+                    label={t.cart.increase(line.product.name)}
                     disabled={
                     line.variant.stock !== null &&
                     line.quantity >= line.variant.stock
@@ -168,7 +172,7 @@ export function CartDrawer() {
                   onClick={() => remove(line.productId, line.variantId)}
                   className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted underline-offset-4 transition-colors hover:text-ink hover:underline">
 
-                          Remove
+                          {t.cart.remove}
                         </button>
                       </div>
                     </div>
@@ -178,17 +182,54 @@ export function CartDrawer() {
           }
 
             <footer className="border-t border-line p-5">
-              <div className="flex items-baseline justify-between">
+              {/* Everything the order will cost, before the payment page: a
+                  total that only appears there is how carts get abandoned. */}
+              <dl className="flex flex-col gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
+                <div className="flex items-baseline justify-between">
+                  <dt>{t.cart.subtotal}</dt>
+                  <dd className="text-xs text-ink">{formatPrice(totals.subtotalCents, totals.currency)}</dd>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <dt>
+                    <label htmlFor="cart-country">{t.cart.deliverTo}</label>
+                  </dt>
+                  <dd>
+                    <select
+                    id="cart-country"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value as ShipCountry)}
+                    className="cursor-pointer border border-line bg-bg px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink outline-none focus-visible:border-ink">
+
+                      {shipCountries.map((code) =>
+                    <option key={code} value={code}>{t.cart.countries[code]}</option>
+                    )}
+                    </select>
+                  </dd>
+                </div>
+                <div className="flex items-baseline justify-between">
+                  <dt>{t.cart.shipping}</dt>
+                  <dd className="text-xs text-ink">
+                    {totals.shippingCents === 0 ? t.cart.free : formatPrice(totals.shippingCents, totals.currency)}
+                  </dd>
+                </div>
+              </dl>
+              {shipping.freeFromCents > 0 && totals.shippingCents > 0 ?
+            <p className="mt-1 text-right font-mono text-[10px] tracking-[0.1em] text-muted">
+                  {t.cart.freeFrom(formatPrice(shipping.freeFromCents, totals.currency))}
+                </p> :
+            null}
+
+              <div className="mt-3 flex items-baseline justify-between border-t border-line pt-3">
                 <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted">
-                  Subtotal
+                  {t.cart.total}
                 </span>
                 <span className="font-display text-lg tracking-tight">
-                  {formatPrice(totals.subtotalCents, totals.currency)}
+                  {formatPrice(totals.totalCents, totals.currency)}
                 </span>
               </div>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                Shipping and taxes calculated at checkout
-              </p>
+              {vatExempt ?
+            <p className="mt-1 font-mono text-[10px] tracking-[0.06em] text-muted">{t.cart.vat}</p> :
+            null}
 
               {notice ?
             <p
@@ -210,9 +251,18 @@ export function CartDrawer() {
                 className="absolute inset-0 -translate-x-full bg-muted/30 transition-transform duration-500 ease-out group-hover:translate-x-0" />
 
                 <span className="relative">
-                  {checkingOut ? 'STARTING CHECKOUT…' : 'CHECKOUT'}
+                  {checkingOut ? t.cart.starting : t.cart.checkout}
                 </span>
               </button>
+              {legalReady ?
+            <p className="mt-3 text-center text-[11px] text-muted">
+                  {t.cart.terms}{' '}
+                  <Link to="/terms" onClick={close} className="underline underline-offset-2 hover:text-ink">
+                    {t.cart.termsLink}
+                  </Link>
+                  .
+                </p> :
+            null}
             </footer>
           </motion.aside>
         </motion.div> :

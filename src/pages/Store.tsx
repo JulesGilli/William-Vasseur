@@ -15,6 +15,7 @@ import {
   productFamilies,
   type Product } from
 '../lib/shop/types';
+import { t } from '../i18n';
 
 function ProductCard({
   product,
@@ -56,7 +57,7 @@ function ProductCard({
               url={product.model}
               poster={product.image}
               label={product.ref}
-              spec="Live model"
+              spec={t.viewer.live}
               aspect="aspect-square"
               bleed="6%" />
 
@@ -93,11 +94,11 @@ function ProductCard({
         <button
           type="button"
           onClick={() => onOpen(product)}
-          aria-label={`${product.name} — details`}
+          aria-label={t.store.details(product.name)}
           className="absolute inset-0 z-20 flex items-end justify-center pb-6">
 
             <span className="border border-line bg-bg/80 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
-              View details
+              {t.store.viewDetails}
             </span>
           </button> :
         null}
@@ -111,12 +112,12 @@ function ProductCard({
             {inspecting ?
           <>
                 <XIcon className="h-3 w-3" aria-hidden="true" />
-                Close 3D
+                {t.store.close3d}
               </> :
 
           <>
                 <Rotate3dIcon className="h-3 w-3" aria-hidden="true" />
-                Inspect in 3D
+                {t.store.inspect3d}
               </>
           }
           </button> :
@@ -145,7 +146,7 @@ function ProductCard({
             both the figure above and whether the button is live. */}
         <fieldset className="mt-4">
           <legend className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-            {product.variants.length > 1 ? 'Size' : 'Edition'}
+            {product.variants.length > 1 ? t.store.size : t.store.edition}
           </legend>
           <div className="mt-2 flex flex-wrap gap-2">
             {product.variants.map((v) => {
@@ -175,8 +176,8 @@ function ProductCard({
           {available ?
           variant.stock === null ?
           product.leadTime :
-          `${variant.stock} left · ${product.leadTime}` :
-          'Sold out in this size'}
+          t.store.left(variant.stock, product.leadTime) :
+          t.store.soldOutSize}
         </p>
 
         <button
@@ -196,7 +197,7 @@ function ProductCard({
               aria-hidden="true" />
 
               <span className="relative transition-colors group-hover:text-bg">
-                Added
+                {t.store.added}
               </span>
             </> :
 
@@ -206,7 +207,7 @@ function ProductCard({
               aria-hidden="true" />
 
               <span className="relative transition-colors group-hover:text-bg">
-                {available ? 'Add to cart' : 'Sold out'}
+                {available ? t.store.addToCart : t.store.soldOut}
               </span>
             </>
           }
@@ -275,19 +276,17 @@ export function Store() {
     <main className="mx-auto max-w-[1400px] px-4 py-14 sm:px-8">
       <header className="border-b border-line pb-8">
         <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
-          Index / Sheet 03
+          {t.store.sheet}
         </span>
         <SplitText
           as="h1"
           by="letter"
-          text="STORE"
+          text={t.store.title}
           className="mt-3 font-display text-3xl tracking-tight sm:text-5xl" />
 
         <Reveal delay={0.15}>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">
-            Prints, figurines and dioramas — produced in small numbered batches
-            from my own files, shipped from Toulouse. Turn any of them over in
-            3D before you decide.
+            {t.store.intro}
           </p>
         </Reveal>
       </header>
@@ -315,12 +314,12 @@ export function Store() {
                 transition={{ type: 'spring', stiffness: 380, damping: 32 }} /> :
 
               null}
-              <span className="relative">{family}</span>
+              <span className="relative">{family === 'All' ? t.projects.all : t.store.families[family] ?? family}</span>
             </button>);
 
         })}
         <span className="ml-auto font-mono text-[11px] text-muted">
-          {visible.length.toString().padStart(2, '0')} items
+          {t.projects.items(visible.length.toString().padStart(2, '0'))}
         </span>
       </div>
 
@@ -330,8 +329,8 @@ export function Store() {
         className="mt-6 border border-line px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
 
           {checkoutOutcome === 'success' ?
-        'Order received — a confirmation is on its way to your inbox. Thank you.' :
-        'Checkout cancelled — your cart is untouched.'}
+        t.store.success :
+        t.store.cancelled}
         </p> :
       null}
 
@@ -340,8 +339,7 @@ export function Store() {
         role="status"
         className="mt-6 border border-line px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
 
-          Storefront preview — the cart works, but no payment backend is
-          connected yet, so orders cannot be placed.
+          {t.store.preview}
         </p> :
       null}
 
@@ -365,7 +363,7 @@ export function Store() {
 
       visible.length === 0 ?
       <p className="py-24 text-center font-mono text-xs uppercase tracking-[0.2em] text-muted">
-          Nothing on this shelf yet.
+          {t.store.emptyShelf}
         </p> :
 
       <ul className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-3">
@@ -381,7 +379,7 @@ export function Store() {
       }
 
       <p className="border-t border-line py-8 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-        More pieces in production — check back soon.
+        {t.store.more}
       </p>
 
       <ProductDialog product={detail} onClose={() => setDetail(null)} />

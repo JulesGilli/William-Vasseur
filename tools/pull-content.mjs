@@ -109,8 +109,13 @@ async function pull() {
   }
 
   // Only the fields the site renders: no timestamps, so an unchanged
-  // publish produces an unchanged file.
-  const clean = projects.map(({ updated_at, published, position, ...rest }) => rest);
+  // publish produces an unchanged file. A project's translations sit in
+  // their own column; here they join the "_i18n" convention the rest of the
+  // content already follows (see src/i18n/localize.ts).
+  const clean = projects.map(({ updated_at, published, position, i18n, ...rest }) => ({
+    ...rest,
+    _i18n: i18n ?? {}
+  }));
   await writeFile(OUT, JSON.stringify({ projects: clean, site, products }, null, 2) + '\n');
   console.log(
     `content: ${clean.length} projects, ${blocks.length} text blocks, ${products.length} products → ${OUT}`

@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { OrbitIcon, PauseIcon, PlayIcon, RotateCcwIcon } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useInView } from '../../hooks/useInView';
+import { t } from '../../i18n';
 
 // three.js, fiber and drei all land in this chunk and nowhere else.
 const ModelScene = lazy(() => import('./ModelScene'));
@@ -30,7 +31,7 @@ interface ModelViewerProps {
 export function ModelViewer({
   url,
   poster,
-  label = 'Model',
+  label = t.viewer.model,
   spec,
   className = '',
   aspect = 'aspect-[4/3]',
@@ -150,7 +151,7 @@ export function ModelViewer({
 
               <span className="relative flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] text-muted">
                 <OrbitIcon className="h-3.5 w-3.5 animate-spin [animation-duration:3s]" aria-hidden="true" />
-                Loading mesh
+                {t.viewer.loading}
               </span>
             </motion.div> :
           null}
@@ -168,7 +169,7 @@ export function ModelViewer({
             type="button"
             onClick={() => setSpinning((v) => !v)}
             aria-pressed={spinning}
-            aria-label={spinning ? 'Pause the rotation' : 'Resume the rotation'}
+            aria-label={spinning ? t.viewer.pause : t.viewer.resume}
             className="flex h-7 w-7 items-center justify-center border border-line bg-bg/80 text-muted backdrop-blur-sm transition-colors hover:border-ink hover:text-ink">
 
             {spinning ?
@@ -178,7 +179,7 @@ export function ModelViewer({
           <button
             type="button"
             onClick={() => setResetKey((k) => k + 1)}
-            aria-label="Reset the view"
+            aria-label={t.viewer.reset}
             className="flex h-7 w-7 items-center justify-center border border-line bg-bg/80 text-muted backdrop-blur-sm transition-colors hover:border-ink hover:text-ink">
 
             <RotateCcwIcon className="h-3 w-3" aria-hidden="true" />
@@ -199,7 +200,7 @@ export function ModelViewer({
             // Inside the border, and clear of the spec caption below it.
             className="pointer-events-none absolute bottom-8 left-1/2 z-30 whitespace-nowrap border border-line bg-bg/80 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.22em] text-muted backdrop-blur-sm">
 
-              Drag to orbit · scroll to zoom
+              {t.viewer.hint}
             </motion.span> :
           null}
         </AnimatePresence>

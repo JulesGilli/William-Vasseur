@@ -10,6 +10,7 @@ import {
   isInStock,
   type Product } from
 '../../lib/shop/types';
+import { t } from '../../i18n';
 
 interface ProductDialogProps {
   product: Product | null;
@@ -79,7 +80,7 @@ export function ProductDialog({ product, onClose }: ProductDialogProps) {
               ref={closeRef}
               type="button"
               onClick={onClose}
-              aria-label="Close"
+              aria-label={t.projects.close}
               className="flex h-8 w-8 items-center justify-center border border-line text-muted transition-colors hover:border-ink hover:text-ink">
 
                 <XIcon className="h-4 w-4" aria-hidden="true" />
@@ -118,7 +119,7 @@ function Detail({ product }: {product: Product;}) {
           url={product.model}
           poster={product.image}
           label={product.ref}
-          spec="Live model"
+          spec={t.viewer.live}
           aspect="aspect-square"
           bleed="4%" /> :
 
@@ -148,8 +149,8 @@ function Detail({ product }: {product: Product;}) {
 
         <dl className="mt-6 grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2">
           {[
-          ['Finish', product.spec],
-          ['Dispatch', product.leadTime]].
+          [t.store.finish, product.spec],
+          [t.store.dispatch, product.leadTime]].
           map(([term, value]) =>
           <div key={term} className="bg-bg px-4 py-3">
               <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
@@ -162,7 +163,7 @@ function Detail({ product }: {product: Product;}) {
 
         <fieldset className="mt-6">
           <legend className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-            {product.variants.length > 1 ? 'Size' : 'Edition'}
+            {product.variants.length > 1 ? t.store.size : t.store.edition}
           </legend>
           <div className="mt-3 flex flex-wrap gap-2">
             {product.variants.map((v) => {
@@ -191,10 +192,10 @@ function Detail({ product }: {product: Product;}) {
             that variant rather than once for the whole piece. */}
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
           {variant.stock === null ?
-          'Made to order' :
+          t.store.madeToOrder :
           available ?
-          `${variant.stock} in stock` :
-          'Sold out'}
+          t.store.inStock(variant.stock) :
+          t.store.soldOut}
         </p>
 
         <button
@@ -214,7 +215,7 @@ function Detail({ product }: {product: Product;}) {
               aria-hidden="true" />
 
               <span className="relative transition-colors group-hover:text-bg">
-                Added to cart
+                {t.store.addedToCart}
               </span>
             </> :
 
@@ -224,7 +225,7 @@ function Detail({ product }: {product: Product;}) {
               aria-hidden="true" />
 
               <span className="relative transition-colors group-hover:text-bg">
-                {available ? 'Add to cart' : 'Sold out'}
+                {available ? t.store.addToCart : t.store.soldOut}
               </span>
             </>
           }

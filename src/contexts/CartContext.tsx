@@ -9,13 +9,30 @@ import React, {
 import { shopApi } from '../lib/shop/api';
 import {
   lineKey,
+  shipCountries,
+  shippingFor,
   type CartLine,
   type CartTotals,
   type Product,
-  type ResolvedCartLine } from
+  type ResolvedCartLine,
+  type ShipCountry,
+  type ShippingRates } from
 '../lib/shop/types';
+import { lang, t } from '../i18n';
 
 const STORAGE_KEY = 'wv.cart.v1';
+const COUNTRY_KEY = 'wv.cart.country';
+
+/** A first guess at where to deliver, from the language being read. */
+function readCountry(): ShipCountry {
+  try {
+    const stored = localStorage.getItem(COUNTRY_KEY);
+    if (shipCountries.includes(stored as ShipCountry)) return stored as ShipCountry;
+  } catch {
+    // Falls through to the guess.
+  }
+  return lang === 'de' ? 'DE' : lang === 'es' ? 'ES' : 'FR';
+}
 
 interface CartContextValue {
   products: Product[];
@@ -24,6 +41,10 @@ interface CartContextValue {
   error: string | null;
   lines: ResolvedCartLine[];
   totals: CartTotals;
+  /** Where the order is going; the shipping fee depends on it. */
+  country: ShipCountry;
+  setCountry: (country: ShipCountry) => void;
+  shipping: ShippingRates;
   isOpen: boolean;
   open: () => void;
   close: () => void;
@@ -61,6 +82,33 @@ export function CartProvider({ children }: {children: React.ReactNode;}) {
   const [error, setError] = useState<string | null>(null);
   const [raw, setRaw] = useState<CartLine[]>(readStored);
   const [isOpen, setIsOpen] = useState(false);
+  const [country, setCountryState] = useState<ShipCountry>(readCountry);
+  const [shipping, setShipping] = useState<ShippingRates>({
+    franceCents: 0,
+    europeCents: 0,
+    freeFromCents: 0
+  });
+
+  useEffect(() => {
+    let alive = true;
+    shopApi.getShipping().then((rates) => {
+      if (alive) setShipping(rates);
+    }).catch(() => {
+      // Keeps the zero default; the payment page states the real fee.
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const setCountry = useCallback((next: ShipCountry) => {
+    setCountryState(next);
+    try {
+      localStorage.setItem(COUNTRY_KEY, next);
+    } catch {
+      // Not worth breaking the cart over.
+    }
+  }, []);
 
   useEffect(() => {
     let alive = true;
@@ -70,7 +118,7 @@ export function CartProvider({ children }: {children: React.ReactNode;}) {
       if (alive) setProducts(list);
     }).
     catch((e: unknown) => {
-      if (alive) setError(e instanceof Error ? e.message : 'Catalogue unavailable');
+      if (alive) setError(e instanceof Error ? e.message : t.store.unavailable);
     }).
     finally(() => {
       if (alive) setLoading(false);
@@ -107,14 +155,17 @@ export function CartProvider({ children }: {children: React.ReactNode;}) {
     filter((l): l is ResolvedCartLine => l !== null);
   }, [raw, products]);
 
-  const totals = useMemo<CartTotals>(
-    () => ({
+  const totals = useMemo<CartTotals>(() => {
+    const subtotalCents = lines.reduce((n, l) => n + l.lineTotalCents, 0);
+    const shippingCents = lines.length ? shippingFor(shipping, country, subtotalCents) : 0;
+    return {
       itemCount: lines.reduce((n, l) => n + l.quantity, 0),
-      subtotalCents: lines.reduce((n, l) => n + l.lineTotalCents, 0),
+      subtotalCents,
+      shippingCents,
+      totalCents: subtotalCents + shippingCents,
       currency: lines[0]?.product.currency ?? 'EUR',
-    }),
-    [lines]
-  );
+    };
+  }, [lines, shipping, country]);
 
   const add = useCallback(
     (productId: string, variantId: string, quantity = 1) => {
@@ -157,6 +208,9 @@ export function CartProvider({ children }: {children: React.ReactNode;}) {
       error,
       lines,
       totals,
+      country,
+      setCountry,
+      shipping,
       isOpen,
       open: () => setIsOpen(true),
       close: () => setIsOpen(false),
@@ -165,7 +219,7 @@ export function CartProvider({ children }: {children: React.ReactNode;}) {
       remove,
       clear: () => setRaw([]),
     }),
-    [products, loading, error, lines, totals, isOpen, add, setQuantity, remove]
+    [products, loading, error, lines, totals, country, setCountry, shipping, isOpen, add, setQuantity, remove]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

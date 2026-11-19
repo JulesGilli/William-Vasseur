@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import type { ProcessStage } from '../data/projects';
+import { t } from '../i18n';
 
 interface ProcessScrubberProps {
   stages: ProcessStage[];
@@ -48,7 +49,7 @@ export function ProcessScrubber({
     <div className="mt-8">
       <div className="flex items-baseline justify-between gap-4">
         <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
-          Process
+          {t.projects.process}
         </span>
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
           {stages[active].index} — {stages[active].tool}
@@ -87,7 +88,7 @@ export function ProcessScrubber({
         {/* Track */}
         <div>
         <label htmlFor={id} className="sr-only">
-          {`${title} — scrub through the production stages`}
+          {t.projects.scrub(title)}
         </label>
         <div className="relative">
           <input

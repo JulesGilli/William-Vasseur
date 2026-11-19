@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ShoppingBagIcon } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
+import { t } from '../../i18n';
 
 export function CartButton() {
   const { totals, open } = useCart();
@@ -11,7 +12,7 @@ export function CartButton() {
       type="button"
       onClick={open}
       aria-label={
-      count === 0 ? 'Cart, empty' : `Cart, ${count} ${count === 1 ? 'item' : 'items'}`
+      count === 0 ? t.cart.buttonEmpty : t.cart.button(count)
       }
       className="relative flex h-8 w-8 items-center justify-center text-muted transition-colors hover:text-ink">
 

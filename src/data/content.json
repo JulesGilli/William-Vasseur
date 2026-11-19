@@ -14,7 +14,18 @@
       "renders": [],
       "stages": [],
       "shop_poster": null,
-      "shop_figurine": null
+      "shop_figurine": null,
+      "_i18n": {
+        "de": {
+          "description": "Ein treibendes Bruchstück aus Rinde, Moos und blühendem Quarz. Die Studie, die allem danach die Richtung gab — Technik, um die Natur aus der Nähe zu betrachten."
+        },
+        "es": {
+          "description": "Un fragmento a la deriva de corteza, musgo y cuarzo en flor. El estudio que marcó el rumbo de todo lo que vino después — la tecnología al servicio de una mirada cercana a la naturaleza."
+        },
+        "fr": {
+          "description": "Un éclat à la dérive d’écorce, de mousse et de quartz en fleur. L’étude qui a donné la direction de tout ce qui a suivi — la technologie mise au service d’un regard rapproché sur la nature."
+        }
+      }
     },
     {
       "id": "navana",
@@ -31,12 +42,40 @@
         {
           "src": "/gallery/navana-landscape.webp",
           "size": "1920 × 1080",
+          "_i18n": {
+            "de": {
+              "label": "Querformat"
+            },
+            "es": {
+              "label": "Horizontal"
+            },
+            "fr": {
+              "label": "Paysage"
+            }
+          },
           "label": "Landscape"
         }
       ],
       "stages": [
         {
           "tool": "Pen · perspective sketch",
+          "_i18n": {
+            "de": {
+              "tool": "Stift · Perspektivskizze",
+              "label": "Zeichnung",
+              "caption": "Es beginnt auf Papier. Perspektivlinien, der Bogen des Blätterdachs und der Punkt, an dem das Auge landen soll — die ganze Szene wird mit dem Stift entschieden, bevor irgendetwas davon gebaut wird."
+            },
+            "es": {
+              "tool": "Bolígrafo · boceto en perspectiva",
+              "label": "Dibujo",
+              "caption": "Todo empieza en papel. Las líneas de perspectiva, el arco del dosel y el punto donde debe posarse la mirada — toda la escena se decide a bolígrafo antes de que nada merezca ser construido."
+            },
+            "fr": {
+              "tool": "Stylo · croquis en perspective",
+              "label": "Dessin",
+              "caption": "Tout commence sur le papier. Les lignes de perspective, l’arche de la canopée et l’endroit où l’œil doit se poser — toute la scène est décidée au stylo avant que quoi que ce soit ne mérite d’être construit."
+            }
+          },
           "image": "/process/drawing.webp",
           "index": "01",
           "label": "Drawing",
@@ -44,6 +83,23 @@
         },
         {
           "tool": "Painted study",
+          "_i18n": {
+            "de": {
+              "tool": "Gemalte Studie",
+              "label": "Konzept",
+              "caption": "Dann eine gemalte Studie — Stimmung, Maßstab des Blätterdachs und Farbpalette stehen fest, bevor ein einziger Vertex existiert."
+            },
+            "es": {
+              "tool": "Estudio pintado",
+              "label": "Concepto",
+              "caption": "Después, un estudio pintado — el ambiente, la escala del dosel y la paleta quedan definidos antes de que exista un solo vértice."
+            },
+            "fr": {
+              "tool": "Étude peinte",
+              "label": "Concept",
+              "caption": "Vient ensuite une étude peinte — l’ambiance, l’échelle de la canopée et la palette sont fixées avant qu’un seul vertex n’existe."
+            }
+          },
           "image": "/process/concept.webp",
           "index": "02",
           "label": "Concept",
@@ -51,6 +107,23 @@
         },
         {
           "tool": "Blender · solid view",
+          "_i18n": {
+            "de": {
+              "tool": "Blender · Solid-Ansicht",
+              "label": "Blockout",
+              "caption": "Nur Geometrie. Stämme, Bodenelemente und Silhouetten werden gebaut und in Flächenfarben gekleidet, damit sich die Komposition beurteilen lässt, ohne dass Licht etwas verbirgt."
+            },
+            "es": {
+              "tool": "Blender · vista sólida",
+              "label": "Blockout",
+              "caption": "Solo geometría. Troncos, elementos del suelo y siluetas se construyen y se visten con colores planos, para poder juzgar la composición sin que la luz oculte nada."
+            },
+            "fr": {
+              "tool": "Blender · vue solide",
+              "label": "Blockout",
+              "caption": "La géométrie seule. Troncs, éléments au sol et silhouettes sont construits et habillés de couleurs en aplat, pour juger la composition sans que la lumière ne cache quoi que ce soit."
+            }
+          },
           "image": "/process/blockout.webp",
           "index": "03",
           "label": "Blockout",
@@ -58,14 +131,45 @@
         },
         {
           "tool": "Blender · Cycles",
+          "_i18n": {
+            "de": {
+              "tool": "Blender · Cycles",
+              "label": "Rendering",
+              "caption": "Materialien, volumetrisches Licht durch das Blätterdach, dann ein Grading. Dieselbe Kamera wie beim Blockout, damit sich beide direkt vergleichen lassen."
+            },
+            "es": {
+              "tool": "Blender · Cycles",
+              "label": "Render",
+              "caption": "Materiales, luz volumétrica a través del dosel y, después, el etalonaje. La misma cámara que el blockout, para poder comparar uno con otro."
+            },
+            "fr": {
+              "tool": "Blender · Cycles",
+              "label": "Rendu",
+              "caption": "Matériaux, lumière volumétrique à travers la canopée, puis étalonnage. Même caméra que le blockout, pour pouvoir lire les deux l’un contre l’autre."
+            }
+          },
           "image": "/process/render.webp",
           "index": "04",
           "label": "Render",
           "caption": "Materials, volumetric light through the canopy, then a grade. Same camera as the blockout, so the two can be read against each other."
         }
       ],
-      "shop_poster": null,
-      "shop_figurine": null
+      "shop_poster": "navana-print",
+      "shop_figurine": null,
+      "_i18n": {
+        "de": {
+          "spec": "Standbild · 1920 × 1080",
+          "description": "Ein Blätterdach aus verwachsenen Pilzkronen, das sich über einem stillen Teich schließt. Für das Licht gebaut: Alles in der Szene ist dazu da, die Strahlen einzufangen, die durch die Lücken fallen."
+        },
+        "es": {
+          "spec": "Imagen · 1920 × 1080",
+          "description": "Un dosel de sombreros de hongos fusionados que se cierra sobre un estanque inmóvil. Construido para la luz: todo en la escena existe para atrapar los rayos que entran por los huecos."
+        },
+        "fr": {
+          "spec": "Image · 1920 × 1080",
+          "description": "Une canopée de chapeaux de champignons soudés qui se referme sur un bassin immobile. Construite pour la lumière : tout dans la scène existe pour attraper les rayons qui passent par les trouées."
+        }
+      }
     },
     {
       "id": "navana-desert",
@@ -82,12 +186,40 @@
         {
           "src": "/gallery/desert-portrait.webp",
           "size": "1080 × 1920",
+          "_i18n": {
+            "de": {
+              "label": "Hochformat"
+            },
+            "es": {
+              "label": "Vertical"
+            },
+            "fr": {
+              "label": "Portrait"
+            }
+          },
           "label": "Portrait"
         }
       ],
       "stages": [
         {
           "tool": "Blender · random colour",
+          "_i18n": {
+            "de": {
+              "tool": "Blender · Zufallsfarben",
+              "label": "Clown-Pass",
+              "caption": "Jedes Element bekommt seine eigene Flächenfarbe. Mit dem fertigen Look hat das nichts zu tun — es zeigt, ob sich jedes Element noch als eigenes lesen lässt, sobald sie sich überlappen."
+            },
+            "es": {
+              "tool": "Blender · colores aleatorios",
+              "label": "Pase clown",
+              "caption": "Cada elemento recibe su propio color plano. No tiene nada que ver con el aspecto final — sirve para comprobar que cada elemento se sigue leyendo por separado cuando se superponen."
+            },
+            "fr": {
+              "tool": "Blender · couleurs aléatoires",
+              "label": "Passe clown",
+              "caption": "Chaque élément reçoit sa propre couleur en aplat. Rien à voir avec le rendu final — c’est là pour vérifier que chaque élément se lit encore séparément une fois qu’ils se chevauchent."
+            }
+          },
           "image": "/process/desert-clown.webp",
           "index": "01",
           "label": "Clown pass",
@@ -95,18 +227,81 @@
         },
         {
           "tool": "Blender · Cycles",
+          "_i18n": {
+            "de": {
+              "tool": "Blender · Cycles",
+              "label": "Rendering",
+              "caption": "Schattiert, beleuchtet und gegradet aus derselben Kamera, damit sich beide Durchgänge direkt vergleichen lassen."
+            },
+            "es": {
+              "tool": "Blender · Cycles",
+              "label": "Render",
+              "caption": "Texturizado, iluminado y etalonado desde la misma cámara, para poder comparar los dos pases."
+            },
+            "fr": {
+              "tool": "Blender · Cycles",
+              "label": "Rendu",
+              "caption": "Texturé, éclairé et étalonné depuis la même caméra, pour pouvoir lire les deux passes l’une contre l’autre."
+            }
+          },
           "image": "/process/desert-render.webp",
           "index": "02",
           "label": "Render",
           "caption": "Shaded, lit and graded from the same camera, so the two passes can be read against each other."
         }
       ],
-      "shop_poster": null,
-      "shop_figurine": null
+      "shop_poster": "navana-desert-print",
+      "shop_figurine": null,
+      "_i18n": {
+        "de": {
+          "spec": "Standbild · 1080 × 1920",
+          "description": "Die trockene Seite derselben Welt. Bandartige Stämme wölben sich über rotem Fels und flachen Becken, und ein zweiter Planet steht tief hinter dem Grat."
+        },
+        "es": {
+          "spec": "Imagen · 1080 × 1920",
+          "description": "El lado árido del mismo mundo. Troncos en forma de cinta se arquean sobre roca roja y estanques poco profundos, con un segundo planeta asomando bajo tras la cresta."
+        },
+        "fr": {
+          "spec": "Image · 1080 × 1920",
+          "description": "Le versant aride du même monde. Des troncs en ruban s’arquent au-dessus de la roche rouge et de bassins peu profonds, avec une seconde planète posée bas derrière la crête."
+        }
+      }
     }
   ],
   "site": {
+    "contact": {
+      "email": "contact@williamvasseur.fr",
+      "instagram": "https://www.instagram.com/v2s3d/",
+      "artstation": "https://www.artstation.com/williamvasseur"
+    },
+    "shipping": {
+      "europeCents": 0,
+      "franceCents": 0,
+      "freeFromCents": 0
+    },
+    "legal": {
+      "name": "",
+      "email": "",
+      "siret": "",
+      "address": "",
+      "mediator": "",
+      "mediatorUrl": ""
+    },
     "hero": {
+      "_i18n": {
+        "de": {
+          "tagline": "3D-Künstler — Science-Fiction-Welten, Figuren und die Dinge, die sie zurücklassen.",
+          "location": "Toulouse, Frankreich"
+        },
+        "es": {
+          "tagline": "Artista 3D — entornos de ciencia ficción, personajes y los objetos que dejan atrás.",
+          "location": "Toulouse, Francia"
+        },
+        "fr": {
+          "tagline": "Artiste 3D — environnements de science-fiction, personnages et les objets qu’ils laissent derrière eux.",
+          "location": "Toulouse, France"
+        }
+      },
       "piece": {
         "spec": "GLB · 16K TRIS",
         "model": "/models/couronne.glb",
@@ -117,6 +312,41 @@
       "location": "Toulouse, France"
     },
     "band": {
+      "_i18n": {
+        "de": {
+          "words": [
+            "SCIENCE-FICTION",
+            "NATUR",
+            "ECHTZEIT",
+            "RESIN-DRUCKE",
+            "DIORAMEN",
+            "UMGEBUNGEN",
+            "FIGUREN"
+          ]
+        },
+        "es": {
+          "words": [
+            "CIENCIA FICCIÓN",
+            "NATURALEZA",
+            "TIEMPO REAL",
+            "IMPRESIONES EN RESINA",
+            "DIORAMAS",
+            "ENTORNOS",
+            "PERSONAJES"
+          ]
+        },
+        "fr": {
+          "words": [
+            "SCIENCE-FICTION",
+            "NATURE",
+            "TEMPS RÉEL",
+            "IMPRESSIONS RÉSINE",
+            "DIORAMAS",
+            "ENVIRONNEMENTS",
+            "PERSONNAGES"
+          ]
+        }
+      },
       "words": [
         "SCIENCE FICTION",
         "NATURE",
@@ -127,18 +357,233 @@
         "CHARACTERS"
       ]
     },
+    "physical": {
+      "_i18n": {
+        "de": {
+          "intro": "Ist eine Umgebung oder eine Figur fertig, hole ich sie aus dem Bildschirm — als Poster auf Papier gedruckt oder im Resin-Drucker zu Figuren und Dioramen gemacht.",
+          "title": "MEINE FANTASIE IM ECHTEN LEBEN"
+        },
+        "es": {
+          "intro": "Cuando un entorno o un personaje está terminado, lo saco de la pantalla — impreso en papel como póster, o pasado por una impresora de resina para las figuras y los dioramas.",
+          "title": "MI IMAGINACIÓN EN LA VIDA REAL"
+        },
+        "fr": {
+          "intro": "Une fois un environnement ou un personnage terminé, je le sors de l’écran — imprimé sur papier en poster, ou passé dans une imprimante résine pour les figurines et les dioramas.",
+          "title": "MON IMAGINATION DANS LA VRAIE VIE"
+        }
+      },
+      "intro": "Once an environment or a character is finished, I bring it out of the screen — printed on paper as posters, and run through a resin printer for models and dioramas.",
+      "title": "PUT MY IMAGINATION IN THE REAL LIFE"
+    },
+    "cta": {
+      "text": "New work turns up whenever the inspiration does. Every piece below can be turned around in your browser — no render, the actual mesh.",
+      "_i18n": {
+        "de": {
+          "text": "Neue Arbeiten entstehen, sobald die Inspiration kommt. Jedes Stück unten lässt sich in deinem Browser drehen — kein Rendering, das echte Mesh.",
+          "title": "FOLGE MIR, ICH ZEIGE ES DIR",
+          "button": "MEINE PROJEKTE"
+        },
+        "es": {
+          "text": "Las piezas nuevas llegan cuando llega la inspiración. Cada una de las de abajo se puede girar en tu navegador — no es un render, es la malla real.",
+          "title": "SÍGUEME, TE LO ENSEÑO",
+          "button": "MIS PROYECTOS"
+        },
+        "fr": {
+          "text": "De nouvelles pièces arrivent dès que l’inspiration passe. Chacune de celles ci-dessous se manipule dans ton navigateur — pas un rendu, le vrai maillage.",
+          "title": "SUIS-MOI, JE TE MONTRE",
+          "button": "MES PROJETS"
+        }
+      },
+      "title": "FOLLOW ME, I WILL SHOW YOU",
+      "button": "MY PROJECTS"
+    },
+    "process": {
+      "_i18n": {
+        "de": {
+          "title": "VON DER SKIZZE ZUR WELT"
+        },
+        "es": {
+          "title": "DE UN BOCETO A UN MUNDO"
+        },
+        "fr": {
+          "title": "DU CROQUIS AU MONDE"
+        }
+      },
+      "title": "FROM A SKETCH TO A WORLD",
+      "stages": [
+        {
+          "tool": "Pen · perspective sketch",
+          "_i18n": {
+            "de": {
+              "tool": "Stift · Perspektivskizze",
+              "label": "Zeichnung",
+              "caption": "Es beginnt auf Papier. Perspektivlinien, der Bogen des Blätterdachs und der Punkt, an dem das Auge landen soll — die ganze Szene wird mit dem Stift entschieden, bevor irgendetwas davon gebaut wird. Scrolle, um sie entstehen zu sehen."
+            },
+            "es": {
+              "tool": "Bolígrafo · boceto en perspectiva",
+              "label": "Dibujo",
+              "caption": "Todo empieza en papel. Las líneas de perspectiva, el arco del dosel y el punto donde debe posarse la mirada — toda la escena se decide a bolígrafo antes de que nada merezca ser construido. Desliza para verla dibujarse."
+            },
+            "fr": {
+              "tool": "Stylo · croquis en perspective",
+              "label": "Dessin",
+              "caption": "Tout commence sur le papier. Les lignes de perspective, l’arche de la canopée et l’endroit où l’œil doit se poser — toute la scène est décidée au stylo avant que quoi que ce soit ne mérite d’être construit. Fais défiler pour la voir se dessiner."
+            }
+          },
+          "image": "/process/drawing.webp",
+          "label": "Drawing",
+          "video": "/process/drawing-timelapse.mp4",
+          "caption": "It starts on paper. Perspective lines, the arch of the canopy and where the eye should land — the whole scene decided in pen before any of it is worth building. Scroll to watch it drawn."
+        },
+        {
+          "tool": "Painted study",
+          "_i18n": {
+            "de": {
+              "tool": "Gemalte Studie",
+              "label": "Konzept",
+              "caption": "Dann eine gemalte Studie — Stimmung, Maßstab des Blätterdachs und Farbpalette stehen fest, bevor ein einziger Vertex existiert."
+            },
+            "es": {
+              "tool": "Estudio pintado",
+              "label": "Concepto",
+              "caption": "Después, un estudio pintado — el ambiente, la escala del dosel y la paleta quedan definidos antes de que exista un solo vértice."
+            },
+            "fr": {
+              "tool": "Étude peinte",
+              "label": "Concept",
+              "caption": "Vient ensuite une étude peinte — l’ambiance, l’échelle de la canopée et la palette sont fixées avant qu’un seul vertex n’existe."
+            }
+          },
+          "image": "/process/concept.webp",
+          "label": "Concept",
+          "caption": "A painted study next — the mood, the scale of the canopy, and the palette get settled before a single vertex exists."
+        },
+        {
+          "tool": "Blender · solid view",
+          "_i18n": {
+            "de": {
+              "tool": "Blender · Solid-Ansicht",
+              "label": "Blockout",
+              "caption": "Nur Geometrie. Stämme, Bodenelemente und Silhouetten werden gebaut und in Flächenfarben gekleidet, damit sich die Komposition beurteilen lässt, ohne dass Licht etwas verbirgt."
+            },
+            "es": {
+              "tool": "Blender · vista sólida",
+              "label": "Blockout",
+              "caption": "Solo geometría. Troncos, elementos del suelo y siluetas se construyen y se visten con colores planos, para poder juzgar la composición sin que la luz oculte nada."
+            },
+            "fr": {
+              "tool": "Blender · vue solide",
+              "label": "Blockout",
+              "caption": "La géométrie seule. Troncs, éléments au sol et silhouettes sont construits et habillés de couleurs en aplat, pour juger la composition sans que la lumière ne cache quoi que ce soit."
+            }
+          },
+          "image": "/process/blockout.webp",
+          "label": "Blockout",
+          "caption": "Geometry only. Trunks, ground scatter and silhouettes are built and dressed in flat colour, so the composition can be judged without lighting hiding anything."
+        },
+        {
+          "tool": "Blender · Cycles",
+          "_i18n": {
+            "de": {
+              "tool": "Blender · Cycles",
+              "label": "Rendering",
+              "caption": "Materialien, volumetrisches Licht durch das Blätterdach, dann ein Grading. Dieselbe Kamera wie beim Blockout, damit sich beide direkt vergleichen lassen."
+            },
+            "es": {
+              "tool": "Blender · Cycles",
+              "label": "Render",
+              "caption": "Materiales, luz volumétrica a través del dosel y, después, el etalonaje. La misma cámara que el blockout, para poder comparar uno con otro."
+            },
+            "fr": {
+              "tool": "Blender · Cycles",
+              "label": "Rendu",
+              "caption": "Matériaux, lumière volumétrique à travers la canopée, puis étalonnage. Même caméra que le blockout, pour pouvoir lire les deux l’un contre l’autre."
+            }
+          },
+          "image": "/process/render.webp",
+          "label": "Render",
+          "caption": "Materials, volumetric light through the canopy, then a grade. Same camera as the blockout, so the two can be read against each other."
+        }
+      ],
+      "project": "Navana · 2026"
+    },
     "about": {
+      "_i18n": {
+        "de": {
+          "title": "ÜBER MICH",
+          "paragraphs": [
+            "Hallo, ich bin 3D-Künstler aus Toulouse in Frankreich. Ich bin 25 und baue Dinge, seit ich denken kann. Zu 3D kam ich vor etwa fünf Jahren aus Lust an neuen Werkzeugen, und seitdem lote ich seine Grenzen aus — im Medium ebenso wie im Motiv.",
+            "Willkommen in meiner Welt: zu gleichen Teilen Technik und Natur. Ich baue Science-Fiction, drucke sie, rahme sie und stelle sie ins Regal."
+          ]
+        },
+        "es": {
+          "title": "SOBRE MÍ",
+          "paragraphs": [
+            "Hola, soy artista 3D de Toulouse, en Francia. Tengo 25 años y llevo creando cosas desde que tengo memoria. Llegué al 3D hace unos cinco años por amor a las herramientas nuevas, y desde entonces no he dejado de empujar sus límites — tanto en el medio como en el tema.",
+            "Bienvenido a mi mundo: tecnología y naturaleza a partes iguales. Construyo ciencia ficción, luego la imprimo, la enmarco y la pongo en una estantería."
+          ]
+        },
+        "fr": {
+          "title": "À PROPOS",
+          "paragraphs": [
+            "Salut, je suis artiste 3D à Toulouse, en France. J’ai 25 ans et je fabrique des choses depuis toujours. Je suis arrivé à la 3D il y a environ cinq ans, par goût des nouveaux outils, et je n’ai pas cessé depuis d’en repousser les limites — dans le médium autant que dans le sujet.",
+            "Bienvenue dans mon monde : à parts égales technologie et nature. Je construis de la science-fiction, puis je l’imprime, je l’encadre et je la pose sur une étagère."
+          ]
+        }
+      },
       "stats": [
         {
           "term": "Based in",
+          "_i18n": {
+            "de": {
+              "term": "Standort",
+              "value": "Toulouse, FR"
+            },
+            "es": {
+              "term": "Ubicación",
+              "value": "Toulouse, FR"
+            },
+            "fr": {
+              "term": "Basé à",
+              "value": "Toulouse, FR"
+            }
+          },
           "value": "Toulouse, FR"
         },
         {
           "term": "Experience",
+          "_i18n": {
+            "de": {
+              "term": "Erfahrung",
+              "value": "5 Jahre"
+            },
+            "es": {
+              "term": "Experiencia",
+              "value": "5 años"
+            },
+            "fr": {
+              "term": "Expérience",
+              "value": "5 ans"
+            }
+          },
           "value": "5 years"
         },
         {
           "term": "Focus",
+          "_i18n": {
+            "de": {
+              "term": "Schwerpunkt",
+              "value": "Sci-Fi / Natur"
+            },
+            "es": {
+              "term": "Enfoque",
+              "value": "Sci-fi / Naturaleza"
+            },
+            "fr": {
+              "term": "Univers",
+              "value": "SF / Nature"
+            }
+          },
           "value": "Sci-fi / Nature"
         }
       ],
@@ -151,75 +596,88 @@
       "portraitLabel": "July 2026 — Picture_of_me.png"
     },
     "tools": {
+      "_i18n": {
+        "de": {
+          "intro": "Ich habe 3D in Blender gelernt und öffne es bis heute jeden Tag. Drumherum: Unreal Engine für Echtzeit-Licht, DaVinci Resolve fürs Grading und Nomad Sculpt auf dem Tablet, wenn eine Form Hände braucht.",
+          "title": "3D ERSCHAFFEN, MIT VERSCHIEDENEN WERKZEUGEN"
+        },
+        "es": {
+          "intro": "Aprendí 3D en Blender y lo sigo abriendo cada día. A su alrededor están Unreal Engine para la iluminación en tiempo real, DaVinci Resolve para el etalonaje y Nomad Sculpt en la tableta cuando una forma necesita manos.",
+          "title": "CREAR EN 3D, CON DISTINTAS HERRAMIENTAS"
+        },
+        "fr": {
+          "intro": "J’ai appris la 3D dans Blender et je l’ouvre encore tous les jours. Autour, Unreal Engine pour l’éclairage en temps réel, DaVinci Resolve pour l’étalonnage, et Nomad Sculpt sur tablette quand une forme a besoin des mains.",
+          "title": "CRÉER EN 3D, AVEC PLUSIEURS OUTILS"
+        }
+      },
       "intro": "I learned 3D in Blender and still open it every day. Around it sit Unreal Engine for real-time lighting, DaVinci Resolve for grading, and Nomad Sculpt on the tablet when a shape needs hands.",
       "title": "CREATING 3D, WITH DIFFERENT TOOLS",
       "tools": [
         {
           "icon": "blender",
           "name": "Blender",
-          "role": "Modeling · Shading · Render"
+          "role": "Modeling · Shading · Render",
+          "_i18n": {
+            "de": {
+              "role": "Modeling · Shading · Rendering"
+            },
+            "es": {
+              "role": "Modelado · Shading · Render"
+            },
+            "fr": {
+              "role": "Modélisation · Shading · Rendu"
+            }
+          }
         },
         {
           "icon": "unreal",
           "name": "Unreal Engine",
-          "role": "Real-time · Lighting"
+          "role": "Real-time · Lighting",
+          "_i18n": {
+            "de": {
+              "role": "Echtzeit · Licht"
+            },
+            "es": {
+              "role": "Tiempo real · Iluminación"
+            },
+            "fr": {
+              "role": "Temps réel · Éclairage"
+            }
+          }
         },
         {
           "icon": "resolve",
           "name": "DaVinci Resolve",
-          "role": "Grading · Edit"
+          "role": "Grading · Edit",
+          "_i18n": {
+            "de": {
+              "role": "Grading · Schnitt"
+            },
+            "es": {
+              "role": "Etalonaje · Montaje"
+            },
+            "fr": {
+              "role": "Étalonnage · Montage"
+            }
+          }
         },
         {
           "icon": "nomad",
           "name": "Nomad Sculpt",
-          "role": "Sculpting · Tablet"
+          "role": "Sculpting · Tablet",
+          "_i18n": {
+            "de": {
+              "role": "Sculpting · Tablet"
+            },
+            "es": {
+              "role": "Escultura · Tableta"
+            },
+            "fr": {
+              "role": "Sculpture · Tablette"
+            }
+          }
         }
       ]
-    },
-    "process": {
-      "title": "FROM A SKETCH TO A WORLD",
-      "stages": [
-        {
-          "tool": "Pen · perspective sketch",
-          "image": "/process/drawing.webp",
-          "label": "Drawing",
-          "video": "/process/drawing-timelapse.mp4",
-          "caption": "It starts on paper. Perspective lines, the arch of the canopy and where the eye should land — the whole scene decided in pen before any of it is worth building. Scroll to watch it drawn."
-        },
-        {
-          "tool": "Painted study",
-          "image": "/process/concept.webp",
-          "label": "Concept",
-          "caption": "A painted study next — the mood, the scale of the canopy, and the palette get settled before a single vertex exists."
-        },
-        {
-          "tool": "Blender · solid view",
-          "image": "/process/blockout.webp",
-          "label": "Blockout",
-          "caption": "Geometry only. Trunks, ground scatter and silhouettes are built and dressed in flat colour, so the composition can be judged without lighting hiding anything."
-        },
-        {
-          "tool": "Blender · Cycles",
-          "image": "/process/render.webp",
-          "label": "Render",
-          "caption": "Materials, volumetric light through the canopy, then a grade. Same camera as the blockout, so the two can be read against each other."
-        }
-      ],
-      "project": "Navana · 2026"
-    },
-    "physical": {
-      "intro": "Once an environment or a character is finished, I bring it out of the screen — printed on paper as posters, and run through a resin printer for models and dioramas.",
-      "title": "PUT MY IMAGINATION IN THE REAL LIFE"
-    },
-    "cta": {
-      "text": "New work turns up whenever the inspiration does. Every piece below can be turned around in your browser — no render, the actual mesh.",
-      "title": "FOLLOW ME, I WILL SHOW YOU",
-      "button": "MY PROJECTS"
-    },
-    "contact": {
-      "email": "contact@williamvasseur.fr",
-      "instagram": "https://www.instagram.com/v2s3d/",
-      "artstation": "https://www.artstation.com/williamvasseur"
     }
   },
   "products": [
@@ -234,27 +692,50 @@
       "image": "/models/posters/canal-arches.webp",
       "currency": "EUR",
       "leadTime": "Printed to order · ships in 5–7 days",
+      "_i18n": {
+        "de": {
+          "kind": "Poster · Kunstdruck",
+          "spec": "250 g mattes Fine-Art-Papier · Rahmen aus massiver Eiche · signiert",
+          "blurb": "Terrassierte Arkaden über stillem Wasser, mit großem Farbraum gedruckt, damit das Rot des Mauerwerks auf dem Papier erhalten bleibt.",
+          "leadTime": "Auf Bestellung gedruckt · Versand in 5–7 Tagen"
+        },
+        "es": {
+          "kind": "Póster · Lámina artística",
+          "spec": "Papel fine art mate de 250 g · marco de roble macizo · firmado",
+          "blurb": "Arcadas en terrazas sobre un agua inmóvil, impresas con una gama amplia para que los rojos de la piedra sobrevivan al papel.",
+          "leadTime": "Impreso por encargo · envío en 5–7 días"
+        },
+        "fr": {
+          "kind": "Poster · Tirage d’art",
+          "spec": "Papier fine art mat 250 g · cadre en chêne massif · signé",
+          "blurb": "Des arcades en terrasses au-dessus d’une eau immobile, imprimées avec un large gamut pour que les rouges de la pierre survivent au papier.",
+          "leadTime": "Imprimé à la commande · expédié sous 5 à 7 jours"
+        }
+      },
       "variants": [
         {
           "id": "a3",
           "label": "30 × 40 cm",
           "priceCents": 4000,
           "sku": "WV-ART01-A3",
-          "stock": null
+          "stock": null,
+          "_i18n": {}
         },
         {
           "id": "a2",
           "label": "50 × 70 cm",
           "priceCents": 6000,
           "sku": "WV-ART01-A2",
-          "stock": null
+          "stock": null,
+          "_i18n": {}
         },
         {
           "id": "a1",
           "label": "70 × 100 cm",
           "priceCents": 9500,
           "sku": "WV-ART01-A1",
-          "stock": null
+          "stock": null,
+          "_i18n": {}
         }
       ]
     },
@@ -270,27 +751,50 @@
       "model": "/models/clockwork-colossus.glb",
       "currency": "EUR",
       "leadTime": "Cast in small batches · ships in 2–3 weeks",
+      "_i18n": {
+        "de": {
+          "kind": "Figur · Resin-Druck",
+          "spec": "Unbemaltes graues Resin · nummerierter Sockel · von Hand nachbearbeitet",
+          "blurb": "Sechs Gliedmaßen, Drucktanks und Schlauchleitungen, mit einer Schichthöhe gedruckt, die fein genug ist, um die Panel-Linien zu halten.",
+          "leadTime": "In kleinen Serien gefertigt · Versand in 2–3 Wochen"
+        },
+        "es": {
+          "kind": "Figura · Impresión en resina",
+          "spec": "Resina gris sin pintar · base numerada · acabado a mano",
+          "blurb": "Seis extremidades, tanques a presión y tramos de manguera, impresos con una altura de capa lo bastante fina para conservar las líneas de los paneles.",
+          "leadTime": "Producido en pequeñas series · envío en 2–3 semanas"
+        },
+        "fr": {
+          "kind": "Figurine · Impression résine",
+          "spec": "Résine grise non peinte · socle numéroté · finition main",
+          "blurb": "Six membres, des réservoirs sous pression et des faisceaux de tuyaux, imprimés avec une hauteur de couche assez fine pour tenir les lignes de panneaux.",
+          "leadTime": "Produit en petites séries · expédié sous 2 à 3 semaines"
+        }
+      },
       "variants": [
         {
           "id": "12cm",
           "label": "12 cm",
           "priceCents": 6500,
           "sku": "WV-ART02-12",
-          "stock": 6
+          "stock": 6,
+          "_i18n": {}
         },
         {
           "id": "18cm",
           "label": "18 cm",
           "priceCents": 8500,
           "sku": "WV-ART02-18",
-          "stock": 2
+          "stock": 2,
+          "_i18n": {}
         },
         {
           "id": "28cm",
           "label": "28 cm",
           "priceCents": 16000,
           "sku": "WV-ART02-28",
-          "stock": 0
+          "stock": 0,
+          "_i18n": {}
         }
       ]
     },
@@ -306,20 +810,178 @@
       "model": "/models/crash-landed.glb",
       "currency": "EUR",
       "leadTime": "Built to order · ships in 4–6 weeks",
+      "_i18n": {
+        "de": {
+          "kind": "Diorama · Maßstab 1/144",
+          "spec": "24 × 18 cm · handbemaltes Resin · gravierte Platte",
+          "blurb": "Ein Frachter, abgestürzt auf totem Fels, von Hand bemalt und gealtert, auf einer gravierten Platte montiert.",
+          "leadTime": "Auf Bestellung gebaut · Versand in 4–6 Wochen"
+        },
+        "es": {
+          "kind": "Diorama · Escala 1/144",
+          "spec": "24 × 18 cm · resina pintada a mano · placa grabada",
+          "blurb": "Un carguero caído sobre roca muerta, pintado y envejecido a mano, montado sobre una placa grabada.",
+          "leadTime": "Hecho por encargo · envío en 4–6 semanas"
+        },
+        "fr": {
+          "kind": "Diorama · Échelle 1/144",
+          "spec": "24 × 18 cm · résine peinte à la main · plaque gravée",
+          "blurb": "Un cargo échoué sur une roche morte, peint et patiné à la main, monté sur une plaque gravée.",
+          "leadTime": "Fabriqué à la commande · expédié sous 4 à 6 semaines"
+        }
+      },
       "variants": [
         {
           "id": "standard",
           "label": "Standard finish",
           "priceCents": 18000,
           "sku": "WV-ART03-STD",
-          "stock": 3
+          "stock": 3,
+          "_i18n": {
+            "de": {
+              "label": "Standardausführung"
+            },
+            "es": {
+              "label": "Acabado estándar"
+            },
+            "fr": {
+              "label": "Finition standard"
+            }
+          }
         },
         {
           "id": "lit",
           "label": "Lit edition",
           "priceCents": 24000,
           "sku": "WV-ART03-LIT",
-          "stock": 1
+          "stock": 1,
+          "_i18n": {
+            "de": {
+              "label": "Beleuchtete Edition"
+            },
+            "es": {
+              "label": "Edición iluminada"
+            },
+            "fr": {
+              "label": "Édition lumineuse"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "navana-print",
+      "ref": "ART—04",
+      "name": "Navana",
+      "kind": "Poster · Fine art print",
+      "family": "Poster",
+      "blurb": "The mushroom canopy over its still pool, printed with a wide gamut so the shafts of light keep their glow on paper.",
+      "spec": "250 g matte fine art paper · solid oak frame · signed",
+      "image": "/gallery/navana-landscape.webp",
+      "currency": "EUR",
+      "leadTime": "Printed to order · ships in 5–7 days",
+      "_i18n": {
+        "de": {
+          "kind": "Poster · Kunstdruck",
+          "spec": "250 g mattes Fine-Art-Papier · Rahmen aus massiver Eiche · signiert",
+          "blurb": "Das Pilzdach über seinem stillen Teich, mit großem Farbraum gedruckt, damit die Lichtstrahlen auf dem Papier ihr Leuchten behalten.",
+          "leadTime": "Auf Bestellung gedruckt · Versand in 5–7 Tagen"
+        },
+        "es": {
+          "kind": "Póster · Lámina artística",
+          "spec": "Papel fine art mate de 250 g · marco de roble macizo · firmado",
+          "blurb": "El dosel de hongos sobre su estanque inmóvil, impreso con una gama amplia para que los haces de luz conserven su brillo en el papel.",
+          "leadTime": "Impreso por encargo · envío en 5–7 días"
+        },
+        "fr": {
+          "kind": "Poster · Tirage d’art",
+          "spec": "Papier fine art mat 250 g · cadre en chêne massif · signé",
+          "blurb": "La canopée de champignons au-dessus de son bassin immobile, imprimée avec un large gamut pour que les rais de lumière gardent leur éclat sur le papier.",
+          "leadTime": "Imprimé à la commande · expédié sous 5 à 7 jours"
+        }
+      },
+      "variants": [
+        {
+          "id": "a3",
+          "label": "30 × 40 cm",
+          "priceCents": 4000,
+          "sku": "WV-ART04-A3",
+          "stock": null,
+          "_i18n": {}
+        },
+        {
+          "id": "a2",
+          "label": "50 × 70 cm",
+          "priceCents": 6000,
+          "sku": "WV-ART04-A2",
+          "stock": null,
+          "_i18n": {}
+        },
+        {
+          "id": "a1",
+          "label": "70 × 100 cm",
+          "priceCents": 9500,
+          "sku": "WV-ART04-A1",
+          "stock": null,
+          "_i18n": {}
+        }
+      ]
+    },
+    {
+      "id": "navana-desert-print",
+      "ref": "ART—05",
+      "name": "Navana / Desert",
+      "kind": "Poster · Fine art print",
+      "family": "Poster",
+      "blurb": "The dry side of Navana: ribbon trunks, red rock and a second planet low on the horizon, in portrait format.",
+      "spec": "250 g matte fine art paper · solid oak frame · signed",
+      "image": "/gallery/desert-portrait.webp",
+      "currency": "EUR",
+      "leadTime": "Printed to order · ships in 5–7 days",
+      "_i18n": {
+        "de": {
+          "kind": "Poster · Kunstdruck",
+          "spec": "250 g mattes Fine-Art-Papier · Rahmen aus massiver Eiche · signiert",
+          "blurb": "Die trockene Seite von Navana: bandartige Stämme, roter Fels und ein zweiter Planet tief am Horizont, im Hochformat.",
+          "leadTime": "Auf Bestellung gedruckt · Versand in 5–7 Tagen"
+        },
+        "es": {
+          "kind": "Póster · Lámina artística",
+          "spec": "Papel fine art mate de 250 g · marco de roble macizo · firmado",
+          "blurb": "El lado árido de Navana: troncos en forma de cinta, roca roja y un segundo planeta bajo en el horizonte, en formato vertical.",
+          "leadTime": "Impreso por encargo · envío en 5–7 días"
+        },
+        "fr": {
+          "kind": "Poster · Tirage d’art",
+          "spec": "Papier fine art mat 250 g · cadre en chêne massif · signé",
+          "blurb": "Le versant aride de Navana : troncs en ruban, roche rouge et une seconde planète basse sur l’horizon, en format portrait.",
+          "leadTime": "Imprimé à la commande · expédié sous 5 à 7 jours"
+        }
+      },
+      "variants": [
+        {
+          "id": "a3",
+          "label": "30 × 40 cm",
+          "priceCents": 4000,
+          "sku": "WV-ART05-A3",
+          "stock": null,
+          "_i18n": {}
+        },
+        {
+          "id": "a2",
+          "label": "50 × 70 cm",
+          "priceCents": 6000,
+          "sku": "WV-ART05-A2",
+          "stock": null,
+          "_i18n": {}
+        },
+        {
+          "id": "a1",
+          "label": "70 × 100 cm",
+          "priceCents": 9500,
+          "sku": "WV-ART05-A1",
+          "stock": null,
+          "_i18n": {}
         }
       ]
     }

@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowRightIcon, ShoppingBagIcon, XIcon } from 'lucide-react';
 import { ModelViewer } from './three/ModelViewer';
 import type { Project } from '../data/projects';
+import { t } from '../i18n';
 
 interface ProjectDialogProps {
   project: Project | null;
@@ -69,13 +70,13 @@ export function ProjectDialog({ project, onClose }: ProjectDialogProps) {
 
             <div className="flex items-center justify-between gap-4 border-b border-line pb-3">
               <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted">
-                {project.ref} — {project.category} · {project.year}
+                {project.ref} — {t.projects.categories[project.category] ?? project.category} · {project.year}
               </span>
               <button
               ref={closeRef}
               type="button"
               onClick={onClose}
-              aria-label="Close"
+              aria-label={t.projects.close}
               className="flex h-8 w-8 items-center justify-center border border-line text-muted transition-colors hover:border-ink hover:text-ink">
 
                 <XIcon className="h-4 w-4" aria-hidden="true" />
@@ -98,13 +99,13 @@ export function ProjectDialog({ project, onClose }: ProjectDialogProps) {
             </header>
 
             <section className="pt-10" aria-labelledby="dialog-work">
-              <SectionLabel id="dialog-work">Finished work</SectionLabel>
+              <SectionLabel id="dialog-work">{t.projects.finished}</SectionLabel>
               <Work project={project} />
             </section>
 
             {project.stages?.length ?
           <section className="pt-12" aria-labelledby="dialog-process">
-                <SectionLabel id="dialog-process">How it was made</SectionLabel>
+                <SectionLabel id="dialog-process">{t.projects.how}</SectionLabel>
                 {/* A real sequence, so the numbers carry meaning: each stage
                     was done after the one above it. */}
                 <ol className="mt-5 flex flex-col gap-10">
@@ -140,7 +141,7 @@ export function ProjectDialog({ project, onClose }: ProjectDialogProps) {
                 likely to want one on the wall. */}
             <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
-                Prints, figurines and dioramas, shipped from Toulouse
+                {t.projects.shipped}
               </span>
               <ShopLinks project={project} />
             </div>
@@ -177,7 +178,7 @@ function Work({ project }: {project: Project;}) {
 
   }
 
-  const renders = project.gallery ?? [{ src: project.image, label: 'Still', size: project.spec }];
+  const renders = project.gallery ?? [{ src: project.image, label: t.projects.still, size: project.spec }];
   return (
     <div className={`mt-5 grid gap-5 ${renders.length > 1 ? 'md:grid-cols-2' : ''}`}>
       {renders.map((render) =>
@@ -205,14 +206,14 @@ function Work({ project }: {project: Project;}) {
 function ShopLinks({ project }: {project: Project;}) {
   const links = [
   project.shop?.poster ?
-  { to: `/store?product=${project.shop.poster}`, label: 'Shop this poster' } :
+  { to: `/store?product=${project.shop.poster}`, label: t.projects.shopPoster } :
   null,
   project.shop?.figurine ?
-  { to: `/store?product=${project.shop.figurine}`, label: 'Shop this figurine' } :
+  { to: `/store?product=${project.shop.figurine}`, label: t.projects.shopFigurine } :
   null].
   filter((l): l is {to: string;label: string;} => l !== null);
 
-  const items = links.length > 0 ? links : [{ to: '/store', label: 'Visit the store' }];
+  const items = links.length > 0 ? links : [{ to: '/store', label: t.projects.visitStore }];
 
   return (
     <div className="flex flex-wrap gap-2">

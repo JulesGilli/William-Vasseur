@@ -11,6 +11,7 @@ import {
 import { ArrowDownIcon } from 'lucide-react';
 import { asset } from '../../lib/asset';
 import { site } from '../../data/content';
+import { t } from '../../i18n';
 
 interface Stage {
   id: string;
@@ -129,7 +130,7 @@ function StageLayer({
           // spending on a visitor who never scrolls this far.
           src={armed ? stage.video : undefined}
           poster={stage.image}
-          aria-label={`${stage.label} — Navana, drawn from first line to finished painting`}
+          aria-label={t.home.timelapse(stage.label)}
           muted
           playsInline
           preload="auto"
@@ -212,7 +213,7 @@ export function ProcessStages() {
           <div className="flex items-end justify-between gap-6">
             <div>
               <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
-                03 / Process
+                {t.home.process}
               </span>
               <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-3">
                 <h2
@@ -228,7 +229,7 @@ export function ProcessStages() {
                 <button
                   type="button"
                   onClick={() => last ? leave() : goTo(active + 1)}
-                  aria-label={last ? 'Continue down the page' : `Next stage: ${STAGES[active + 1].label}`}
+                  aria-label={last ? t.home.continueDown : t.home.nextStage(STAGES[active + 1].label)}
                   className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted transition-colors hover:border-ink hover:text-ink">
 
                   <motion.span
@@ -239,7 +240,7 @@ export function ProcessStages() {
 
                     <ArrowDownIcon className="h-3.5 w-3.5" />
                   </motion.span>
-                  Scroll
+                  {t.home.scroll}
                   <span className="tabular-nums text-ink">
                     {String(active + 1).padStart(2, '0')} / {String(STAGES.length).padStart(2, '0')}
                   </span>

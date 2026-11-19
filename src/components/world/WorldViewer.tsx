@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { OrbitIcon, XIcon } from 'lucide-react';
 import type { SplatWorld } from '../../data/projects';
+import { t } from '../../i18n';
 
 // PlayCanvas only reaches visitors who actually open a world.
 const WorldScene = lazy(() => import('./WorldScene'));
@@ -54,7 +55,7 @@ export function WorldViewer({ world, title, onClose }: WorldViewerProps) {
       <motion.div
         role="dialog"
         aria-modal="true"
-        aria-label={`${title} — explore in 3D`}
+        aria-label={t.world.explore(title)}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -82,7 +83,7 @@ export function WorldViewer({ world, title, onClose }: WorldViewerProps) {
               <button
               type="button"
               onClick={onClose}
-              aria-label="Leave this world"
+              aria-label={t.world.leave}
               className="pointer-events-auto flex h-9 w-9 items-center justify-center border border-line bg-bg/70 text-muted backdrop-blur-sm transition-colors hover:border-ink hover:text-ink">
 
                 <XIcon className="h-4 w-4" aria-hidden="true" />
@@ -116,7 +117,7 @@ export function WorldViewer({ world, title, onClose }: WorldViewerProps) {
 
                 {error ?
             <span className="relative max-w-sm px-6 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-                    This world could not be loaded.
+                    {t.world.failed}
                     <span className="mt-2 block normal-case tracking-normal opacity-70">
                       {error}
                     </span>

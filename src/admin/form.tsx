@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode } from 'react';
+import { createContext, useContext, useRef, useState, type ReactNode } from 'react';
 import { ArrowDownIcon, ArrowUpIcon, PlusIcon, Trash2Icon, UploadIcon } from 'lucide-react';
 import { mediaUrl, supabase } from './supabase';
 
@@ -13,8 +13,28 @@ import { mediaUrl, supabase } from './supabase';
 
 type Value = Record<string, unknown>;
 
+/**
+ * The language being edited. English is the site's base text and shows every
+ * field; the others show only the words, each beside its English original.
+ *
+ * Translations live with what they translate: every object keeps its own
+ * "_i18n": { fr: {…}, de: {…}, es: {…} }, so reordering a list carries them
+ * along and nothing has to be matched up by position.
+ */
+export const EDIT_LANGS = [
+{ code: 'en', label: 'English', hint: 'texte principal' },
+{ code: 'fr', label: 'Français', hint: 'traduction' },
+{ code: 'de', label: 'Deutsch', hint: 'traduction' },
+{ code: 'es', label: 'Español', hint: 'traduction' }] as
+const;
+
+export type EditLang = (typeof EDIT_LANGS)[number]['code'];
+
+export const EditLangContext = createContext<EditLang>('en');
+
 export type FieldSpec =
-{kind: 'text';key: string;label: string;hint?: string;} |
+/** `fixed` marks text that is the same in every language: a link, a reference. */
+{kind: 'text';key: string;label: string;hint?: string;fixed?: boolean;} |
 {kind: 'textarea';key: string;label: string;hint?: string;rows?: number;} |
 {kind: 'lines';key: string;label: string;hint?: string;} |
 {kind: 'paragraphs';key: string;label: string;hint?: string;} |
@@ -44,13 +64,58 @@ export function FieldsEditor({
 
 
 }: {fields: FieldSpec[];value: Value;onChange: (next: Value) => void;}) {
+  const lang = useContext(EditLangContext);
   const set = (key: string, v: unknown) => onChange({ ...value, [key]: v });
+
+  if (lang === 'en') {
+    return (
+      <div className="flex flex-col gap-5">
+        {fields.map((f) =>
+        <Field key={f.key} spec={f} value={value[f.key]} onChange={(v) => set(f.key, v)} />
+        )}
+      </div>);
+
+  }
+
+  // Translating: only words are shown, and they are written into this
+  // object's own "_i18n", leaving the English untouched.
+  const all = (value._i18n ?? {}) as Record<string, Value>;
+  const translated = all[lang] ?? {};
+  const setTranslated = (key: string, v: unknown) =>
+  onChange({ ...value, _i18n: { ...all, [lang]: { ...translated, [key]: v } } });
+
+  const shown = fields.filter(
+    (f) =>
+    f.kind === 'group' || f.kind === 'list' ||
+    (f.kind === 'text' && !f.fixed) || f.kind === 'textarea' || f.kind === 'lines' || f.kind === 'paragraphs'
+  );
+
   return (
     <div className="flex flex-col gap-5">
-      {fields.map((f) =>
-      <Field key={f.key} spec={f} value={value[f.key]} onChange={(v) => set(f.key, v)} />
+      {shown.map((f) =>
+      f.kind === 'group' || f.kind === 'list' ?
+      <Field key={f.key} spec={f} value={value[f.key]} onChange={(v) => set(f.key, v)} /> :
+
+      <Field
+        key={f.key}
+        spec={f}
+        value={translated[f.key]}
+        original={value[f.key]}
+        onChange={(v) => setTranslated(f.key, v)} />
+
       )}
     </div>);
+
+}
+
+/** The English a translation stands for, shown under the field being filled. */
+function Original({ value }: {value: unknown;}) {
+  const text = Array.isArray(value) ? value.join(' / ') : String(value ?? '');
+  if (!text) return null;
+  return (
+    <span className="mt-1 block text-[11px] leading-relaxed text-muted">
+      <span className="font-mono uppercase tracking-[0.14em]">EN</span> — {text}
+    </span>);
 
 }
 
@@ -63,25 +128,35 @@ function Label({ text, hint }: {text: string;hint?: string;}) {
 
 }
 
-function Field({ spec, value, onChange }: {spec: FieldSpec;value: unknown;onChange: (v: unknown) => void;}) {
+function Field({
+  spec,
+  value,
+  onChange,
+  original
+}: {spec: FieldSpec;value: unknown;onChange: (v: unknown) => void;
+  /** Set when translating: the English this field stands for. */
+  original?: unknown;}) {
+  const translating = original !== undefined;
   switch (spec.kind) {
     case 'text':
       return (
         <label className="block">
-          <Label text={spec.label} hint={spec.hint} />
+          <Label text={spec.label} hint={translating ? undefined : spec.hint} />
           <input className={inputClass} value={String(value ?? '')} onChange={(e) => onChange(e.target.value)} />
+          {translating ? <Original value={original} /> : null}
         </label>);
 
     case 'textarea':
       return (
         <label className="block">
-          <Label text={spec.label} hint={spec.hint} />
+          <Label text={spec.label} hint={translating ? undefined : spec.hint} />
           <textarea
             className={`${inputClass} leading-relaxed`}
             rows={spec.rows ?? 4}
             value={String(value ?? '')}
             onChange={(e) => onChange(e.target.value)} />
 
+          {translating ? <Original value={original} /> : null}
         </label>);
 
     case 'lines':
@@ -95,6 +170,7 @@ function Field({ spec, value, onChange }: {spec: FieldSpec;value: unknown;onChan
             // Kept as typed while editing; empty lines are dropped on save.
             onChange={(e) => onChange(e.target.value.split('\n'))} />
 
+          {translating ? <Original value={original} /> : null}
         </label>);
 
     case 'paragraphs':
@@ -107,6 +183,7 @@ function Field({ spec, value, onChange }: {spec: FieldSpec;value: unknown;onChan
             value={((value as string[]) ?? []).join('\n\n')}
             onChange={(e) => onChange(e.target.value.split(/\n\s*\n/))} />
 
+          {translating ? <Original value={original} /> : null}
         </label>);
 
     case 'select':
@@ -157,6 +234,8 @@ function ListField({
 
 
 }: {spec: Extract<FieldSpec, {kind: 'list';}>;value: Value[];onChange: (v: Value[]) => void;}) {
+  // A list is built in English; a translation only fills in its words.
+  const translating = useContext(EditLangContext) !== 'en';
   const move = (from: number, to: number) => {
     const next = [...value];
     const [item] = next.splice(from, 1);
@@ -172,7 +251,7 @@ function ListField({
         <li key={i} className="border border-line p-4">
             <div className="mb-4 flex items-center justify-between gap-3">
               <span className="text-sm">{spec.itemTitle(item, i)}</span>
-              <span className="flex gap-1">
+              <span className={translating ? 'hidden' : 'flex gap-1'}>
                 <IconButton label="Monter" disabled={i === 0} onClick={() => move(i, i - 1)}>
                   <ArrowUpIcon className="h-3.5 w-3.5" />
                 </IconButton>
@@ -200,7 +279,9 @@ function ListField({
       <button
         type="button"
         onClick={() => onChange([...value, spec.newItem()])}
-        className="mt-3 inline-flex items-center gap-2 border border-dashed border-line px-3 py-2 text-sm text-muted transition-colors hover:border-ink hover:text-ink">
+        className={`mt-3 items-center gap-2 border border-dashed border-line px-3 py-2 text-sm text-muted transition-colors hover:border-ink hover:text-ink ${
+        translating ? 'hidden' : 'inline-flex'}`
+        }>
 
         <PlusIcon className="h-4 w-4" aria-hidden="true" />
         Ajouter
@@ -354,6 +435,24 @@ export function clean(fields: FieldSpec[], value: Value): Value {
     } else if (f.kind === 'list') {
       out[f.key] = ((v as Value[]) ?? []).map((item) => clean(f.item, item));
     }
+  }
+
+  // Translations get the same tidying, and an emptied one is removed, so the
+  // site falls back to the English rather than showing a blank.
+  const all = out._i18n as Record<string, Value> | undefined;
+  if (all) {
+    const tidy: Record<string, Value> = {};
+    for (const [lang, translated] of Object.entries(all)) {
+      const kept: Value = {};
+      for (const [key, v] of Object.entries(translated ?? {})) {
+        const next = Array.isArray(v) ?
+        v.map((s) => String(s).trim()).filter(Boolean) :
+        typeof v === 'string' ? v.trim() : v;
+        if (Array.isArray(next) ? next.length : next) kept[key] = next;
+      }
+      if (Object.keys(kept).length) tidy[lang] = kept;
+    }
+    out._i18n = tidy;
   }
   return out;
 }

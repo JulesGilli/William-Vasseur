@@ -1,9 +1,31 @@
 import { MoonIcon, SunIcon } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { t } from '../i18n';
 
-export function ThemeToggle() {
+/**
+ * `compact` is the phone header's version: one icon rather than a sliding
+ * track. With a language picker beside it and labels that run longer in
+ * Spanish and French than in English, the 74px track no longer fits a 375px
+ * screen.
+ */
+export function ThemeToggle({ compact = false }: {compact?: boolean;}) {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
+
+  if (compact) {
+    const Icon = isDark ? SunIcon : MoonIcon;
+    return (
+      <button
+        type="button"
+        onClick={toggleTheme}
+        aria-label={isDark ? t.theme.toLight : t.theme.toDark}
+        aria-pressed={isDark}
+        className="flex h-7 w-7 items-center justify-center border border-line text-muted transition-colors hover:border-ink hover:text-ink">
+
+        <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+      </button>);
+
+  }
 
   // Inside the border the track is 72px wide. The 32px knob is inset 2px, so it
   // travels 36px and leaves the same 2px at either end; the 11px padding lands
@@ -12,7 +34,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={isDark ? t.theme.toLight : t.theme.toDark}
       aria-pressed={isDark}
       className="group relative flex h-8 w-[74px] items-center justify-between rounded-full border border-line px-[11px] transition-colors hover:border-ink">
 

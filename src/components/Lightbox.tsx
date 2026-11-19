@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { DownloadIcon, XIcon } from 'lucide-react';
 import type { GalleryImage } from '../data/projects';
+import { t } from '../i18n';
 
 interface LightboxProps {
   image: GalleryImage | null;
@@ -88,13 +89,13 @@ export function Lightbox({ image, title, onClose, onPrev, onNext }: LightboxProp
               className="flex items-center gap-2 border border-line px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted transition-colors hover:border-ink hover:text-ink">
 
                 <DownloadIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                Download
+                {t.gallery.download}
               </button>
               <button
               ref={closeRef}
               type="button"
               onClick={onClose}
-              aria-label="Close"
+              aria-label={t.projects.close}
               className="flex h-8 w-8 items-center justify-center border border-line text-muted transition-colors hover:border-ink hover:text-ink">
 
                 <XIcon className="h-4 w-4" aria-hidden="true" />
@@ -143,7 +144,7 @@ function ArrowButton({
         e.stopPropagation();
         onClick();
       }}
-      aria-label={side === 'left' ? 'Previous image' : 'Next image'}
+      aria-label={side === 'left' ? t.gallery.previous : t.gallery.next}
       className="flex h-10 w-10 shrink-0 items-center justify-center border border-line text-muted transition-colors hover:border-ink hover:text-ink">
 
       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">

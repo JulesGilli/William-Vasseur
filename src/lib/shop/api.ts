@@ -1,6 +1,8 @@
 import { asset } from '../asset';
 import { products } from '../../data/products';
-import type { CartLine, CheckoutResult, Product, ShopApi } from './types';
+import { site } from '../../data/content';
+import { lang, localize, t } from '../../i18n';
+import type { CartLine, CheckoutResult, Product, ShipCountry, ShippingRates, ShopApi } from './types';
 
 /**
  * The one file to replace when a backend exists.
@@ -13,9 +15,15 @@ import type { CartLine, CheckoutResult, Product, ShopApi } from './types';
 /** Set to a backend origin to switch over, e.g. VITE_SHOP_API=https://api.example.com */
 const API_BASE = import.meta.env.VITE_SHOP_API as string | undefined;
 
+const NO_FEES: ShippingRates = { franceCents: 0, europeCents: 0, freeFromCents: 0 };
+
 const localApi: ShopApi = {
   async listProducts() {
     return products;
+  },
+
+  async getShipping() {
+    return site.shipping ?? NO_FEES;
   },
 
   async createCheckout() {
@@ -24,7 +32,7 @@ const localApi: ShopApi = {
     // and pretending otherwise would hide the missing half of the feature.
     return {
       status: 'unavailable',
-      reason: 'No payment backend is connected yet.',
+      reason: t.cart.noBackend,
     };
   },
 };
@@ -32,8 +40,9 @@ const localApi: ShopApi = {
 const remoteApi = (base: string): ShopApi => ({
   async listProducts() {
     const res = await fetch(`${base}/products`);
-    if (!res.ok) throw new Error(`Catalogue unavailable (${res.status})`);
-    const items = (await res.json()) as Product[];
+    if (!res.ok) throw new Error(`${t.store.unavailable} (${res.status})`);
+    // Served with every translation alongside; folded to this visit's.
+    const items = localize((await res.json()) as Product[], lang);
     // The backend stores either a repository path ("/models/…") or, for what
     // William uploaded, a storage key. Publishing copies every upload into
     // the site under /media/ — optimising 3D on the way — so a key resolves
@@ -46,15 +55,24 @@ const remoteApi = (base: string): ShopApi => ({
     }));
   },
 
-  async createCheckout(lines: CartLine[]) {
+  async getShipping() {
+    const res = await fetch(`${base}/shipping`);
+    // A failed lookup must not block the shop; the payment page states the
+    // real fee either way.
+    return res.ok ? ((await res.json()) as ShippingRates) : site.shipping ?? NO_FEES;
+  },
+
+  async createCheckout(lines: CartLine[], country: ShipCountry) {
     const res = await fetch(`${base}/checkout`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       // Only identifiers and quantities travel: the server prices the order.
-      body: JSON.stringify({ lines }),
+      // The language rides along so the payment page and its line items
+      // read the same as the shop did.
+      body: JSON.stringify({ lines, country, lang }),
     });
     if (!res.ok) {
-      return { status: 'unavailable', reason: `Checkout failed (${res.status})` };
+      return { status: 'unavailable', reason: t.cart.refused(res.status) };
     }
     const { url } = (await res.json()) as { url: string };
     return { status: 'redirect', url };
