@@ -1,0 +1,3 @@
+esplanade.exr — "Esplanade" HDRI from Poly Haven (https://polyhaven.com), CC0 1.0.
+Resized to 512 px and converted to EXR by the pmndrs/assets project
+(https://github.com/pmndrs/assets, CC0 1.0). Used as the 3D viewer's lighting.

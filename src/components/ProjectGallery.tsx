@@ -1,9 +1,8 @@
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ExpandIcon, ShoppingBagIcon } from 'lucide-react';
+import { ShoppingBagIcon } from 'lucide-react';
 import type { GalleryImage } from '../data/projects';
-import { Lightbox } from './Lightbox';
 import { t } from '../i18n';
 
 interface ProjectGalleryProps {
@@ -16,11 +15,14 @@ interface ProjectGalleryProps {
   aspect?: string;
   /** Product ids this render is sold as, if any. */
   shop?: {poster?: string;figurine?: string;};
+  /** Clicking the image opens the whole project. */
+  onOpen: () => void;
 }
 
 /**
  * The stills counterpart to the 3D viewer: same frame, but paging through a
- * project's finished artwork, any of which opens full-bleed and downloadable.
+ * project's finished artwork. Clicking the picture opens the project, as
+ * VIEW PROJECT does; enlarging happens in there.
  */
 export function ProjectGallery({
   images,
@@ -28,11 +30,11 @@ export function ProjectGallery({
   label,
   spec,
   aspect = 'aspect-[5/4]',
-  shop
+  shop,
+  onOpen
 }: ProjectGalleryProps) {
   const reduced = useReducedMotion();
   const [index, setIndex] = useState(0);
-  const [zoomed, setZoomed] = useState(false);
   // Which way the last move went, so the slide leaves the way it came.
   const [direction, setDirection] = useState(0);
 
@@ -84,8 +86,8 @@ export function ProjectGallery({
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: direction * -offset }}
                 transition={{ duration: reduced ? 0.01 : 0.4, ease: [0.16, 1, 0.3, 1] }}
-                onClick={() => setZoomed(true)}
-                className="absolute inset-0 h-full w-full cursor-zoom-in object-contain p-4" />
+                onClick={onOpen}
+                className="absolute inset-0 h-full w-full cursor-pointer object-contain p-4" />
 
             </AnimatePresence>
           </div>
@@ -98,13 +100,14 @@ export function ProjectGallery({
             </> :
           null}
 
+          {/* The image is clickable for the mouse; this is the same action
+              for the keyboard, invisible until focused. */}
           <button
             type="button"
-            onClick={() => setZoomed(true)}
-            aria-label={t.gallery.viewFull(title, current.label)}
-            className="absolute right-2 top-2 z-30 flex h-7 w-7 items-center justify-center border border-line bg-bg/80 text-muted opacity-0 backdrop-blur-sm transition-all duration-300 hover:border-ink hover:text-ink focus-visible:opacity-100 group-hover:opacity-100">
+            onClick={onOpen}
+            className="sr-only focus:not-sr-only focus:absolute focus:right-2 focus:top-2 focus:z-30 focus:border focus:border-ink focus:bg-bg focus:px-2 focus:py-1 focus:font-mono focus:text-[10px]">
 
-            <ExpandIcon className="h-3 w-3" aria-hidden="true" />
+            {t.gallery.open(title)}
           </button>
 
           {/* On the render itself, as close to "buy this one" as the sheet
@@ -164,14 +167,6 @@ export function ProjectGallery({
           </div> :
         null}
       </figure>
-
-      <Lightbox
-        image={zoomed ? current : null}
-        title={title}
-        onClose={() => setZoomed(false)}
-        onPrev={many ? () => go(-1) : undefined}
-        onNext={many ? () => go(1) : undefined} />
-
     </>);
 
 }

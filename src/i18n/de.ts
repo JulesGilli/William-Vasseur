@@ -58,8 +58,6 @@ const de: Dictionary = {
     visitWorld: 'DIESE WELT BESUCHEN',
     empty: 'Noch kein Projekt in dieser Kategorie.',
     still: 'Standbild',
-    process: 'Prozess',
-    scrub: (title) => `${title} — durch die Produktionsschritte blättern`,
     finished: 'Fertiges Werk',
     how: 'Wie es entstanden ist',
     shipped: 'Drucke, Figuren und Dioramen, Versand aus Toulouse',
@@ -69,10 +67,10 @@ const de: Dictionary = {
     close: 'Schließen'
   },
   gallery: {
-    viewFull: (title, label) => `${title} — ${label} in voller Größe ansehen`,
     previous: 'Vorheriges Bild',
     next: 'Nächstes Bild',
-    download: 'Herunterladen'
+    enlarge: (title, label) => `${title} — ${label} vergrößern`,
+    open: (title) => `${title} öffnen`,
   },
   viewer: {
     model: 'Modell',
@@ -80,7 +78,7 @@ const de: Dictionary = {
     pause: 'Drehung anhalten',
     resume: 'Drehung fortsetzen',
     reset: 'Ansicht zurücksetzen',
-    hint: 'Ziehen zum Drehen · Scrollen zum Zoomen',
+    hint: 'Ziehen zum Drehen',
     live: 'Live-Modell'
   },
   world: {
@@ -94,6 +92,7 @@ const de: Dictionary = {
     intro:
     'Drucke, Figuren und Dioramen — in kleinen, nummerierten Serien aus meinen eigenen Dateien gefertigt, Versand aus Toulouse. Dreh jedes Stück in 3D, bevor du dich entscheidest.',
     families: { Poster: 'Poster', Figurine: 'Figur', Diorama: 'Diorama' },
+    commission: 'Auftragsarbeit',
     viewDetails: 'Details ansehen',
     details: (name) => `${name} — Details`,
     close3d: '3D schließen',

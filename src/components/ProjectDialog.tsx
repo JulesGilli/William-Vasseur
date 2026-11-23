@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowRightIcon, ShoppingBagIcon, XIcon } from 'lucide-react';
 import { ModelViewer } from './three/ModelViewer';
-import type { Project } from '../data/projects';
+import { Lightbox } from './Lightbox';
+import type { GalleryImage, Project } from '../data/projects';
 import { t } from '../i18n';
 
 interface ProjectDialogProps {
@@ -24,6 +25,18 @@ export function ProjectDialog({ project, onClose }: ProjectDialogProps) {
   const reduced = useReducedMotion();
   const closeRef = useRef<HTMLButtonElement>(null);
   const open = project !== null;
+
+  // Every picture in the pop-up enlarges: the renders, then the stages, as
+  // one sequence the arrows walk through.
+  const [zoomed, setZoomed] = useState<number | null>(null);
+  const pictures: GalleryImage[] = project ?
+  [
+  ...(project.model ? [] : project.gallery ?? [{ src: project.image, label: t.projects.still, size: project.spec }]),
+  ...(project.stages ?? []).map((stage) => ({ src: stage.image, label: stage.label, size: '' }))] :
+
+  [];
+  const enlarge = (src: string) => setZoomed(pictures.findIndex((p) => p.src === src));
+  useEffect(() => setZoomed(null), [project]);
 
   useEffect(() => {
     if (!open) return;
@@ -100,7 +113,7 @@ export function ProjectDialog({ project, onClose }: ProjectDialogProps) {
 
             <section className="pt-10" aria-labelledby="dialog-work">
               <SectionLabel id="dialog-work">{t.projects.finished}</SectionLabel>
-              <Work project={project} />
+              <Work project={project} onEnlarge={enlarge} />
             </section>
 
             {project.stages?.length ?
@@ -114,14 +127,19 @@ export function ProjectDialog({ project, onClose }: ProjectDialogProps) {
                 key={stage.index}
                 className="grid gap-5 border-t border-line pt-5 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] md:gap-8">
 
-                      <div className="relative border border-line bg-surface/40">
+                      <button
+                  type="button"
+                  onClick={() => enlarge(stage.image)}
+                  aria-label={t.gallery.enlarge(project.title, stage.label)}
+                  className="relative block cursor-zoom-in border border-line bg-surface/40">
+
                         <img
                     src={stage.image}
                     alt={`${project.title} — ${stage.label}`}
                     loading="lazy"
                     className="aspect-[16/10] w-full object-contain p-3" />
 
-                      </div>
+                      </button>
                       <div>
                         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
                           {stage.index} — {stage.tool}
@@ -148,6 +166,15 @@ export function ProjectDialog({ project, onClose }: ProjectDialogProps) {
           </motion.article>
         </motion.div> :
       null}
+      {project ?
+      <Lightbox
+        key="lightbox"
+        image={zoomed !== null && zoomed >= 0 ? pictures[zoomed] : null}
+        title={project.title}
+        onClose={() => setZoomed(null)}
+        onPrev={pictures.length > 1 ? () => setZoomed((i) => ((i ?? 0) - 1 + pictures.length) % pictures.length) : undefined}
+        onNext={pictures.length > 1 ? () => setZoomed((i) => ((i ?? 0) + 1) % pictures.length) : undefined} /> :
+      null}
     </AnimatePresence>,
     document.body
   );
@@ -162,7 +189,7 @@ function SectionLabel({ id, children }: {id: string;children: React.ReactNode;})
 }
 
 /** The piece itself: turnable where there is a mesh, otherwise its renders. */
-function Work({ project }: {project: Project;}) {
+function Work({ project, onEnlarge }: {project: Project;onEnlarge: (src: string) => void;}) {
   if (project.model) {
     return (
       <div className="mt-5">
@@ -183,10 +210,18 @@ function Work({ project }: {project: Project;}) {
     <div className={`mt-5 grid gap-5 ${renders.length > 1 ? 'md:grid-cols-2' : ''}`}>
       {renders.map((render) =>
       <figure key={render.src} className="border border-line bg-surface/40">
-          <img
-          src={render.src}
-          alt={`${project.title} — ${render.label}`}
-          className="max-h-[75vh] w-full object-contain p-3" />
+          <button
+          type="button"
+          onClick={() => onEnlarge(render.src)}
+          aria-label={t.gallery.enlarge(project.title, render.label)}
+          className="block w-full cursor-zoom-in">
+
+            <img
+            src={render.src}
+            alt={`${project.title} — ${render.label}`}
+            className="max-h-[75vh] w-full object-contain p-3" />
+
+          </button>
 
           <figcaption className="flex justify-between gap-4 border-t border-line px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
             <span>{render.label}</span>

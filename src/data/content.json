@@ -274,19 +274,6 @@
       "instagram": "https://www.instagram.com/v2s3d/",
       "artstation": "https://www.artstation.com/williamvasseur"
     },
-    "shipping": {
-      "europeCents": 0,
-      "franceCents": 0,
-      "freeFromCents": 0
-    },
-    "legal": {
-      "name": "",
-      "email": "",
-      "siret": "",
-      "address": "",
-      "mediator": "",
-      "mediatorUrl": ""
-    },
     "hero": {
       "_i18n": {
         "de": {
@@ -310,6 +297,19 @@
       },
       "tagline": "3D Artist — science-fiction environments, characters and the objects they leave behind.",
       "location": "Toulouse, France"
+    },
+    "shipping": {
+      "europeCents": 0,
+      "franceCents": 0,
+      "freeFromCents": 0
+    },
+    "legal": {
+      "name": "",
+      "email": "",
+      "siret": "",
+      "address": "",
+      "mediator": "",
+      "mediatorUrl": ""
     },
     "band": {
       "_i18n": {
@@ -506,6 +506,28 @@
         }
       ],
       "project": "Navana · 2026"
+    },
+    "custom": {
+      "text": "A character, a creature, a corner of your own world — I can design and build it with you, as a render, a fine art print or a resin figurine for your shelf. Tell me what you have in mind and we will work out the rest together: the form, the size, the timing and the price.",
+      "_i18n": {
+        "de": {
+          "text": "Eine Figur, eine Kreatur, ein Winkel deiner eigenen Welt — ich kann sie mit dir entwerfen und bauen, als Rendering, als Kunstdruck oder als Resin-Figur fürs Regal. Erzähl mir, was dir vorschwebt, und den Rest klären wir gemeinsam: Form, Größe, Zeitrahmen und Preis.",
+          "title": "EIN STÜCK NUR FÜR DICH",
+          "button": "PROJEKT STARTEN"
+        },
+        "es": {
+          "text": "Un personaje, una criatura, un rincón de tu propio mundo — puedo diseñarlo y construirlo contigo, como render, lámina artística o figura de resina para tu estantería. Cuéntame qué tienes en mente y el resto lo definimos juntos: la forma, el tamaño, el plazo y el precio.",
+          "title": "UNA PIEZA SOLO PARA TI",
+          "button": "EMPEZAR UN PROYECTO"
+        },
+        "fr": {
+          "text": "Un personnage, une créature, un coin de ton propre monde — je peux le concevoir et le construire avec toi, en rendu, en tirage d’art ou en figurine résine pour ton étagère. Dis-moi ce que tu as en tête et on définit le reste ensemble : la forme, la taille, le délai et le prix.",
+          "title": "UNE PIÈCE RIEN QUE POUR TOI",
+          "button": "LANCER UN PROJET"
+        }
+      },
+      "title": "A PIECE MADE FOR YOU",
+      "button": "START A PROJECT"
     },
     "about": {
       "_i18n": {

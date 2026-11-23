@@ -58,8 +58,6 @@ const es: Dictionary = {
     visitWorld: 'VISITAR ESTE MUNDO',
     empty: 'Todavía no hay proyectos en esta categoría.',
     still: 'Imagen',
-    process: 'Proceso',
-    scrub: (title) => `${title} — recorrer las etapas de producción`,
     finished: 'Obra terminada',
     how: 'Cómo se hizo',
     shipped: 'Láminas, figuras y dioramas, enviados desde Toulouse',
@@ -69,10 +67,10 @@ const es: Dictionary = {
     close: 'Cerrar'
   },
   gallery: {
-    viewFull: (title, label) => `Ver ${title} — ${label} a tamaño completo`,
     previous: 'Imagen anterior',
     next: 'Imagen siguiente',
-    download: 'Descargar'
+    enlarge: (title, label) => `Ampliar ${title} — ${label}`,
+    open: (title) => `Abrir ${title}`,
   },
   viewer: {
     model: 'Modelo',
@@ -80,7 +78,7 @@ const es: Dictionary = {
     pause: 'Pausar la rotación',
     resume: 'Reanudar la rotación',
     reset: 'Restablecer la vista',
-    hint: 'Arrastra para girar · rueda para ampliar',
+    hint: 'Arrastra para girar',
     live: 'Modelo en vivo'
   },
   world: {
@@ -94,6 +92,7 @@ const es: Dictionary = {
     intro:
     'Láminas, figuras y dioramas — producidos en pequeñas series numeradas a partir de mis propios archivos, enviados desde Toulouse. Gíralos en 3D antes de decidirte.',
     families: { Poster: 'Póster', Figurine: 'Figura', Diorama: 'Diorama' },
+    commission: 'Por encargo',
     viewDetails: 'Ver detalles',
     details: (name) => `${name} — detalles`,
     close3d: 'Cerrar 3D',

@@ -58,8 +58,6 @@ const fr: Dictionary = {
     visitWorld: 'VISITER CE MONDE',
     empty: 'Aucun projet dans cette catégorie pour l’instant.',
     still: 'Image',
-    process: 'Process',
-    scrub: (title) => `${title} — parcourir les étapes de production`,
     finished: 'Œuvre finie',
     how: 'Comment elle a été faite',
     shipped: 'Tirages, figurines et dioramas, expédiés depuis Toulouse',
@@ -69,10 +67,10 @@ const fr: Dictionary = {
     close: 'Fermer'
   },
   gallery: {
-    viewFull: (title, label) => `Voir ${title} — ${label} en grand`,
     previous: 'Image précédente',
     next: 'Image suivante',
-    download: 'Télécharger'
+    enlarge: (title, label) => `Agrandir ${title} — ${label}`,
+    open: (title) => `Ouvrir ${title}`,
   },
   viewer: {
     model: 'Modèle',
@@ -80,7 +78,7 @@ const fr: Dictionary = {
     pause: 'Mettre la rotation en pause',
     resume: 'Reprendre la rotation',
     reset: 'Réinitialiser la vue',
-    hint: 'Glisser pour tourner · molette pour zoomer',
+    hint: 'Glisser pour faire tourner',
     live: 'Modèle en direct'
   },
   world: {
@@ -94,6 +92,7 @@ const fr: Dictionary = {
     intro:
     'Tirages, figurines et dioramas — produits en petites séries numérotées à partir de mes propres fichiers, expédiés depuis Toulouse. Fais-les tourner en 3D avant de te décider.',
     families: { Poster: 'Poster', Figurine: 'Figurine', Diorama: 'Diorama' },
+    commission: 'Sur mesure',
     viewDetails: 'Voir le détail',
     details: (name) => `${name} — détail`,
     close3d: 'Fermer la 3D',

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { CheckIcon, Rotate3dIcon, ShoppingBagIcon, XIcon } from 'lucide-react';
+import { ArrowRightIcon, CheckIcon, Rotate3dIcon, ShoppingBagIcon, XIcon } from 'lucide-react';
 import { BlueprintFrame } from '../components/BlueprintFrame';
 import { ModelViewer } from '../components/three/ModelViewer';
 import { ProductDialog } from '../components/shop/ProductDialog';
@@ -16,6 +16,7 @@ import {
   type Product } from
 '../lib/shop/types';
 import { t } from '../i18n';
+import { site } from '../data/content';
 
 function ProductCard({
   product,
@@ -42,7 +43,10 @@ function ProductCard({
   };
 
   return (
-    <Reveal as="li" delay={index * 0.08} className="flex flex-col">
+    // Each card is eight rows of the shelf's own grid (subgrid), so the size
+    // picker, the stock line and the buttons sit at the same height on every
+    // card in a row, however long each description runs.
+    <Reveal as="li" delay={index * 0.08} className="row-span-8 grid grid-rows-subgrid gap-y-0 pb-14">
       <div className="group relative">
         <AnimatePresence mode="wait">
           {inspecting && product.model ?
@@ -124,8 +128,7 @@ function ProductCard({
         null}
       </div>
 
-      <div className="mt-8 flex flex-1 flex-col">
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+        <span className="mt-8 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
           {product.kind}
         </span>
         <div className="mt-1.5 flex items-baseline justify-between gap-3">
@@ -180,11 +183,19 @@ function ProductCard({
           t.store.soldOutSize}
         </p>
 
+        <div className="mt-4 flex gap-2">
+        <button
+          type="button"
+          onClick={() => onOpen(product)}
+          className="rounded-full border border-line px-4 py-2.5 text-sm text-muted transition-colors hover:border-ink hover:text-ink">
+
+          {t.store.viewDetails}
+        </button>
         <button
           type="button"
           onClick={addToCart}
           disabled={!available}
-          className="group relative mt-4 flex items-center justify-center gap-2 overflow-hidden rounded-full border border-ink px-5 py-2.5 text-sm transition-opacity disabled:cursor-not-allowed disabled:opacity-40">
+          className="group relative flex flex-1 items-center justify-center gap-2 overflow-hidden rounded-full border border-ink px-5 py-2.5 text-sm transition-opacity disabled:cursor-not-allowed disabled:opacity-40">
 
           <span
             aria-hidden="true"
@@ -212,7 +223,7 @@ function ProductCard({
             </>
           }
         </button>
-      </div>
+        </div>
     </Reveal>);
 
 }
@@ -239,6 +250,48 @@ function useCheckoutReturn(clear: () => void): 'success' | 'cancelled' | null {
   }, [outcome]);
 
   return outcome;
+}
+
+/**
+ * The made-to-measure offer, closing the shop. William writes it in the
+ * editor (Boutique → Projet sur mesure); until he has, nothing shows.
+ */
+function Commission() {
+  const custom = site.custom;
+  if (!custom?.title) return null;
+  const email = site.contact.email;
+  const subject = encodeURIComponent(custom.title);
+
+  return (
+    <section aria-labelledby="commission-title" className="mb-16">
+      <BlueprintFrame label={t.store.commission} className="bg-surface/30">
+        <div className="grid gap-8 px-6 pb-10 pt-14 sm:px-10 lg:grid-cols-[1.3fr_1fr] lg:items-end lg:gap-16 lg:px-14 lg:pb-14 lg:pt-20">
+          <div>
+            <h2 id="commission-title" className="font-display text-2xl leading-tight tracking-tight sm:text-4xl">
+              {custom.title}
+            </h2>
+            <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">{custom.text}</p>
+          </div>
+          <div className="flex flex-col items-start gap-3 lg:items-end">
+            <a
+              href={`mailto:${email}?subject=${subject}`}
+              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-ink px-7 py-3.5 font-display text-sm tracking-tight text-bg">
+
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 -translate-x-full bg-muted/30 transition-transform duration-500 ease-out group-hover:translate-x-0" />
+
+              <span className="relative">{custom.button}</span>
+              <ArrowRightIcon className="relative h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
+            </a>
+            {/* The address in plain text too: a mail link does nothing on a
+                computer without a mail app set up. */}
+            <span className="select-all font-mono text-[11px] text-muted">{email}</span>
+          </div>
+        </div>
+      </BlueprintFrame>
+    </section>);
+
 }
 
 export function Store() {
@@ -366,7 +419,7 @@ export function Store() {
           {t.store.emptyShelf}
         </p> :
 
-      <ul className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid gap-x-10 gap-y-0 pt-12 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((product, i) =>
         <ProductCard
           key={product.id}
@@ -381,6 +434,8 @@ export function Store() {
       <p className="border-t border-line py-8 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
         {t.store.more}
       </p>
+
+      <Commission />
 
       <ProductDialog product={detail} onClose={() => setDetail(null)} />
     </main>);

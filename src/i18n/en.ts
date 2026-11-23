@@ -64,8 +64,6 @@ const en = {
     visitWorld: 'VISIT THIS WORLD',
     empty: 'No project in this category yet.',
     still: 'Still',
-    process: 'Process',
-    scrub: (title: string) => `${title} — scrub through the production stages`,
     finished: 'Finished work',
     how: 'How it was made',
     shipped: 'Prints, figurines and dioramas, shipped from Toulouse',
@@ -75,10 +73,10 @@ const en = {
     close: 'Close'
   },
   gallery: {
-    viewFull: (title: string, label: string) => `View ${title} — ${label} full size`,
     previous: 'Previous image',
     next: 'Next image',
-    download: 'Download'
+    enlarge: (title: string, label: string) => `Enlarge ${title} — ${label}`,
+    open: (title: string) => `Open ${title}`,
   },
   viewer: {
     model: 'Model',
@@ -86,7 +84,7 @@ const en = {
     pause: 'Pause the rotation',
     resume: 'Resume the rotation',
     reset: 'Reset the view',
-    hint: 'Drag to orbit · scroll to zoom',
+    hint: 'Drag to turn it',
     live: 'Live model'
   },
   world: {
@@ -100,6 +98,7 @@ const en = {
     intro:
     'Prints, figurines and dioramas — produced in small numbered batches from my own files, shipped from Toulouse. Turn any of them over in 3D before you decide.',
     families: { Poster: 'Poster', Figurine: 'Figurine', Diorama: 'Diorama' } as Record<string, string>,
+    commission: 'Commission',
     viewDetails: 'View details',
     details: (name: string) => `${name} — details`,
     close3d: 'Close 3D',

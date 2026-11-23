@@ -75,6 +75,8 @@ export interface SiteContent {
   physical: {title: string;intro: string;};
   cta: {title: string;text: string;button: string;};
   contact: {email: string;artstation: string;instagram: string;};
+  /** The made-to-measure block that closes the shop. */
+  custom?: {title: string;text: string;button: string;};
   /** Cents. Zero fees mean free shipping; freeFromCents 0 means no threshold. */
   shipping?: {franceCents: number;europeCents: number;freeFromCents: number;};
   /** Who is selling. The legal pages are built from this. */

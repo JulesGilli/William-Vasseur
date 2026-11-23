@@ -1,21 +1,17 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { DownloadIcon, XIcon } from 'lucide-react';
+import { XIcon } from 'lucide-react';
 import type { GalleryImage } from '../data/projects';
 import { t } from '../i18n';
 
 interface LightboxProps {
   image: GalleryImage | null;
-  /** Prefixes the downloaded filename, e.g. "navana-landscape.webp". */
   title: string;
   onClose: () => void;
   onPrev?: () => void;
   onNext?: () => void;
 }
-
-const slug = (s: string) =>
-s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 /**
  * Full-bleed image viewer. Rendered in a portal so no ancestor's transform,
@@ -30,12 +26,17 @@ export function Lightbox({ image, title, onClose, onPrev, onNext }: LightboxProp
   useEffect(() => {
     if (!open) return;
 
+    // Caught on the way down and stopped there: opened from the project
+    // pop-up, Escape must close the image and leave the pop-up behind it.
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        onClose();
+      }
       if (e.key === 'ArrowLeft') onPrev?.();
       if (e.key === 'ArrowRight') onNext?.();
     };
-    document.addEventListener('keydown', onKey);
+    window.addEventListener('keydown', onKey, { capture: true });
 
     // Freeze the page behind, and put focus somewhere useful inside.
     const { overflow } = document.body.style;
@@ -43,20 +44,10 @@ export function Lightbox({ image, title, onClose, onPrev, onNext }: LightboxProp
     closeRef.current?.focus();
 
     return () => {
-      document.removeEventListener('keydown', onKey);
+      window.removeEventListener('keydown', onKey, { capture: true });
       document.body.style.overflow = overflow;
     };
   }, [open, onClose, onPrev, onNext]);
-
-  const download = useCallback(() => {
-    if (!image) return;
-    const a = document.createElement('a');
-    a.href = image.src;
-    a.download = `${slug(title)}-${slug(image.label)}.webp`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }, [image, title]);
 
   return createPortal(
     <AnimatePresence>
@@ -79,18 +70,9 @@ export function Lightbox({ image, title, onClose, onPrev, onNext }: LightboxProp
               {title} — {image.label} · {image.size}
             </span>
 
+            {/* No download button: William would rather people bought the
+                print than printed the file. */}
             <div className="flex items-center gap-2">
-              <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                download();
-              }}
-              className="flex items-center gap-2 border border-line px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted transition-colors hover:border-ink hover:text-ink">
-
-                <DownloadIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                {t.gallery.download}
-              </button>
               <button
               ref={closeRef}
               type="button"

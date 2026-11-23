@@ -2,6 +2,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { PencilIcon, PlusIcon } from 'lucide-react';
 import { supabase } from '../supabase';
 import { clean, FieldsEditor, Notice, previewUrl, SaveButton, ScreenHeader, type FieldSpec } from '../form';
+import { Block } from './HomeSection';
+
+/** The block under the products: a commission, worked out with the buyer. */
+const COMMISSION: FieldSpec[] = [
+{ kind: 'text', key: 'title', label: 'Titre' },
+{ kind: 'textarea', key: 'text', label: 'Texte', rows: 4 },
+{ kind: 'text', key: 'button', label: 'Texte du bouton', hint: 'Le bouton ouvre un e-mail vers l’adresse du bloc Contact.' }];
+
 
 type Value = Record<string, unknown>;
 
@@ -98,6 +106,16 @@ export function ShopSection() {
   const [rows, setRows] = useState<ProductRow[] | null>(null);
   const [editing, setEditing] = useState<ProductRow | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [commission, setCommission] = useState<Value | null>(null);
+
+  useEffect(() => {
+    supabase.
+    from('site_content').
+    select('value').
+    eq('key', 'custom').
+    maybeSingle().
+    then(({ data }) => setCommission((data?.value as Value) ?? null));
+  }, []);
 
   const load = useCallback(async () => {
     const { data, error } = await supabase.from('products').select('*, variants(*)').order('position');
@@ -194,6 +212,18 @@ export function ShopSection() {
         })}
         </ol> :
       <p className="text-sm text-muted">Chargement…</p>}
+
+      {commission ?
+      <div className="mt-8">
+          <Block
+          blockKey="custom"
+          title="Projet sur mesure"
+          fields={COMMISSION}
+          initial={commission}
+          open={false} />
+
+        </div> :
+      null}
     </>);
 
 }

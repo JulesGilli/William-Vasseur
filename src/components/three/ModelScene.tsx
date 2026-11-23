@@ -3,14 +3,20 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {
   Bounds,
   Environment,
-  Lightformer,
   OrbitControls,
   useGLTF,
 } from '@react-three/drei';
-import { Box3, Vector3, type Group } from 'three';
+import { Box3, DirectionalLight, Vector3, type Group } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
 const UP = new Vector3(0, 1, 0);
+
+/**
+ * A Poly Haven sky (CC0, see public/env/LICENSE.txt), 512px and 254kB. Served
+ * from the site as a file rather than inlined into this chunk, where base64
+ * would have made it a third larger and held up the viewer's code.
+ */
+const ENVIRONMENT = `${import.meta.env.BASE_URL}env/esplanade.exr`;
 
 /**
  * Default export so the whole three.js runtime lands in its own lazy chunk —
@@ -71,17 +77,24 @@ function Model({ url, onReady }: {url: string;onReady?: () => void;}) {
 }
 
 /**
- * Brightness as one knob rather than five. Measured against this rig, the dark
- * theme sat at 45.8 mean luminance and the light one at 55.2 — the models read
- * as underlit, and the two themes did not match each other. These exposures put
- * both at about 60, with highlight clipping still under a tenth of a percent.
+ * A light that rides with the camera, so whichever side the visitor turns to
+ * is the lit one. Placed up and to the right of the lens, as glTF viewers do.
  */
-function Exposure({ value }: {value: number;}) {
-  const gl = useThree((state) => state.gl);
+function Headlight({ intensity }: {intensity: number;}) {
+  const camera = useThree((state) => state.camera);
+  const scene = useThree((state) => state.scene);
 
   useEffect(() => {
-    gl.toneMappingExposure = value;
-  }, [gl, value]);
+    const light = new DirectionalLight('#ffffff', intensity);
+    light.position.set(0.5, 0, 0.866);
+    camera.add(light);
+    // A camera only carries children into the render once it is in the scene.
+    scene.add(camera);
+    return () => {
+      camera.remove(light);
+      scene.remove(camera);
+    };
+  }, [camera, scene, intensity]);
 
   return null;
 }
@@ -156,10 +169,16 @@ export default function ModelScene({
   onReady,
   fit = 1.18,
 }: ModelSceneProps) {
-  const dark = theme === 'dark';
+  // The same light in both themes: the model is William's work, and it should
+  // look the way he lit it, whatever the page around it is doing.
+  void theme;
 
   return (
     <Canvas
+      // No tone mapping. The default (ACES) dulls saturated colour and
+      // crushes highlights — the crystals came out grey-blue and the flowers
+      // flat. Linear output is what William checks his exports in.
+      flat
       // 'never' fully parks the render loop for offscreen viewers.
       frameloop={active ? 'always' : 'never'}
       dpr={[1, 1.75]}
@@ -167,41 +186,12 @@ export default function ModelScene({
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       style={{ touchAction: 'pan-y' }}>
 
-      <Exposure value={dark ? 1.5 : 1.2} />
-
-      <ambientLight intensity={dark ? 0.85 : 1.15} />
-      <directionalLight
-        position={[3, 5, 2]}
-        intensity={dark ? 1.6 : 2.1}
-        color={dark ? '#dfe6f0' : '#ffffff'} />
-
-      <directionalLight
-        position={[-4, 2, -3]}
-        intensity={dark ? 0.7 : 0.5}
-        color={dark ? '#7f8ea3' : '#cdd6e2'} />
-
-
-      {/* Built in-scene from lightformers — no HDRI fetched over the network. */}
-      <Environment resolution={192}>
-        <Lightformer
-          intensity={dark ? 1.5 : 2.4}
-          position={[0, 4, 2]}
-          scale={[8, 4, 1]}
-          color="#ffffff" />
-
-        <Lightformer
-          intensity={dark ? 0.8 : 1.1}
-          position={[-4, 1, 2]}
-          scale={[4, 6, 1]}
-          color="#b9c6d6" />
-
-        <Lightformer
-          intensity={dark ? 0.55 : 0.8}
-          position={[4, -1, -2]}
-          scale={[4, 4, 1]}
-          color="#8f9bad" />
-
-      </Environment>
+      {/* The rig William previews his models in (gltf-viewer.donmccurdy.com):
+          a real sky for reflections, a soft fill, one key light. A sky is what
+          the crystals need — lightformers gave them nothing to reflect. */}
+      <Environment files={ENVIRONMENT} />
+      <ambientLight intensity={0.3} />
+      <Headlight intensity={2.5} />
 
       <Suspense fallback={null}>
         {/* Bounds fits a cube of the model's longest side against the canvas's

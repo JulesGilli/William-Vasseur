@@ -6,7 +6,6 @@ import { WorldViewer } from '../components/world/WorldViewer';
 import { ProjectDialog } from '../components/ProjectDialog';
 import type { Project } from '../data/projects';
 import { ModelViewer } from '../components/three/ModelViewer';
-import { ProcessScrubber } from '../components/ProcessScrubber';
 import { ProjectGallery } from '../components/ProjectGallery';
 import { SplitText } from '../components/motion/SplitText';
 import { Reveal } from '../components/motion/Reveal';
@@ -124,7 +123,8 @@ export function Projects() {
                       title={project.title}
                       label={project.ref}
                       spec={project.spec}
-                      shop={project.shop} />
+                      shop={project.shop}
+                      onOpen={() => setOpened(project)} />
 
                     }
                   </div>
@@ -195,12 +195,9 @@ export function Projects() {
 
                     null}
 
-                    {project.stages ?
-                    <ProcessScrubber
-                      stages={project.stages}
-                      title={project.title} /> :
-
-                    null}
+                    {/* The process used to run under each piece as a slider.
+                        It now lives only in the pop-up, image by image and
+                        larger, where William preferred it. */}
                   </div>
                 </article>
               </motion.li>);
